@@ -5,131 +5,53 @@
     <title>Portal Desbravadores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-        #loading-overlay p { color: #ffcc00; font-weight: bold; font-size: 1.1rem; letter-spacing: 2px; }
-        .spinner { width: 60px; height: 60px; border: 5px solid #333; border-top-color: #ffcc00; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        
         /* RESET E CORES DINÂMICAS */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         :root { 
-            --amarelo: #ffcc00; 
-            --amarelo-hover: #ffdb4d;
-            --vermelho: #e63946; 
-            --vermelho-hover: #f04b58;
-            --preto: #000000; 
-            --cinza-dark: #121212; 
-            --cinza-card: #1e1e1e; 
-            --borda-suave: #333333;
+            --amarelo: #ffcc00; --amarelo-hover: #ffdb4d;
+            --vermelho: #e63946; --vermelho-hover: #f04b58;
+            --preto: #000000; --cinza-dark: #121212; 
+            --cinza-card: #1e1e1e; --borda-suave: #333333;
+            --verde: #00cc66;
         }
         
-        body { 
-            background-color: var(--cinza-dark); 
-            color: white; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            line-height: 1.6; 
-            transition: background-color 0.3s ease; 
-            overflow-x: hidden;
-            padding-top: 80px; 
-        }
+        body { background-color: var(--cinza-dark); color: white; font-family: 'Segoe UI', Roboto, sans-serif; line-height: 1.6; transition: background-color 0.3s ease; overflow-x: hidden; padding-top: 80px; }
         
-        /* HEADER PERSONALIZÁVEL */
-        header { 
-            width: 100%; 
-            height: 80px; 
-            position: fixed; 
-            top: 0; left: 0;
-            z-index: 1000; 
-            border-bottom: 3px solid transparent; 
-            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); 
-            backdrop-filter: blur(10px);
-        }
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+        #loading-overlay p { color: var(--amarelo); font-weight: bold; font-size: 1.1rem; letter-spacing: 2px; }
+        .spinner { width: 60px; height: 60px; border: 5px solid #333; border-top-color: var(--amarelo); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .logo-container {
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            transform: translate(0, -50%) scale(1); 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-            cursor: pointer;
-        }
-
-        .header-logo { 
-            height: 50px; 
-            transition: all 0.3s ease; 
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-        }
-        
+        /* HEADER */
+        header { width: 100%; height: 80px; position: fixed; top: 0; left: 0; z-index: 1000; border-bottom: 3px solid transparent; transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); backdrop-filter: blur(10px); }
+        .logo-container { position: absolute; top: 50%; left: 5%; transform: translate(0, -50%) scale(1); display: flex; flex-direction: column; align-items: center; transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; }
+        .header-logo { height: 50px; transition: all 0.3s ease; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
         .logo-container:hover .header-logo { transform: scale(1.05) rotate(3deg); }
-        
         .scroll-down-msg { display: none; }
 
-        .user-info-header { 
-            position: absolute;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            transition: opacity 0.5s ease;
-            opacity: 1;
-        }
-        
-        .user-status {
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .user-info-header { position: absolute; right: 5%; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 15px; transition: opacity 0.5s ease; opacity: 1; }
+        .user-status { font-weight: 600; background: rgba(255, 255, 255, 0.1); padding: 5px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; gap: 8px; }
 
         /* EFEITO SPLASH */
-        body.is-home header.initial-splash {
-            height: 100vh; 
-            background-color: var(--home-bg, #121212) !important; 
-            backdrop-filter: none;
-            border-bottom: none;
-        }
-
+        body.is-home header.initial-splash { height: 100vh; background-color: var(--home-bg, #121212) !important; backdrop-filter: none; border-bottom: none; }
         @keyframes fadeInStart { 0% { opacity: 0; } 100% { opacity: 1; } }
-        @keyframes pulseSplash {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); }
-            50% { transform: scale(1.08); filter: drop-shadow(0 0 30px rgba(255,204,0,0.6)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); }
-        }
-
-        body.is-home header.initial-splash .logo-container {
-            top: 45vh; 
-            left: 50%;
-            transform: translate(-50%, -50%) scale(2.5); 
-            animation: fadeInStart 1s ease-out forwards;
-        }
-        
+        @keyframes pulseSplash { 0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); } 50% { transform: scale(1.08); filter: drop-shadow(0 0 30px rgba(255,204,0,0.6)); } 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); } }
+        body.is-home header.initial-splash .logo-container { top: 45vh; left: 50%; transform: translate(-50%, -50%) scale(2.5); animation: fadeInStart 1s ease-out forwards; }
         body.is-home header.initial-splash .header-logo { animation: pulseSplash 2.5s infinite ease-in-out; }
-        body.is-home header.initial-splash .scroll-down-msg {
-            display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 15px;
-            color: var(--amarelo); font-size: 0.6rem; text-transform: uppercase; font-weight: bold;
-            letter-spacing: 2px; animation: bounce 2s infinite;
-        }
+        body.is-home header.initial-splash .scroll-down-msg { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 15px; color: var(--amarelo); font-size: 0.6rem; text-transform: uppercase; font-weight: bold; letter-spacing: 2px; animation: bounce 2s infinite; }
         body.is-home header.initial-splash .user-info-header { opacity: 0; pointer-events: none; }
-
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 60% { transform: translateY(-4px); } }
         header.scrolled { border-bottom: 3px solid var(--amarelo); box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
         
-        /* BOTÕES ESTILIZADOS */
+        /* BOTÕES */
         .btn-lideranca { background: linear-gradient(135deg, var(--vermelho), #9b1d26); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #7a151e; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
         .btn-lideranca:hover { background: var(--vermelho-hover); transform: translateY(-2px); box-shadow: 0 6px 0 #7a151e; }
         .btn-lideranca:active { transform: translateY(2px); box-shadow: 0 0 0 #7a151e; }
         
+        .btn-desbravador { background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #0a3520; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+        .btn-desbravador:hover { background: #22854a; transform: translateY(-2px); box-shadow: 0 6px 0 #0a3520; }
+        .btn-desbravador:active { transform: translateY(2px); box-shadow: 0 0 0 #0a3520; }
+
         .btn-custom { background: linear-gradient(135deg, #444, #222); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #111; transition: all 0.2s; display: none; align-items: center; gap: 8px; }
         .btn-custom:hover { background: #555; transform: translateY(-2px); box-shadow: 0 6px 0 #111;}
         .btn-custom:active { transform: translateY(2px); box-shadow: 0 0 0 #111; }
@@ -137,81 +59,12 @@
         .btn-save { background: linear-gradient(135deg, var(--amarelo), #d4aa00); color: black; width: 100%; padding: 14px; font-weight: 800; border-radius: 8px; cursor: pointer; text-transform: uppercase; border: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2); display: flex; justify-content: center; align-items: center; gap: 10px; }
         .btn-save:hover { background: var(--amarelo-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 204, 0, 0.4); }
 
-        /* RODAPÉ PERSONALIZÁVEL */
         footer { padding: 40px 5%; text-align: center; border-top: 1px solid var(--borda-suave); margin-top: 50px; background: rgba(0,0,0,0.5); }
-        .footer-social a:hover { color: var(--amarelo) !important; transform: scale(1.2); }
-
-        /* ESTRUTURA DE PÁGINAS E ANIMAÇÕES */
         .page { display: none; min-height: 90vh; padding: 25px; max-width: 1600px; margin: auto; }
         .active { display: block !important; animation: slideInUp 0.5s ease forwards; }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* HERO DINÂMICO */
-        .hero { text-align: center; margin-bottom: 40px; padding: 80px 20px; border-radius: 20px; border: 1px solid var(--borda-suave); background-position: center; background-size: cover; transition: background 0.8s ease; box-shadow: inset 0 0 100px rgba(0,0,0,0.8); }
-        .hero h1 { font-size: 4rem; text-shadow: 3px 3px 20px rgba(0,0,0,1); margin-bottom: 10px; letter-spacing: 2px; }
-        .hero p.subtitle { font-size: 1.5rem; text-shadow: 2px 2px 10px rgba(0,0,0,1); margin-bottom: 30px; color: #ddd; }
-        
-        /* CRONÔMETRO */
-        .timer { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px; }
-        .unit-timer { background: rgba(20, 20, 20, 0.6); padding: 20px; border-radius: 15px; min-width: 110px; border: 2px solid var(--vermelho); backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(230, 57, 70, 0.2); transition: transform 0.3s; }
-        .unit-timer:hover { transform: translateY(-5px); }
-        .unit-timer b { font-size: 3rem; display: block; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .unit-timer span { font-size: 0.9rem; color: var(--amarelo); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .event-date-txt { font-weight: bold; font-size: 1.2rem; text-shadow: 2px 2px 5px #000; margin-top: 15px; display: block; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; width: fit-content; margin-left: auto; margin-right: auto; }
-        .timer-replacement { font-size: 1.8rem; font-weight: bold; background: rgba(0,0,0,0.8); padding: 25px 40px; border-radius: 15px; display: inline-block; border: 2px solid var(--amarelo); backdrop-filter: blur(5px); }
-
-        /* GALERIA MULTIMÍDIA */
-        .home-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; margin-top: 50px; }
-        .gallery-card { border-radius: 15px; overflow: hidden; border: 2px solid var(--borda-suave); position: relative; background: #000; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
-        .gallery-card:hover { transform: scale(1.02); z-index: 2; }
-        .gallery-card.layout-grid { height: 320px; } 
-        .gallery-card.layout-full { grid-column: 1 / -1; width: 100%; height: auto; min-height: 400px; }
-        .gallery-card.layout-title { grid-column: 1 / -1; background: transparent; border: none; text-align: center; margin: 40px 0 10px 0; box-shadow: none !important; height: auto; }
-        .gallery-card.layout-title h2 { color: var(--amarelo); font-size: 2.5rem; text-transform: uppercase; text-shadow: 0 0 15px rgba(255,204,0,0.3); }
-        .gallery-card.layout-title p { color: #aaa; font-size: 1.1rem; }
-        
-        .gallery-text-box { padding: 10px 15px; background: #111; text-align: center; }
-        .gallery-text-box h3 { color: var(--amarelo); margin-bottom: 5px; font-size: 1.2rem; }
-        .gallery-text-box p { color: #ccc; font-size: 0.95rem; }
-        .gallery-media-container { flex: 1; overflow: hidden; position: relative; min-height: 150px; display: flex; justify-content: center; align-items: center; background: #0a0a0a; }
-        .gallery-media-container img, .gallery-media-container video { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; }
-        .gallery-card.layout-full .gallery-media-container { max-height: 80vh; }
-        .gallery-card.layout-full .gallery-media-container img, .gallery-card.layout-full .gallery-media-container video { object-fit: contain; } 
-        .gallery-card:hover img { opacity: 0.8; }
-
-        /* LISTA ADMIN */
-        .admin-list { background: #0a0a0a; border: 1px solid #333; border-radius: 10px; max-height: 300px; overflow-y: auto; margin-top: 15px; padding: 10px; }
-        .admin-list-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 3px solid var(--amarelo); }
-        .admin-list-item button { background: var(--vermelho); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-
-        /* CARROSSEIS */
-        .showcase-section { text-align: center; margin: 60px 0; padding: 40px 20px; background: rgba(0,0,0,0.4); border-radius: 20px; border: 1px solid #333; position: relative; }
-        .showcase-section h2 { color: var(--amarelo); font-size: 2.2rem; margin-bottom: 30px; }
-        .carousel-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; }
-        .carousel-track { display: flex; gap: 20px; overflow: hidden; width: 300px; height: 350px; justify-content: center; align-items: center; position: relative; }
-        .carousel-item { position: absolute; width: 100%; height: 100%; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: scale(0.9); pointer-events: none; background: #111; border-radius: 15px; border: 2px solid var(--amarelo); padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .carousel-item.active { opacity: 1; transform: scale(1); pointer-events: auto; }
-        .carousel-item img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--amarelo); margin-bottom: 15px; }
-        .carousel-item h3 { color: white; margin-bottom: 5px; font-size: 1.4rem; }
-        .carousel-item p { color: var(--amarelo); font-weight: bold; }
-        .carousel-btn { background: #333; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: 0.3s; z-index: 10; }
-        .carousel-btn:hover { background: var(--amarelo); color: black; }
-        
-        /* UNIDADES NA HOME */
-        .units-home-wrap { display: flex; flex-direction: column; gap: 50px; margin-top: 50px; }
-        .unit-home-box { background: #111; border-radius: 20px; padding: 30px; border-top: 5px solid var(--amarelo); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .unit-home-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
-        .unit-home-header img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--amarelo); }
-        .unit-home-header h2 { font-size: 2rem; }
-
-        /* LAYOUT PAINEL */
-        .panel-layout { display: grid; grid-template-columns: 320px 1fr 350px; gap: 30px; }
-        @media (max-width: 1200px) { .panel-layout { grid-template-columns: 1fr; } }
-        .sidebar, .ranking-column, .form-box { background: var(--cinza-card); padding: 30px; border-radius: 20px; border: 1px solid var(--borda-suave); height: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .sidebar-profile { text-align: center; margin-bottom: 20px; }
-        .profile-img { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--vermelho); object-fit: cover; margin-bottom: 15px; box-shadow: 0 0 20px rgba(230,57,70,0.4); }
-        
-        /* INPUTS ESTILIZADOS */
+        /* UI BASICS */
         .input-group { position: relative; margin: 12px 0; width: 100%; }
         .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--amarelo); z-index: 2; font-size: 1.1rem; }
         .input-group input, .input-group select { width: 100%; padding: 14px 14px 14px 45px; border-radius: 10px; border: 1px solid #444; background: #111; color: white; font-size: 1rem; transition: all 0.3s; }
@@ -219,84 +72,48 @@
         input:not(.input-group input):not([type="checkbox"]):not([type="color"]), select:not(.input-group select), textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #111; color: white; transition: 0.3s; font-family: inherit; }
         input:focus, select:focus, textarea:focus { border-color: var(--amarelo); }
         .input-label { display: block; text-align: left; font-size: 0.85rem; color: #aaa; margin-bottom: -5px; margin-top: 10px; font-weight: bold; }
-
-        /* GRID MEMBROS (DBV) */
-        .dbv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .dbv-card { background: linear-gradient(145deg, #2a2a2a, #1f1f1f); border-radius: 15px; padding: 20px; text-align: center; border-bottom: 5px solid var(--vermelho); position: relative; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .dbv-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-bottom-color: var(--amarelo); }
-        .btn-del { position: absolute; top: -10px; right: -10px; background: var(--vermelho); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: 0.2s; }
-        .btn-del:hover { background: #ff0000; transform: scale(1.1); }
-        .dbv-card-pts { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .dbv-card-pts button { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: 0.2s; font-weight: bold; }
-        .dbv-card-pts button:hover { background: var(--amarelo); color: black; }
-        .btn-hist { background: transparent; color: #888; border: 1px solid #444; width: 100%; padding: 5px; border-radius: 5px; margin-top: 10px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
-        .btn-hist:hover { background: #333; color: white; }
-
-        /* RANKING */
-        .rank-box { margin-bottom: 30px; }
-        .rank-box h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: var(--amarelo); border-bottom: 2px solid #333; padding-bottom: 10px; }
-        .rank-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: #111; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; transition: 0.3s; border-left: 4px solid #444; }
-        .rank-item:hover { background: #1a1a1a; transform: translateX(5px); border-left-color: var(--amarelo); }
-        .rank-item b { font-size: 1.2rem; color: var(--amarelo); width: 30px; }
-
-        /* MODAIS GERAIS */
+        .form-box { background: var(--cinza-card); padding: 30px; border-radius: 20px; border: 1px solid var(--borda-suave); height: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 9000; display: none; align-items: center; justify-content: center; }
         .modal-box { background: var(--cinza-card); padding: 30px; border-radius: 20px; width: 95%; max-width: 500px; border: 2px solid var(--amarelo); box-shadow: 0 15px 35px rgba(0,0,0,0.8); max-height: 80vh; overflow-y: auto; }
-        .close-modal { text-align: right; cursor: pointer; color: #888; font-size: 1.2rem; margin-bottom: 10px;}
-        .close-modal:hover { color: white; }
+        .close-modal { text-align: right; cursor: pointer; color: #888; font-size: 1.2rem; }
 
-        /* ÁREA DO DESBRAVADOR / NOVO DASHBOARD */
-        .dbv-area-hero { text-align: center; padding: 40px 20px 20px; }
-        .dbv-area-hero h1 { font-size: 3rem; color: var(--amarelo); margin-bottom: 10px; }
-        .dbv-area-hero p { color: #aaa; font-size: 1.1rem; }
+        /* NOVA ÁREA LMS (Classes e Especialidades) */
+        .lms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .lms-card { background: #111; border: 1px solid #333; border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; position: relative; overflow: hidden; }
+        .lms-card:hover { border-color: var(--amarelo); transform: translateY(-5px); }
+        .lms-card img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; }
+        .lms-card h4 { color: white; margin-bottom: 5px; }
+        .lms-card p { color: #888; font-size: 0.85rem; }
+        .status-badge { position: absolute; top: 10px; right: 10px; padding: 4px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; }
+        .status-badge.aprovado { background: var(--verde); color: black; }
+        .status-badge.pendente { background: #ff9900; color: black; }
         
-        .dbv-dashboard-layout { display: grid; grid-template-columns: 300px 1fr; gap: 30px; max-width: 1200px; margin: 0 auto; padding-top: 20px;}
-        @media (max-width: 900px) { .dbv-dashboard-layout { grid-template-columns: 1fr; } }
-        
-        .dbv-profile-sidebar { background: var(--cinza-card); border-radius: 20px; padding: 30px; border: 1px solid var(--borda-suave); box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; height: fit-content;}
-        .dbv-profile-sidebar img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--amarelo); margin-bottom: 15px; }
-        .dbv-profile-sidebar h2 { font-size: 1.8rem; margin-bottom: 5px; }
-        .unid-badge { background: var(--amarelo); color: black; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; display: inline-block; margin-bottom: 15px;}
-        .cargo-badge { background: var(--vermelho); color: white; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; display: inline-block; margin-bottom: 15px; margin-left: 5px;}
-        
-        .dbv-pts-display { background: #111; border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; }
-        .dbv-pts-display .pts-num { font-size: 3.5rem; font-weight: 900; color: var(--amarelo); line-height: 1; }
-        
-        .dbv-main-panel { display: flex; flex-direction: column; gap: 20px; }
-        .dbv-section-card { background: var(--cinza-card); border-radius: 20px; padding: 25px; border: 1px solid var(--borda-suave); }
-        .dbv-section-card h3 { color: var(--amarelo); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;}
-        
-        .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
-        .badge-item { background: #111; border: 1px solid #333; border-radius: 10px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s; position: relative;}
-        .badge-item:hover { border-color: var(--amarelo); transform: translateY(-5px); }
-        .badge-item i { font-size: 2rem; margin-bottom: 10px; color: #888; }
-        .badge-item.concluida i { color: var(--amarelo); }
-        .badge-item.andamento i { color: #3498db; }
-        .badge-item span { display: block; font-size: 0.8rem; font-weight: bold; }
-        .status-tag { position: absolute; top: -5px; right: -5px; font-size: 0.65rem; padding: 3px 6px; border-radius: 10px; font-weight: bold; }
-        .tag-andamento { background: #3498db; color: white; }
-        .tag-concluida { background: var(--amarelo); color: black; }
+        /* TABS ÁREA DO DESBRAVADOR */
+        .dbv-tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 15px; flex-wrap: wrap; }
+        .dbv-tab-btn { background: transparent; color: #888; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; padding: 10px 20px; transition: 0.3s; border-radius: 8px; }
+        .dbv-tab-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+        .dbv-tab-btn.active { color: var(--amarelo); background: rgba(255,204,0,0.1); }
+        .dbv-tab-content { display: none; }
+        .dbv-tab-content.active { display: block; animation: slideInUp 0.3s ease; }
 
-        /* LISTA DE REQUISITOS */
-        .req-list { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; max-height: 300px; overflow-y: auto; padding-right: 10px;}
-        .req-item { background: #111; padding: 12px; border-radius: 8px; border-left: 3px solid #444; font-size: 0.9rem; color: #ccc;}
-
-        /* CARDS DE APROVAÇÃO (LIDERANÇA) */
-        .approval-card { background: #111; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-left: 4px solid #3498db; }
-        .approval-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 10px;}
-        .approval-actions { display: flex; gap: 10px; margin-top: 15px; }
-
-        .btn-desbravador { background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #0a3520; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
-        .btn-desbravador:hover { background: #22854a; transform: translateY(-2px); box-shadow: 0 6px 0 #0a3520; }
+        /* DBV PROFILE LAYOUT */
+        .dbv-profile-header { display: flex; align-items: center; gap: 25px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #333; background: var(--cinza-card); padding: 30px; border-radius: 20px; border: 1px solid #333; }
+        .dbv-profile-header img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--amarelo); }
+        .dbv-profile-info h2 { font-size: 2rem; margin-bottom: 5px; }
+        .badge-cargo { background: #333; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; border: 1px solid #555; }
         
+        .admin-list { background: #0a0a0a; border: 1px solid #333; border-radius: 10px; max-height: 300px; overflow-y: auto; margin-top: 15px; padding: 10px; }
+        .admin-list-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 3px solid var(--amarelo); }
+
+        /* RESPONSIVIDADE BÁSICA */
         @media (max-width: 768px) {
             body { padding-top: 140px !important; }
             header { height: auto !important; padding: 15px 10px !important; }
             .logo-container { position: relative !important; top: 0 !important; left: 0 !important; transform: none !important; margin: 0 auto 15px !important; }
             .user-info-header { position: relative !important; right: 0 !important; top: 0 !important; transform: none !important; flex-wrap: wrap !important; justify-content: center !important; gap: 8px !important; width: 100% !important; }
-            .hero { padding: 40px 15px !important; }
-            .hero h1 { font-size: 2rem !important; }
-            .panel-layout { display: flex !important; flex-direction: column !important; }
+            .btn-lideranca, .btn-desbravador { flex: 1 1 auto; justify-content: center; }
+            .dbv-profile-header { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
@@ -304,280 +121,152 @@
     
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <p><i class="fa-solid fa-cloud-arrow-down"></i> CARREGANDO DADOS...</p>
+        <p>CARREGANDO DADOS...</p>
     </div>
 
     <header id="main-header" class="initial-splash">
-        <div class="logo-container" onclick="window.location.reload()">
-            <img src="https://i.imgur.com/uR1jWqR.png" class="header-logo" id="main-logo-img" alt="Logo Desbravadores">
+        <div class="logo-container" onclick="navegarPara('home-page')">
+            <img src="PNGDBV.webp" class="header-logo" id="main-logo-img" alt="Logo">
             <div class="scroll-down-msg">Role para baixo <i class="fa-solid fa-chevron-down"></i></div>
         </div>
         <div class="user-info-header">
             <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> Visitante</span>
-            <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> Customizar Site</button>
-            <button class="btn-desbravador" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> Área do Desbravador</button>
-            <button class="btn-lideranca" onclick="abrirLoginLider()"><i class="fa-solid fa-lock"></i> Área do Líder</button>
+            <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i></button>
+            <button class="btn-desbravador" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> Acesso Desbravador</button>
+            <button class="btn-lideranca" onclick="abrirLoginLider()"><i class="fa-solid fa-lock"></i> Acesso Líder</button>
         </div>
     </header>
 
-    <div id="modal-pontos" class="modal-overlay">
-        <div class="modal-box">
-            <div class="close-modal" onclick="document.getElementById('modal-pontos').style.display='none'"><i class="fa-solid fa-times"></i></div>
-            <h3 style="color:var(--amarelo); margin-bottom: 20px; text-align: center;"><i class="fa-solid fa-star"></i> Atribuir Pontuação</h3>
-            <p id="txt-acao-pontos" style="text-align: center; margin-bottom: 15px; font-weight: bold;"></p>
-            <input type="text" id="input-just-pontos" placeholder="Justificativa (Opcional)">
-            <input type="hidden" id="hdn-membro-id">
-            <input type="hidden" id="hdn-membro-valor">
-            <button onclick="confirmarPontos()" class="btn-save" style="margin-top:20px;">CONFIRMAR AÇÃO</button>
-        </div>
-    </div>
-
-    <div id="modal-historico" class="modal-overlay">
-        <div class="modal-box" style="max-width: 600px;">
-            <div class="close-modal" onclick="document.getElementById('modal-historico').style.display='none'"><i class="fa-solid fa-times"></i></div>
-            <h3 style="color:var(--amarelo); margin-bottom: 20px;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pontos</h3>
-            <div id="lista-historico-membro" style="display: flex; flex-direction: column; gap: 10px;"></div>
-        </div>
-    </div>
-
-    <main id="home-page" class="page active">
-        <div id="hero-top-container"></div>
-        <section id="home-hero-default" class="hero" style="display:none;">
-            <h1 id="home-title-display">Clube Desbravadores</h1>
-            <p id="home-subtitle-display" class="subtitle"></p>
-            <div id="timer-container"><div id="timer-display" class="timer"></div><span id="event-date-display" class="event-date-txt"></span></div>
-            <div id="timer-alt-display" class="timer-replacement" style="display:none"></div>
-        </section>
-
-        <section id="lideranca-section" class="showcase-section" style="display:none;">
-            <h2><i class="fa-solid fa-user-tie"></i> Nossa Liderança</h2>
-            <div class="carousel-wrap">
-                <button class="carousel-btn" onclick="prevLider()">&lt;</button>
-                <div id="lideranca-track" class="carousel-track"></div>
-                <button class="carousel-btn" onclick="nextLider()">&gt;</button>
-            </div>
-        </section>
-
-        <h2 id="gallery-title-main" style="margin-top: 40px; text-align: center; color: var(--amarelo);"><i class="fa-solid fa-images"></i> Galeria de Mídia</h2>
-        <div id="home-gallery-grid" class="home-gallery"></div>
-
-        <section id="unidades-showcase-section" style="display:none;">
-            <h2 style="margin-top: 60px; text-align: center; color: var(--amarelo); font-size:2.5rem;"><i class="fa-solid fa-campground"></i> Nossas Unidades</h2>
-            <div id="unidades-home-container" class="units-home-wrap"></div>
-        </section>
-    </main>
-
-    <section id="dbv-area-page" class="page">
-        <div class="dbv-area-hero">
-            <h1><i class="fa-solid fa-id-badge"></i> Área do Desbravador</h1>
-            <p>Acompanhe suas classes, especialidades e pontuações.</p>
-        </div>
-
-        <div id="dbv-dashboard-container" class="dbv-dashboard-layout" style="display:none;">
-            <aside class="dbv-profile-sidebar">
-                <img id="dbv-dash-foto" src="" onerror="this.src='https://via.placeholder.com/150'">
-                <h2 id="dbv-dash-nome">Nome</h2>
-                <span id="dbv-dash-unid" class="unid-badge">Unidade</span>
-                <span id="dbv-dash-cargo" class="cargo-badge">Desbravador</span>
-                
-                <div id="dbv-dash-pts-box" class="dbv-pts-display">
-                    <div class="pts-num" id="dbv-dash-pts">0</div>
-                    <div class="pts-label">pontos acumulados</div>
-                </div>
-                <button onclick="fazerLogoff()" class="btn-custom" style="display:flex; width:100%; justify-content:center; margin-top:20px;"><i class="fa-solid fa-right-from-bracket"></i> Sair da Conta</button>
-            </aside>
-
-            <div class="dbv-main-panel">
-                <div class="dbv-section-card">
-                    <h3><span><i class="fa-solid fa-layer-group"></i> Minhas Classes</span> <button class="btn-custom" style="display:flex; padding:5px 10px; font-size:0.8rem;" onclick="abrirCatalogo('classe')"><i class="fa-solid fa-plus"></i> Iniciar Classe</button></h3>
-                    <div id="dbv-classes-grid" class="badge-grid">
-                        </div>
-                </div>
-
-                <div class="dbv-section-card">
-                    <h3><span><i class="fa-solid fa-award"></i> Minhas Especialidades</span> <button class="btn-custom" style="display:flex; padding:5px 10px; font-size:0.8rem;" onclick="abrirCatalogo('especialidade')"><i class="fa-solid fa-plus"></i> Fazer Especialidade</button></h3>
-                    <div id="dbv-especialidades-grid" class="badge-grid">
-                        </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div id="modal-catalogo" class="modal-overlay">
-        <div class="modal-box" style="max-width: 800px;">
-            <div class="close-modal" onclick="document.getElementById('modal-catalogo').style.display='none'"><i class="fa-solid fa-times"></i></div>
-            <h3 id="titulo-catalogo" style="color:var(--amarelo); margin-bottom: 20px;"><i class="fa-solid fa-book-open"></i> Catálogo</h3>
-            
-            <div id="lista-catalogo" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; max-height: 50vh; overflow-y: auto; padding-right: 10px;">
-                </div>
-        </div>
-    </div>
-
-    <div id="modal-requisitos" class="modal-overlay">
-        <div class="modal-box" style="max-width: 600px;">
-            <div class="close-modal" onclick="document.getElementById('modal-requisitos').style.display='none'"><i class="fa-solid fa-times"></i></div>
-            <h3 id="req-titulo" style="color:var(--amarelo); margin-bottom: 5px;">Título</h3>
-            <p id="req-tipo" style="color:#888; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">Tipo</p>
-            
-            <div id="req-lista-box" class="req-list"></div>
-
-            <div id="req-envio-box" style="margin-top: 20px; background: #111; padding: 15px; border-radius: 10px; border: 1px solid #333;">
-                <h4 style="color:var(--amarelo); margin-bottom: 10px;"><i class="fa-solid fa-file-arrow-up"></i> Enviar Relatório para Aprovação</h4>
-                <textarea id="req-texto-relatorio" placeholder="Escreva o link da sua pasta do drive com fotos, ou o resumo do relatório aqui..." rows="4"></textarea>
-                <input type="hidden" id="hdn-req-item-id">
-                <input type="hidden" id="hdn-req-item-tipo">
-                <button onclick="enviarParaAprovacao()" class="btn-save" style="margin-top: 10px; font-size: 0.9rem; padding: 10px;"><i class="fa-solid fa-paper-plane"></i> ENVIAR PARA LIDERANÇA</button>
-            </div>
-        </div>
-    </div>
-
-    <footer id="main-footer"><div id="footer-text">© Portal Desbravadores</div></footer>
-
-    <section id="custom-page" class="page">
-        <div style="max-width: 1200px; margin: auto;">
-            <h2 style="color:var(--amarelo); margin-bottom:30px; text-align: center; font-size: 2rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> Personalização</h2>
-            <div class="custom-grid">
-                <div class="form-box">
-                    <div class="config-sec">
-                        <h4><i class="fa-solid fa-eye"></i> Exibição e Permissões</h4>
-                        <label><input type="checkbox" id="cfg-hide-points"> Ocultar Pontuação na Área do Desbravador (Apenas Líder vê)</label>
-                        <label><input type="checkbox" id="cfg-show-lideranca"> Mostrar Apresentação da Liderança (Home)</label>
-                        <label><input type="checkbox" id="cfg-show-unidades"> Mostrar Unidades Segregadas (Home)</label>
-                    </div>
-                    <button onclick="salvarConfigHome()" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> SALVAR ALTERAÇÕES</button>
-                    <button onclick="navegarPara('admin-page')" style="width:100%; background:none; color:#aaa; border:none; margin-top:20px; cursor:pointer; font-weight:bold;"><i class="fa-solid fa-arrow-left"></i> Voltar ao Painel</button>
-                </div>
-            </div>
+    <section id="login-dbv-modal" class="modal-overlay">
+        <div class="modal-box" style="text-align:center;">
+            <i class="fa-solid fa-campground" style="font-size: 3rem; color: var(--amarelo); margin-bottom: 15px;"></i>
+            <h2 style="color:var(--amarelo);margin-bottom:25px;">ACESSO DESBRAVADOR</h2>
+            <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-dbv-u" placeholder="Nome de Usuário"></div>
+            <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-dbv-p" placeholder="Senha"></div>
+            <button onclick="tentarLoginDbv()" class="btn-save" style="margin-top:25px"><i class="fa-solid fa-right-to-bracket"></i> ENTRAR</button>
+            <p onclick="document.getElementById('login-dbv-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;"><i class="fa-solid fa-times"></i> Cancelar</p>
         </div>
     </section>
 
     <section id="login-lider-modal" class="modal-overlay">
-        <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid var(--amarelo);text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
+        <div class="modal-box" style="text-align:center;">
             <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: var(--amarelo); margin-bottom: 15px;"></i>
-            <h2 style="color:var(--amarelo);margin-bottom:25px;letter-spacing: 1px;">ACESSO LIDERANÇA</h2>
-            <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-l-u" placeholder="Nome de Usuário"></div>
-            <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-l-p" placeholder="Senha"></div>
-            <button onclick="tentarLogin('lider')" class="btn-save" style="margin-top:25px"><i class="fa-solid fa-right-to-bracket"></i> ENTRAR</button>
-            <p onclick="document.getElementById('login-lider-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;"><i class="fa-solid fa-times"></i> Voltar</p>
+            <h2 style="color:var(--amarelo);margin-bottom:25px;">ACESSO LIDERANÇA</h2>
+            <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-lid-u" placeholder="Nome de Usuário"></div>
+            <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-lid-p" placeholder="Senha"></div>
+            <button onclick="tentarLoginLider()" class="btn-save" style="margin-top:25px"><i class="fa-solid fa-right-to-bracket"></i> ENTRAR</button>
+            <p onclick="document.getElementById('login-lider-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;"><i class="fa-solid fa-times"></i> Cancelar</p>
         </div>
     </section>
 
-    <section id="login-dbv-modal" class="modal-overlay">
-        <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid #3498db;text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
-            <i class="fa-solid fa-id-card-clip" style="font-size: 3rem; color: #3498db; margin-bottom: 15px;"></i>
-            <h2 style="color:#3498db;margin-bottom:25px;letter-spacing: 1px;">SOU DESBRAVADOR</h2>
-            <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-d-u" placeholder="Seu Login"></div>
-            <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-d-p" placeholder="Sua Senha"></div>
-            <button onclick="tentarLogin('dbv')" class="btn-save" style="margin-top:25px; background: linear-gradient(135deg, #3498db, #2980b9); color:white;"><i class="fa-solid fa-right-to-bracket"></i> ENTRAR NO MEU PAINEL</button>
-            <p onclick="document.getElementById('login-dbv-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;"><i class="fa-solid fa-times"></i> Voltar</p>
+    <main id="home-page" class="page active">
+        <div style="text-align:center; padding: 100px 20px;">
+            <h1 style="font-size: 3rem; color:var(--amarelo);">Portal do Clube</h1>
+            <p style="color:#aaa;">Bem-vindo ao sistema de gestão integrado.</p>
+        </div>
+    </main>
+
+    <section id="dbv-area-page" class="page">
+        <div id="dbv-logged-content" style="display:none; max-width: 1000px; margin: 0 auto;">
+            
+            <div class="dbv-profile-header">
+                <img id="dbv-me-foto" src="">
+                <div class="dbv-profile-info" style="flex:1;">
+                    <h2 id="dbv-me-nome">Nome</h2>
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:5px;">
+                        <span class="badge-cargo" style="background:var(--amarelo); color:black;" id="dbv-me-unid"><i class="fa-solid fa-campground"></i> Unidade</span>
+                        <span class="badge-cargo" id="dbv-me-cargo"><i class="fa-solid fa-sitemap"></i> Cargo</span>
+                    </div>
+                </div>
+                <div id="dbv-pts-display-box" style="text-align:center; background:#111; padding:20px; border-radius:15px; border:1px solid #333; min-width: 150px;">
+                    <div id="dbv-me-pontos" style="font-size:3rem; font-weight:900; color:var(--amarelo); line-height:1;">0</div>
+                    <div style="color:#aaa; font-size:0.8rem; text-transform:uppercase;">Pontos</div>
+                </div>
+            </div>
+
+            <div class="dbv-tabs">
+                <button class="dbv-tab-btn active" onclick="switchDbvTab('tab-espec')"><i class="fa-solid fa-star"></i> Especialidades</button>
+                <button class="dbv-tab-btn" onclick="switchDbvTab('tab-classes')"><i class="fa-solid fa-book-journal-whills"></i> Classes</button>
+            </div>
+
+            <div id="tab-espec" class="dbv-tab-content active">
+                <h3 style="color:var(--amarelo); margin-bottom: 15px;">Explorar Especialidades</h3>
+                <div id="grid-especialidades-disponiveis" class="lms-grid"></div>
+            </div>
+
+            <div id="tab-classes" class="dbv-tab-content">
+                <h3 style="color:var(--amarelo); margin-bottom: 15px;">Trilha de Classes</h3>
+                <div id="grid-classes-disponiveis" class="lms-grid"></div>
+            </div>
+
         </div>
     </section>
 
     <section id="admin-page" class="page">
-        <div class="panel-layout">
-            <aside class="sidebar">
-                <div class="sidebar-profile">
-                    <img id="my-profile-img" src="" class="profile-img" onerror="this.src='https://via.placeholder.com/150'">
-                    <h2 id="my-name-display">Líder</h2>
-                    <p id="my-unid-display" style="color:var(--amarelo);font-size:14px;font-weight:bold;"><i class="fa-solid fa-campground"></i> </p>
-                    <p id="my-cargo-display" style="color:#aaa;font-size:12px;margin-bottom:20px;"></p>
-                </div>
+        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 30px;">
+            <aside class="sidebar form-box">
+                <h3 id="admin-hello" style="color:var(--amarelo); margin-bottom: 20px;">Olá, Líder</h3>
+                <button onclick="logout()" class="btn-save" style="background:var(--vermelho); color:white;"><i class="fa-solid fa-power-off"></i> Sair</button>
             </aside>
-
             <div class="main-content">
                 
-                <div id="aprovacao-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid #3498db;">
-                    <h3 style="color:#3498db; margin-bottom: 15px;"><i class="fa-solid fa-clipboard-check"></i> Relatórios Pendentes de Aprovação</h3>
-                    <div id="lista-aprovacoes"></div>
+                <div class="form-box" style="margin-bottom: 30px; border-color:var(--amarelo);">
+                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-clipboard-check"></i> Aprovações Pendentes (Especialidades/Classes)</h3>
+                    <div id="lista-aprovacoes-pendentes" class="admin-list"></div>
                 </div>
 
-                <div id="memb-section" class="form-box" style="display:none; margin-bottom: 30px;">
+                <div class="form-box" style="margin-bottom: 30px;">
                     <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-users"></i> Gerenciar Desbravadores</h3>
-                    <p style="font-size: 0.85rem; color: #888; margin-bottom: 15px;">Crie o acesso para o desbravador poder entrar no painel dele.</p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="m-user" placeholder="Login (Usuário)"></div>
+                        <div class="input-group"><i class="fa-solid fa-key"></i><input type="text" id="m-senha" placeholder="Senha"></div>
                         <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="m-nome" placeholder="Nome Completo"></div>
-                        <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="m-foto" placeholder="URL da Foto (Opcional)"></div>
-                        <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="m-login" placeholder="Login de Acesso"></div>
-                        <div class="input-group"><i class="fa-solid fa-key"></i><input type="text" id="m-senha" placeholder="Senha de Acesso"></div>
+                        <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="m-foto" placeholder="URL da Foto"></div>
                     </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group" id="container-m-unid-dest"><i class="fa-solid fa-campground"></i><select id="m-unid-dest"></select></div>
-                        <div class="input-group"><i class="fa-solid fa-sitemap"></i>
-                            <select id="m-cargo">
-                                <option value="Desbravador">Desbravador</option>
-                                <option value="Capitão">Capitão</option>
-                                <option value="Secretário">Secretário de Unidade</option>
-                            </select>
-                        </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                        <div class="input-group"><i class="fa-solid fa-campground"></i><select id="m-unid-dest"></select></div>
+                        <div class="input-group"><i class="fa-solid fa-sitemap"></i><select id="m-cargo-dest">
+                            <option value="Desbravador">Desbravador (Padrão)</option>
+                            <option value="Capitão">Capitão</option>
+                            <option value="Secretário">Secretário</option>
+                            <option value="Tesoureiro">Tesoureiro</option>
+                            <option value="Almoxarife">Almoxarife</option>
+                        </select></div>
                     </div>
-                    <button onclick="cadastrarMembro()" class="btn-save" style="margin-top: 15px; margin-bottom: 30px;"><i class="fa-solid fa-user-plus"></i> CADASTRAR DESBRAVADOR</button>
-                    
-                    <h4 style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom:10px;"><i class="fa-solid fa-address-book"></i> Membros da Unidade</h4>
-                    <div id="meus-membros-grid" class="dbv-grid"></div>
+                    <button onclick="cadastrarMembroCompleto()" class="btn-save" style="margin-top:15px;"><i class="fa-solid fa-user-plus"></i> CADASTRAR DESBRAVADOR</button>
+                    <div id="meus-membros-admin-list" class="admin-list" style="margin-top: 20px;"></div>
                 </div>
 
-                <div id="admin-only-users" class="form-box" style="display:none; margin-bottom: 30px;">
-                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-user-gear"></i> Gerenciar Líderes</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><i class="fa-solid fa-user-plus"></i><input type="text" id="new-u" placeholder="Novo Login"></div>
-                        <div class="input-group"><i class="fa-solid fa-key"></i><input type="text" id="new-p" placeholder="Senha"></div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><i class="fa-solid fa-campground"></i><select id="new-unid-sel"></select></div>
-                        <div class="input-group"><i class="fa-solid fa-sitemap"></i>
-                            <select id="new-cargo">
-                                <option value="Conselheiro">Conselheiro</option>
-                                <option value="Instrutor">Instrutor</option>
-                                <option value="Diretor">Diretor(a)</option>
-                                <option value="Admin">Administrador do Sistema</option>
-                            </select>
-                        </div>
-                    </div>
-                    <label class="input-label">Permissões Especiais do Líder:</label>
-                    <div class="perm-grid">
-                        <label><input type="checkbox" id="perm-h"> 🏠 Editar Home</label>
-                        <label><input type="checkbox" id="perm-m"> 👥 Gerir Desbravadores</label>
-                        <label><input type="checkbox" id="perm-a"> ✅ Aprovar Especialidades</label>
-                        <label><input type="checkbox" id="perm-t"> 🌟 Acesso Total (Diretoria)</label>
-                    </div>
-                    <button onclick="criarUsuario()" class="btn-save"><i class="fa-solid fa-plus"></i> CRIAR LÍDER</button>
-                </div>
-            </div>
-
-            <div class="ranking-column">
-                <div class="rank-box">
-                    <h3><i class="fa-solid fa-trophy" style="color:var(--amarelo);"></i> Ranking Unidades</h3>
-                    <div id="ranking-unidades-list"></div>
-                </div>
             </div>
         </div>
     </section>
 
+    <section id="custom-page" class="page">
+        <div class="form-box" style="max-width: 600px; margin: 0 auto;">
+            <h2 style="color:var(--amarelo); margin-bottom: 20px;">Configurações do Sistema</h2>
+            <label style="display:flex; align-items:center; gap:10px;"><input type="checkbox" id="cfg-mostrar-pontos" onchange="salvarConfigGeral()"> Mostrar pontuação na Área do Desbravador</label>
+            <button onclick="navegarPara('admin-page')" class="btn-save" style="margin-top: 20px;">Voltar</button>
+        </div>
+    </section>
+
+    <div id="modal-enviar-req" class="modal-overlay">
+        <div class="modal-box">
+            <div class="close-modal" onclick="document.getElementById('modal-enviar-req').style.display='none'"><i class="fa-solid fa-times"></i></div>
+            <h3 id="req-titulo" style="color:var(--amarelo); margin-bottom: 15px;">Título</h3>
+            <div id="req-texto" style="color:#ccc; font-size:0.9rem; margin-bottom:20px; max-height: 200px; overflow-y:auto; background:#111; padding:10px; border-radius:8px;"></div>
+            <label class="input-label">Link do Relatório / Pasta de Fotos (Google Drive, etc):</label>
+            <div class="input-group"><i class="fa-solid fa-link"></i><input type="text" id="req-link" placeholder="Cole o link aqui..."></div>
+            <input type="hidden" id="req-id-item">
+            <input type="hidden" id="req-tipo-item">
+            <button onclick="enviarSolicitacao()" class="btn-save" style="margin-top: 15px;"><i class="fa-solid fa-paper-plane"></i> ENVIAR PARA APROVAÇÃO</button>
+        </div>
+    </div>
+
+
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    
     <script>
-        // --- BANCO DE DADOS DAS ESPECIALIDADES E CLASSES (AMOSTRA ARQUITETURAL) ---
-        // Aqui é onde você vai adicionar o restante das mais de 400 especialidades depois.
-        const CATALOGO_CLASSES = [
-            { id: "c_amigo", titulo: "Amigo", icone: "fa-solid fa-user", cor: "#3498db", requisitos: ["Ter 10 anos de idade", "Saber os ideais do clube", "Ler o livro do ano", "Decorar o Voto"] },
-            { id: "c_companheiro", titulo: "Companheiro", icone: "fa-solid fa-user-group", cor: "#e74c3c", requisitos: ["Ter 11 anos de idade", "Saber a lei", "Nó direito e lais de guia"] },
-            { id: "c_pesquisador", titulo: "Pesquisador", icone: "fa-solid fa-magnifying-glass", cor: "#2ecc71", requisitos: ["Ter 12 anos", "Especialidade de Acampamento"] },
-            { id: "c_pioneiro", titulo: "Pioneiro", icone: "fa-solid fa-map-location-dot", cor: "#9b59b6", requisitos: ["Ter 13 anos", "Fogo e fogueiras"] },
-            { id: "c_excursionista", titulo: "Excursionista", icone: "fa-solid fa-mountain", cor: "#e67e22", requisitos: ["Ter 14 anos", "Caminhada de 15km"] },
-            { id: "c_guia", titulo: "Guia", icone: "fa-solid fa-compass", cor: "#f1c40f", requisitos: ["Ter 15 anos", "Liderar ordem unida"] },
-            { id: "c_lider", titulo: "Líder (Agrupada)", icone: "fa-solid fa-crown", cor: "#ffcc00", requisitos: ["Terminar todas as classes", "Curso de Liderança"], apenasLider: true }
-        ];
-
-        const CATALOGO_ESPECIALIDADES = [
-            { id: "e_acampamento_1", titulo: "Acampamento I", area: "Atividades Recreativas", icone: "fa-solid fa-campground", requisitos: ["Saber montar uma barraca", "Saber regras de segurança com fogo", "Dormir 2 noites em acampamento"] },
-            { id: "e_natacao_1", titulo: "Natação I", area: "Atividades Recreativas", icone: "fa-solid fa-person-swimming", requisitos: ["Nadar 15m livre", "Boiar por 1 minuto", "Saber regras de segurança na água"] },
-            { id: "e_primeiros_socorros", titulo: "Primeiros Socorros I", area: "Saúde e Ciência", icone: "fa-solid fa-briefcase-medical", requisitos: ["Saber imobilizar braço", "Tratar queimaduras leves", "Fazer curativo básico"] },
-            { id: "m_natureza", titulo: "Mestrado em Natureza", area: "Mestrados", icone: "fa-solid fa-leaf", requisitos: ["Ter 7 especialidades de Estudo da Natureza"], isMestrado: true }
-        ];
-
-        // CONFIGURAÇÃO DO FIREBASE (MANTIDA)
+        // FIREBASE SETUP
         const firebaseConfig = { 
             apiKey: "AIzaSyBfmk3fKbRWy3HhcJ47qStH7VChI6U0tWM", 
             authDomain: "clube-guardioes.firebaseapp.com", 
@@ -588,336 +277,272 @@
         };
         firebase.initializeApp(firebaseConfig);
         const firestoreDb = firebase.firestore();
-        const DOC_REF = firestoreDb.collection("sistema").doc("dados");
-        
-        const DB_PADRAO = { 
-            usuarios: [{u:"admin", p:"123", tipo:"geral", unid:"Administração", cargo:"Admin", foto:"", perms:{h:true,m:true,a:true,t:true}}], 
-            unidades: [{nome:"Administração", logo:"", cor:"#333333"}, {nome:"Águia", logo:"", cor:"#e63946"}], 
-            membros: [], 
-            solicitacoes: [], // Nova tabela para fila de aprovação
-            home: { hideDbvPoints: false, showLideranca: true, showUnidades: true, gallery: [], colors: { bg: "#121212", txt: "#ffffff" } } 
-        };
-        
-        let db = null; let currentUser = null; let userType = null; // 'lider' ou 'dbv'
+        const DOC_REF = firestoreDb.collection("sistema").doc("dados_completos");
 
-        async function save() { try { await DOC_REF.set(db); render(); } catch(e) { console.error(e); alert("Erro ao salvar"); } }
+        // DADOS PADRÃO (Com Especialidades e Classes Básicas Iniciais)
+        const DB_PADRAO = { 
+            config: { mostrarPontos: true },
+            usuarios: [{u:"admin", p:"123", tipo:"geral", unid:"Administração", foto:"", perms:{t:true}}], 
+            unidades: [{nome:"Administração", cor:"#333"}, {nome:"Águia", cor:"#e63946"}, {nome:"Órion", cor:"#00cc66"}], 
+            membros: [], // Estrutura: { u, p, nome, foto, unid, cargo, pontos, lms: { especialidades: [{id, status, link}], classes: [] } }
+            db_especialidades: [
+                { id: "esp1", area: "Habilidades Manuais", nome: "Acampamento I", reqs: "1. Entender o significado de acampamento. 2. Montar barraca..." },
+                { id: "esp2", area: "Estudos da Natureza", nome: "Felinos", reqs: "1. Qual o nome científico do gato doméstico? 2. Citar 4 felinos selvagens..." },
+                { id: "esp3", area: "Atividades Recreativas", nome: "Natação Principiante", reqs: "1. Nadar 15 metros. 2. Flutuar por 30s..." }
+            ],
+            db_classes: [
+                { id: "cls1", nome: "Amigo", cor: "blue" },
+                { id: "cls2", nome: "Companheiro", cor: "red" },
+                { id: "cls3", nome: "Pesquisador", cor: "green" },
+                { id: "cls4", nome: "Pioneiro", cor: "gray" },
+                { id: "cls5", nome: "Excursionista", cor: "purple" },
+                { id: "cls6", nome: "Guia", cor: "yellow" }
+            ]
+        };
+
+        let db = null; 
+        let userLider = null; 
+        let userDbv = null;
+
+        async function save() { 
+            try { await DOC_REF.set(db); } catch(e) { console.error(e); alert("Erro ao salvar no Firebase."); } 
+            renderUI(); 
+        }
+
         async function carregarDados() { 
             try { 
                 const snap = await DOC_REF.get(); 
                 if (snap.exists) db = snap.data(); 
                 else { db = JSON.parse(JSON.stringify(DB_PADRAO)); await DOC_REF.set(db); } 
-            } catch(e) { db = JSON.parse(JSON.stringify(DB_PADRAO)); }
+            } catch(e) { 
+                db = JSON.parse(JSON.stringify(DB_PADRAO)); 
+            }
             
-            // Correção de esquema antigo
-            if(!db.solicitacoes) db.solicitacoes = [];
-            db.membros.forEach(m => {
-                if(!m.classes) m.classes = [];
-                if(!m.especialidades) m.especialidades = [];
-            });
-
+            // Corrige membros antigos para suportar LMS se não existir
+            db.membros.forEach(m => { if(!m.lms) m.lms = { especialidades: [], classes: [] }; if(!m.u) m.u = m.nome.toLowerCase().replace(/\s/g, ''); if(!m.p) m.p = "1234"; if(!m.cargo) m.cargo = "Desbravador"; });
+            
             document.getElementById("loading-overlay").style.display = "none"; 
-            render(); 
+            renderUI(); 
         }
 
-        /* NAVEGAÇÃO E LOGINS */
+        // NAVEGAÇÃO
         function navegarPara(id) { 
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
             document.getElementById(id).classList.add('active'); 
-            if (id === 'home-page') document.body.classList.add('is-home');
-            else document.body.classList.remove('is-home');
-        }
-        
-        function abrirLoginLider() { document.getElementById('login-lider-modal').style.display = 'flex'; }
-        function abrirLoginDbv() { document.getElementById('login-dbv-modal').style.display = 'flex'; }
-        
-        function fazerLogoff() {
-            currentUser = null; userType = null;
-            document.getElementById('status-txt').innerHTML = `<i class="fa-solid fa-user-shield"></i> Visitante`;
-            document.getElementById('dbv-dashboard-container').style.display = 'none';
-            navegarPara('home-page');
+            if(id === 'home-page') { document.body.classList.add('is-home'); document.getElementById('main-header').classList.add('initial-splash'); } 
+            else { document.body.classList.remove('is-home'); document.getElementById('main-header').classList.remove('initial-splash'); }
         }
 
-        function tentarLogin(tipo) {
-            let u, p, auth;
-            if(tipo === 'lider') {
-                u = document.getElementById('login-l-u').value; p = document.getElementById('login-l-p').value;
-                auth = db.usuarios.find(x => x.u === u && x.p === p);
-                if(auth) { currentUser = auth; userType = 'lider'; document.getElementById('login-lider-modal').style.display='none'; navegarPara('admin-page'); }
-            } else if (tipo === 'dbv') {
-                u = document.getElementById('login-d-u').value; p = document.getElementById('login-d-p').value;
-                auth = db.membros.find(x => x.login === u && x.senha === p);
-                if(auth) { currentUser = auth; userType = 'dbv'; document.getElementById('login-dbv-modal').style.display='none'; navegarPara('dbv-area-page'); renderDashboardDbv(); }
-            }
-            if(!auth) alert("Acesso Negado! Verifique usuário e senha.");
-            else render();
+        // LOGINS
+        function abrirLoginLider() { if(userLider) navegarPara('admin-page'); else document.getElementById('login-lider-modal').style.display = 'flex'; }
+        function tentarLoginLider() {
+            const u = document.getElementById('login-lid-u').value, p = document.getElementById('login-lid-p').value;
+            const log = db.usuarios.find(x => x.u === u && x.p === p);
+            if(log) { userLider = log; document.getElementById('login-lider-modal').style.display = 'none'; navegarPara('admin-page'); renderUI(); } 
+            else alert("Acesso Negado!");
         }
 
-        /* LÓGICA DO DASHBOARD DO DESBRAVADOR (MECÂNICA DE CLASSES E ESPECIALIDADES) */
-        function renderDashboardDbv() {
-            if(!currentUser || userType !== 'dbv') return;
-            document.getElementById('dbv-dashboard-container').style.display = 'grid';
-            
-            const unidData = db.unidades.find(u => u.nome === currentUser.unid) || {cor: '#333'};
-            
-            document.getElementById('dbv-dash-nome').innerText = currentUser.nome;
-            document.getElementById('dbv-dash-unid').innerText = currentUser.unid;
-            document.getElementById('dbv-dash-unid').style.background = unidData.cor;
-            document.getElementById('dbv-dash-cargo').innerText = currentUser.cargo || "Desbravador";
-            document.getElementById('dbv-dash-foto').src = currentUser.foto || 'https://via.placeholder.com/150';
-            document.getElementById('dbv-dash-foto').style.borderColor = unidData.cor;
+        function abrirLoginDbv() { if(userDbv) navegarPara('dbv-area-page'); else document.getElementById('login-dbv-modal').style.display = 'flex'; }
+        function tentarLoginDbv() {
+            const u = document.getElementById('login-dbv-u').value, p = document.getElementById('login-dbv-p').value;
+            const log = db.membros.find(x => x.u === u && x.p === p);
+            if(log) { userDbv = log; document.getElementById('login-dbv-modal').style.display = 'none'; navegarPara('dbv-area-page'); renderUI(); } 
+            else alert("Usuário ou senha incorretos!");
+        }
+        function logout() { userLider = null; userDbv = null; navegarPara('home-page'); renderUI(); }
 
-            if(db.home.hideDbvPoints) document.getElementById('dbv-dash-pts-box').style.display = 'none';
-            else { document.getElementById('dbv-dash-pts-box').style.display = 'block'; document.getElementById('dbv-dash-pts').innerText = currentUser.pontos; }
+        // CADASTRO MEMBROS (ÁREA ADMIN)
+        function cadastrarMembroCompleto() {
+            const u = document.getElementById('m-user').value, p = document.getElementById('m-senha').value;
+            const nome = document.getElementById('m-nome').value, foto = document.getElementById('m-foto').value;
+            const unid = document.getElementById('m-unid-dest').value, cargo = document.getElementById('m-cargo-dest').value;
+            if(!u || !p || !nome) return alert("Preencha Usuário, Senha e Nome!");
+            if(db.membros.find(x => x.u === u)) return alert("Este login já existe!");
 
-            // Renderizar Classes Iniciadas/Concluídas do Dbv
-            const htmlClasses = currentUser.classes.map(cl => {
-                const catInfo = CATALOGO_CLASSES.find(x => x.id === cl.id);
-                if(!catInfo) return '';
-                const isConcluida = cl.status === 'concluida';
-                return `<div class="badge-item ${cl.status}" onclick="abrirRequisitos('${catInfo.id}', 'classe')">
-                            <span class="status-tag ${isConcluida ? 'tag-concluida' : 'tag-andamento'}">${isConcluida ? 'Concluída' : 'Em andamento'}</span>
-                            <i class="${catInfo.icone}" style="color:${isConcluida ? catInfo.cor : '#888'}"></i>
-                            <span>${catInfo.titulo}</span>
-                        </div>`;
-            }).join('');
-            document.getElementById('dbv-classes-grid').innerHTML = htmlClasses || '<p style="color:#888; font-size:0.9rem;">Nenhuma classe iniciada.</p>';
-
-            // Renderizar Especialidades Iniciadas/Concluídas do Dbv
-            const htmlEspec = currentUser.especialidades.map(es => {
-                const catInfo = CATALOGO_ESPECIALIDADES.find(x => x.id === es.id);
-                if(!catInfo) return '';
-                const isConcluida = es.status === 'concluida';
-                return `<div class="badge-item ${cl.status}" onclick="abrirRequisitos('${catInfo.id}', 'especialidade')">
-                            <span class="status-tag ${isConcluida ? 'tag-concluida' : 'tag-andamento'}">${isConcluida ? 'Concluída' : 'Em andamento'}</span>
-                            <i class="${catInfo.icone}"></i>
-                            <span>${catInfo.titulo}</span>
-                        </div>`;
-            }).join('');
-            document.getElementById('dbv-especialidades-grid').innerHTML = htmlEspec || '<p style="color:#888; font-size:0.9rem;">Nenhuma especialidade iniciada.</p>';
+            db.membros.push({ id: Date.now(), u, p, nome, foto, unid, cargo, pontos: 0, historico: [], lms: { especialidades: [], classes: [] } });
+            save(); alert("Desbravador criado com sucesso!");
         }
 
-        function abrirCatalogo(tipo) {
-            document.getElementById('modal-catalogo').style.display = 'flex';
-            const cat = tipo === 'classe' ? CATALOGO_CLASSES : CATALOGO_ESPECIALIDADES;
-            document.getElementById('titulo-catalogo').innerHTML = tipo === 'classe' ? '<i class="fa-solid fa-layer-group"></i> Catálogo de Classes' : '<i class="fa-solid fa-award"></i> Catálogo de Especialidades';
-            
-            // Filtrar classes agrupadas se for dbv
-            const listToRender = cat.filter(item => !(userType === 'dbv' && item.apenasLider));
-
-            document.getElementById('lista-catalogo').innerHTML = listToRender.map(item => {
-                const isDbv = userType === 'dbv';
-                const userArray = tipo === 'classe' ? (isDbv ? currentUser.classes : []) : (isDbv ? currentUser.especialidades : []);
-                const exists = userArray.find(x => x.id === item.id);
-                
-                return `<div class="badge-item" onclick="abrirRequisitos('${item.id}', '${tipo}')" style="border-color:${item.cor || '#333'};">
-                            ${exists ? `<span class="status-tag tag-concluida">Iniciada</span>` : ''}
-                            <i class="${item.icone}" style="color:${item.cor || '#fff'}"></i>
-                            <span style="margin-top:10px;">${item.titulo}</span>
-                            <span style="color:#888; font-size:0.7rem;">${item.area || 'Classe'}</span>
-                        </div>`;
-            }).join('');
-        }
-
-        function abrirRequisitos(itemId, tipo) {
-            document.getElementById('modal-catalogo').style.display = 'none';
-            const item = (tipo === 'classe' ? CATALOGO_CLASSES : CATALOGO_ESPECIALIDADES).find(x => x.id === itemId);
-            if(!item) return;
-
-            document.getElementById('req-titulo').innerText = item.titulo;
-            document.getElementById('req-tipo').innerText = tipo.toUpperCase() + (item.isMestrado ? ' (MESTRADO)' : '');
-            
-            document.getElementById('req-lista-box').innerHTML = item.requisitos.map((req, i) => `<div class="req-item"><b>${i+1}.</b> ${req}</div>`).join('');
-            
-            document.getElementById('hdn-req-item-id').value = item.id;
-            document.getElementById('hdn-req-item-tipo').value = tipo;
-            document.getElementById('req-texto-relatorio').value = '';
-
-            // Mostrar caixa de envio apenas se for desbravador logado e ainda não concluiu
-            const isDbv = userType === 'dbv';
-            const dbArray = tipo === 'classe' ? (isDbv ? currentUser.classes : []) : (isDbv ? currentUser.especialidades : []);
-            const userProg = dbArray.find(x => x.id === itemId);
-            
-            if(isDbv && (!userProg || userProg.status !== 'concluida')) {
-                document.getElementById('req-envio-box').style.display = 'block';
-                // Adiciona a classe/especialidade ao perfil como "andamento" se ainda não tiver
-                if(!userProg) {
-                    dbArray.push({ id: itemId, status: 'andamento' });
-                    save(); renderDashboardDbv(); // salva silenciamente
-                }
-            } else {
-                document.getElementById('req-envio-box').style.display = 'none';
-            }
-
-            document.getElementById('modal-requisitos').style.display = 'flex';
-        }
-
-        function enviarParaAprovacao() {
-            const relatorio = document.getElementById('req-texto-relatorio').value;
-            if(!relatorio) return alert("Por favor, cole o link ou descreva o relatório.");
-            const itemId = document.getElementById('hdn-req-item-id').value;
-            const tipo = document.getElementById('hdn-req-item-tipo').value;
-
-            // Criar solicitação na fila dos líderes
-            db.solicitacoes.push({
-                id: Date.now(),
-                membroId: currentUser.id,
-                membroNome: currentUser.nome,
-                unid: currentUser.unid,
-                itemId: itemId,
-                tipo: tipo,
-                relatorio: relatorio,
-                data: new Date().toLocaleDateString()
-            });
-
-            save();
-            document.getElementById('modal-requisitos').style.display = 'none';
-            alert("Relatório enviado para a liderança! Aguarde a aprovação.");
-        }
-
-        /* LÓGICA DO PAINEL ADMIN / LÍDERES (APROVAÇÕES E PERMISSÕES) */
-        function renderAprovacoesLider() {
-            const container = document.getElementById('lista-aprovacoes');
-            if(!db.solicitacoes || db.solicitacoes.length === 0) { container.innerHTML = '<p style="color:#888;">Nenhuma pendência no momento.</p>'; return; }
-
-            // Filtrar solicitações da unidade do líder (se ele não for Admin geral)
-            const canApproveAll = currentUser.tipo === 'geral' || currentUser.perms.t;
-            const minhasSol = db.solicitacoes.filter(s => canApproveAll || s.unid === currentUser.unid);
-
-            container.innerHTML = minhasSol.map(s => {
-                const cat = s.tipo === 'classe' ? CATALOGO_CLASSES : CATALOGO_ESPECIALIDADES;
-                const info = cat.find(x => x.id === s.itemId);
-                return `
-                <div class="approval-card">
-                    <div class="approval-header">
-                        <strong><i class="fa-solid fa-user"></i> ${s.membroNome}</strong>
-                        <span style="font-size:0.8rem; color:#aaa;">${s.data}</span>
+        function renderMeusMembrosAdmin() {
+            if(!userLider) return;
+            const container = document.getElementById('meus-membros-admin-list');
+            if(!container) return;
+            const lista = db.membros.filter(m => userLider.tipo === 'geral' || m.unid === userLider.unid);
+            container.innerHTML = lista.map(m => `
+                <div class="admin-list-item">
+                    <div>
+                        <b>${m.nome}</b> (${m.u})<br>
+                        <span style="font-size:0.8rem; color:#aaa;"><i class="fa-solid fa-sitemap"></i> ${m.cargo} | <i class="fa-solid fa-campground"></i> ${m.unid}</span>
                     </div>
-                    <div style="color:var(--amarelo); font-weight:bold;"><i class="${info.icone}"></i> ${info.titulo} (${s.tipo.toUpperCase()})</div>
-                    <div style="background:#0a0a0a; padding:10px; border-radius:8px; margin-top:10px; font-size:0.9rem; border:1px solid #222;">${s.relatorio}</div>
-                    <div class="approval-actions">
-                        <button onclick="julgarSolicitacao(${s.id}, true)" style="background:#2ecc71; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; flex:1; font-weight:bold;"><i class="fa-solid fa-check"></i> APROVAR</button>
-                        <button onclick="julgarSolicitacao(${s.id}, false)" style="background:var(--vermelho); color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; flex:1; font-weight:bold;"><i class="fa-solid fa-xmark"></i> REJEITAR</button>
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        function julgarSolicitacao(idSol, aprovado) {
-            const idx = db.solicitacoes.findIndex(x => x.id === idSol);
-            if(idx === -1) return;
-            const sol = db.solicitacoes[idx];
-            
-            if(aprovado) {
-                const mb = db.membros.find(x => x.id === sol.membroId);
-                if(mb) {
-                    const arrayAlvo = sol.tipo === 'classe' ? mb.classes : mb.especialidades;
-                    const itemProg = arrayAlvo.find(x => x.id === sol.itemId);
-                    if(itemProg) itemProg.status = 'concluida';
-                    else arrayAlvo.push({id: sol.itemId, status: 'concluida'});
-                }
-                alert("Aprovado com sucesso! Adicionado ao perfil do desbravador.");
-            } else {
-                alert("Solicitação rejeitada.");
-            }
-
-            db.solicitacoes.splice(idx, 1);
-            save();
-        }
-
-        function renderAdmin() {
-            if(!currentUser || userType !== 'lider') return;
-            const isGeral = currentUser.tipo === 'geral' || currentUser.perms.t;
-            
-            document.getElementById('status-txt').innerHTML = `<i class="fa-solid fa-shield"></i> Liderança`;
-            document.getElementById('my-name-display').innerText = currentUser.u;
-            document.getElementById('my-unid-display').innerHTML = `<i class="fa-solid fa-campground"></i> ${currentUser.unid}`;
-            document.getElementById('my-cargo-display').innerText = currentUser.cargo || "Líder";
-            
-            document.getElementById('nav-custom').style.display = (currentUser.perms && currentUser.perms.h) || isGeral ? 'flex' : 'none';
-            document.getElementById('admin-only-users').style.display = isGeral ? 'block' : 'none';
-            document.getElementById('memb-section').style.display = (currentUser.perms && currentUser.perms.m) || isGeral ? 'block' : 'none';
-            document.getElementById('aprovacao-section').style.display = (currentUser.perms && currentUser.perms.a) || isGeral ? 'block' : 'none';
-
-            // Selects de Unidade
-            const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
-            document.getElementById('new-unid-sel').innerHTML = htmlUnid; 
-            document.getElementById('m-unid-dest').innerHTML = htmlUnid;
-            
-            if(isGeral) document.getElementById('container-m-unid-dest').style.display = 'block'; 
-            else { document.getElementById('container-m-unid-dest').style.display = 'none'; document.getElementById('m-unid-dest').value = currentUser.unid; }
-
-            // Lista Membros para o Líder gerenciar
-            const meusM = db.membros.filter(m => isGeral || m.unid === currentUser.unid);
-            document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
-                <div class="dbv-card">
-                    <button class="btn-del" onclick="excluirMembro(${m.id})"><i class="fa-solid fa-times"></i></button>
-                    <img src="${m.foto || 'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
-                    <div style="font-weight:bold; margin-top:10px;">${m.nome}</div>
-                    <div style="color:#aaa; font-size:0.75rem;">${m.cargo} | Login: ${m.login}</div>
-                    <div style="color:var(--amarelo); font-size:1.3rem; font-weight:bold; background:#111; padding:5px; border-radius:8px;">${m.pontos} pts</div>
-                    <div class="dbv-card-pts">
-                        <button onclick="abrirModalPontos(${m.id}, 10)"><i class="fa-solid fa-plus"></i></button>
-                        <button onclick="abrirModalPontos(${m.id}, -10)"><i class="fa-solid fa-minus"></i></button>
-                    </div>
+                    <button onclick="removerMembro(${m.id})" style="background:var(--vermelho); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
+        }
+        function removerMembro(id) { if(confirm("Apagar membro?")) { db.membros = db.membros.filter(x => x.id !== id); save(); } }
 
-            renderAprovacoesLider();
+        // SISTEMA LMS: DESBRAVADOR LOGADO
+        function switchDbvTab(tabId) {
+            document.querySelectorAll('.dbv-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.dbv-tab-content').forEach(c => c.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
         }
 
-        /* FUNÇÕES DE CADASTRO */
-        function cadastrarMembro() {
-            const n = document.getElementById('m-nome').value, f = document.getElementById('m-foto').value, l = document.getElementById('m-login').value, s = document.getElementById('m-senha').value, c = document.getElementById('m-cargo').value;
-            if(!n || !l || !s) return alert("Nome, Login e Senha são obrigatórios!");
-            if(db.membros.find(x => x.login === l)) return alert("Este login já existe!");
+        function abrirModalRequisitos(tipo, id) {
+            const baseDb = tipo === 'esp' ? db.db_especialidades : db.db_classes;
+            const item = baseDb.find(x => x.id === id);
+            if(!item) return;
+
+            document.getElementById('req-titulo').innerText = item.nome;
+            document.getElementById('req-texto').innerText = item.reqs || "Requisitos pendentes de cadastro pelo diretor.";
+            document.getElementById('req-id-item').value = id;
+            document.getElementById('req-tipo-item').value = tipo;
+            document.getElementById('req-link').value = "";
+            document.getElementById('modal-enviar-req').style.display = 'flex';
+        }
+
+        function enviarSolicitacao() {
+            const link = document.getElementById('req-link').value;
+            if(!link) return alert("Cole o link do seu relatório ou pasta de fotos!");
             
-            const uDest = document.getElementById('m-unid-dest').value;
-            db.membros.push({ id: Date.now(), nome: n, foto: f, login: l, senha: s, cargo: c, unid: uDest, pontos: 0, historico: [], classes: [], especialidades: [] });
-            save(); alert("Desbravador Cadastrado!"); 
-        }
-
-        function criarUsuario() {
-            const u = document.getElementById('new-u').value, p = document.getElementById('new-p').value, unid = document.getElementById('new-unid-sel').value, c = document.getElementById('new-cargo').value;
-            if(!u || !p) return alert("Preencha usuário e senha!");
-            const tipo = c === 'Admin' ? 'geral' : 'lider';
-            db.usuarios.push({u, p, tipo, unid, cargo: c, foto:'', perms:{h:document.getElementById('perm-h').checked, m:document.getElementById('perm-m').checked, a:document.getElementById('perm-a').checked, t:document.getElementById('perm-t').checked}});
-            save(); alert("Líder Cadastrado!");
-        }
-
-        /* OUTRAS FUNÇÕES (MANTIDAS DO ORIGINAL E ADAPTADAS) */
-        function confirmarPontos() {
-            const id = parseInt(document.getElementById('hdn-membro-id').value);
-            const val = parseInt(document.getElementById('hdn-membro-valor').value);
-            const m = db.membros.find(x => x.id === id);
-            if(m) { m.pontos += val; if(!m.historico) m.historico = []; m.historico.push({ id: Date.now(), data: new Date().toLocaleDateString(), valor: val, just: document.getElementById('input-just-pontos').value || "Misto" }); save(); }
-            document.getElementById('modal-pontos').style.display = 'none';
-        }
-        function excluirMembro(id) { if(confirm("Deseja realmente excluir este membro?")) { db.membros = db.membros.filter(x => x.id !== id); save(); } }
-
-        function render() {
-            if(userType === 'lider') renderAdmin();
-            if(userType === 'dbv') renderDashboardDbv();
-
-            // Customizações de Cores da Home
-            document.getElementById('home-page').style.backgroundColor = db.home.colors.bg;
-            document.documentElement.style.setProperty('--home-bg', db.home.colors.bg);
+            const tipo = document.getElementById('req-tipo-item').value;
+            const id = document.getElementById('req-id-item').value;
             
-            if(document.getElementById('cfg-hide-points')) document.getElementById('cfg-hide-points').checked = db.home.hideDbvPoints;
-
-            // Renderiza Rank de Unidades na lateral admin
-            const rankU = db.unidades.filter(u => u.nome !== 'Administração').map(u => {
-                const soma = db.membros.filter(m => m.unid === u.nome).reduce((acc, cur) => acc + cur.pontos, 0);
-                return { ...u, total: soma };
-            }).sort((a,b) => b.total - a.total);
-            document.getElementById('ranking-unidades-list').innerHTML = rankU.map((u, i) => `<div class="rank-item"><b>${i+1}º</b> <span style="flex:1;">${u.nome}</span> <span style="color:var(--amarelo); font-weight:bold;">${u.total} pts</span></div>`).join('');
+            // Pegar o array correto dentro do membro
+            const lmsArray = tipo === 'esp' ? userDbv.lms.especialidades : userDbv.lms.classes;
+            
+            // Verifica se já existe
+            const exIdx = lmsArray.findIndex(x => x.id === id);
+            if(exIdx > -1) {
+                if(lmsArray[exIdx].status === 'aprovado') return alert("Você já foi investido nesta etapa!");
+                lmsArray[exIdx].link = link;
+                lmsArray[exIdx].status = 'pendente';
+            } else {
+                lmsArray.push({ id: id, link: link, status: 'pendente', dataReq: new Date().toLocaleString() });
+            }
+            
+            // Atualiza DB principal
+            const userIndexDb = db.membros.findIndex(x => x.id === userDbv.id);
+            db.membros[userIndexDb] = userDbv;
+            save(); alert("Enviado para avaliação da liderança!");
+            document.getElementById('modal-enviar-req').style.display = 'none';
         }
 
-        function salvarConfigHome() {
-            db.home.hideDbvPoints = document.getElementById('cfg-hide-points').checked;
-            save(); alert("Personalização Salva!");
+        // SISTEMA LMS: APROVAÇÃO LIDERANÇA
+        function renderAprovacoesPendentes() {
+            const container = document.getElementById('lista-aprovacoes-pendentes');
+            if(!container) return;
+            let html = "";
+            db.membros.forEach(m => {
+                // Filtra apenas membros que este líder pode avaliar
+                if(userLider.tipo !== 'geral' && m.unid !== userLider.unid) return;
+                
+                ['especialidades', 'classes'].forEach(tipoArr => {
+                    const pendentes = m.lms[tipoArr].filter(x => x.status === 'pendente');
+                    pendentes.forEach(p => {
+                        const baseDb = tipoArr === 'especialidades' ? db.db_especialidades : db.db_classes;
+                        const itemInfo = baseDb.find(x => x.id === p.id);
+                        html += `
+                            <div class="admin-list-item" style="flex-direction:column; align-items:flex-start; border-left-color:#ff9900;">
+                                <div><b>${m.nome}</b> solicitou investidura em <b>${itemInfo ? itemInfo.nome : 'Item'}</b></div>
+                                <div style="margin: 5px 0;"><a href="${p.link}" target="_blank" style="color:var(--amarelo); font-size:0.9rem;"><i class="fa-solid fa-up-right-from-square"></i> Ver Relatório</a></div>
+                                <div style="display:flex; gap:10px;">
+                                    <button onclick="julgarSolicitacao(${m.id}, '${tipoArr}', '${p.id}', true)" style="background:var(--verde); color:black; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold;">Aprovar</button>
+                                    <button onclick="julgarSolicitacao(${m.id}, '${tipoArr}', '${p.id}', false)" style="background:var(--vermelho); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold;">Rejeitar</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                });
+            });
+            container.innerHTML = html || "<p style='color:#888; text-align:center;'>Nenhuma solicitação pendente.</p>";
         }
 
-        // INICIALIZAÇÃO
+        function julgarSolicitacao(membroId, tipoArr, itemId, aprovar) {
+            const mIdx = db.membros.findIndex(x => x.id === membroId);
+            if(mIdx === -1) return;
+            const arr = db.membros[mIdx].lms[tipoArr];
+            const itemIdx = arr.findIndex(x => x.id === itemId);
+            if(itemIdx > -1) {
+                if(aprovar) { arr[itemIdx].status = 'aprovado'; alert("Aprovado com sucesso!"); } 
+                else { arr.splice(itemIdx, 1); alert("Solicitação rejeitada e devolvida ao membro."); }
+                save();
+            }
+        }
+
+        function salvarConfigGeral() {
+            db.config.mostrarPontos = document.getElementById('cfg-mostrar-pontos').checked;
+            save(); alert("Configuração salva.");
+        }
+
+        // RENDER GERAL DA INTERFACE
+        function renderUI() {
+            // Header
+            document.getElementById('status-txt').innerHTML = userLider ? `<i class="fa-solid fa-shield-halved"></i> Líder` : userDbv ? `<i class="fa-solid fa-campground"></i> Desbravador` : `<i class="fa-solid fa-user-shield"></i> Visitante`;
+            document.getElementById('nav-custom').style.display = userLider && userLider.perms.t ? 'flex' : 'none';
+
+            // Selects Liderança
+            const uHtml = db.unidades.filter(x=>x.nome!=='Administração').map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
+            if(document.getElementById('m-unid-dest')) document.getElementById('m-unid-dest').innerHTML = uHtml;
+            if(document.getElementById('cfg-mostrar-pontos')) document.getElementById('cfg-mostrar-pontos').checked = db.config.mostrarPontos;
+
+            // Área Líder
+            if(userLider) {
+                document.getElementById('admin-hello').innerText = `Olá, ${userLider.u}`;
+                renderAprovacoesPendentes();
+                renderMeusMembrosAdmin();
+            }
+
+            // Área Desbravador Logado
+            if(userDbv) {
+                document.getElementById('dbv-logged-content').style.display = 'block';
+                document.getElementById('dbv-me-foto').src = userDbv.foto || 'https://via.placeholder.com/150';
+                document.getElementById('dbv-me-nome').innerText = userDbv.nome;
+                document.getElementById('dbv-me-unid').innerHTML = `<i class="fa-solid fa-campground"></i> ${userDbv.unid}`;
+                document.getElementById('dbv-me-cargo').innerHTML = `<i class="fa-solid fa-sitemap"></i> ${userDbv.cargo}`;
+                
+                if(db.config.mostrarPontos) {
+                    document.getElementById('dbv-pts-display-box').style.display = 'block';
+                    document.getElementById('dbv-me-pontos').innerText = userDbv.pontos;
+                } else {
+                    document.getElementById('dbv-pts-display-box').style.display = 'none';
+                }
+
+                // Render Especialidades
+                document.getElementById('grid-especialidades-disponiveis').innerHTML = db.db_especialidades.map(e => {
+                    const statusObj = userDbv.lms.especialidades.find(x => x.id === e.id);
+                    let badge = "";
+                    if(statusObj) {
+                        badge = `<div class="status-badge ${statusObj.status}">${statusObj.status.toUpperCase()}</div>`;
+                    }
+                    return `<div class="lms-card" onclick="abrirModalRequisitos('esp', '${e.id}')" style="cursor:pointer;">
+                        ${badge}
+                        <i class="fa-solid fa-star" style="font-size:2rem; color:var(--amarelo); margin-bottom:10px;"></i>
+                        <h4>${e.nome}</h4><p>${e.area}</p>
+                    </div>`;
+                }).join('');
+
+                // Render Classes
+                document.getElementById('grid-classes-disponiveis').innerHTML = db.db_classes.map(c => {
+                    const statusObj = userDbv.lms.classes.find(x => x.id === c.id);
+                    let badge = "";
+                    if(statusObj) {
+                        badge = `<div class="status-badge ${statusObj.status}">${statusObj.status.toUpperCase()}</div>`;
+                    }
+                    return `<div class="lms-card" onclick="abrirModalRequisitos('cls', '${c.id}')" style="cursor:pointer; border-bottom: 4px solid ${c.cor};">
+                        ${badge}
+                        <i class="fa-solid fa-book-journal-whills" style="font-size:2rem; color:${c.cor}; margin-bottom:10px;"></i>
+                        <h4>${c.nome}</h4>
+                    </div>`;
+                }).join('');
+            } else {
+                const dbvContent = document.getElementById('dbv-logged-content');
+                if(dbvContent) dbvContent.style.display = 'none';
+            }
+        }
+
+        // Init
+        document.body.classList.add('is-home');
         carregarDados();
     </script>
 </body>
