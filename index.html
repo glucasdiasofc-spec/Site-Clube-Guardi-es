@@ -2,763 +2,165 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Desbravadores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portal Desbravadores - Mobile OK</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-        #loading-overlay p { color: #ffcc00; font-weight: bold; font-size: 1.1rem; letter-spacing: 2px; }
-        .spinner { width: 60px; height: 60px; border: 5px solid #333; border-top-color: #ffcc00; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        /* TESTE DO VERDE - SE O CARREGAMENTO ESTIVER VERDE, O SITE ATUALIZOU! */
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+        #loading-overlay p { color: #00ff00 !important; font-weight: bold; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px #00ff00; }
+        .spinner { width: 60px; height: 60px; border: 5px solid #111; border-top-color: #00ff00 !important; border-radius: 50%; animation: spin 0.8s linear infinite; box-shadow: 0 0 15px #00ff00; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        
-        /* RESET E CORES DINÂMICAS */
+        /* RESET E CORES */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         :root { 
             --amarelo: #ffcc00; 
-            --amarelo-hover: #ffdb4d;
             --vermelho: #e63946; 
-            --vermelho-hover: #f04b58;
             --preto: #000000; 
             --cinza-dark: #121212; 
             --cinza-card: #1e1e1e; 
             --borda-suave: #333333;
         }
         
-        body { 
-            background-color: var(--cinza-dark); 
-            color: white; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            line-height: 1.6; 
-            transition: background-color 0.3s ease; 
-            overflow-x: hidden;
-        }
+        body { background-color: var(--cinza-dark); color: white; font-family: 'Segoe UI', Roboto, sans-serif; line-height: 1.6; overflow-x: hidden; }
         
-        /* HEADER PERSONALIZÁVEL */
+        /* HEADER PADRÃO (PC) */
         header { 
-            width: 100%; 
-            height: 80px; 
-            position: fixed; 
-            top: 0; left: 0;
-            z-index: 1000; 
-            border-bottom: 3px solid transparent; 
-            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); 
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
+            width: 100%; height: 80px; position: fixed; top: 0; left: 0; z-index: 1000; 
+            display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
+            transition: all 0.4s ease; backdrop-filter: blur(10px); background: rgba(0,0,0,0.5);
         }
+        header.scrolled { border-bottom: 3px solid var(--amarelo); background: rgba(0,0,0,0.9); }
 
-        .logo-container {
-            position: relative;
-            transform: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-            cursor: pointer;
-        }
-
-        .header-logo { 
-            height: 50px; 
-            transition: all 0.3s ease; 
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-        }
+        .logo-container { display: flex; align-items: center; cursor: pointer; }
+        .header-logo { height: 55px; transition: 0.3s; }
         
-        .logo-container:hover .header-logo { transform: scale(1.05) rotate(3deg); }
-        
-        .scroll-down-msg { display: none; }
+        .nav-buttons { display: flex; align-items: center; gap: 15px; }
+        .user-status { font-weight: 600; background: rgba(255, 255, 255, 0.1); padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; gap: 8px; }
 
-        .user-info-header { 
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            transition: opacity 0.5s ease;
-            opacity: 1;
-        }
-        
-        .user-status {
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .btn-lideranca { background: linear-gradient(135deg, var(--vermelho), #9b1d26); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-custom { background: linear-gradient(135deg, #444, #222); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; align-items: center; gap: 8px; transition: 0.2s; }
 
-        /* EFEITO SPLASH */
-        body.is-home header.initial-splash {
-            height: 100vh; 
-            background-color: var(--home-bg, #121212) !important; 
-            backdrop-filter: none;
-            border-bottom: none;
-            justify-content: center;
-        }
+        /* MOBILE MENU BUTTON (OCULTO NO PC) */
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--amarelo); font-size: 1.8rem; cursor: pointer; z-index: 1100; }
 
-        @keyframes fadeInStart { 0% { opacity: 0; } 100% { opacity: 1; } }
-        @keyframes pulseSplash {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); }
-            50% { transform: scale(1.08); filter: drop-shadow(0 0 30px rgba(255,204,0,0.6)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); }
-        }
-
-        body.is-home header.initial-splash .logo-container {
-            position: absolute;
-            top: 45vh; 
-            left: 50%;
-            transform: translate(-50%, -50%) scale(2.5); 
-            animation: fadeInStart 1s ease-out forwards;
-        }
-        
-        body.is-home header.initial-splash .header-logo { animation: pulseSplash 2.5s infinite ease-in-out; }
-        body.is-home header.initial-splash .scroll-down-msg {
-            display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 15px;
-            color: var(--amarelo); font-size: 0.6rem; text-transform: uppercase; font-weight: bold;
-            letter-spacing: 2px; animation: bounce 2s infinite;
-        }
-        body.is-home header.initial-splash .user-info-header { opacity: 0; pointer-events: none; }
-
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 60% { transform: translateY(-4px); } }
-        header.scrolled { border-bottom: 3px solid var(--amarelo); box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
-        
-        /* BOTÕES ESTILIZADOS */
-        .btn-lideranca { background: linear-gradient(135deg, var(--vermelho), #9b1d26); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #7a151e; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
-        .btn-lideranca:hover { background: var(--vermelho-hover); transform: translateY(-2px); box-shadow: 0 6px 0 #7a151e; }
-        .btn-lideranca:active { transform: translateY(2px); box-shadow: 0 0 0 #7a151e; }
-        
-        .btn-custom { background: linear-gradient(135deg, #444, #222); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #111; transition: all 0.2s; display: none; align-items: center; gap: 8px; }
-        .btn-custom:hover { background: #555; transform: translateY(-2px); box-shadow: 0 6px 0 #111;}
-        .btn-custom:active { transform: translateY(2px); box-shadow: 0 0 0 #111; }
-
-        .btn-save { background: linear-gradient(135deg, var(--amarelo), #d4aa00); color: black; width: 100%; padding: 14px; font-weight: 800; border-radius: 8px; cursor: pointer; text-transform: uppercase; border: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2); display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-save:hover { background: var(--amarelo-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 204, 0, 0.4); }
-
-        /* RODAPÉ PERSONALIZÁVEL */
-        footer { padding: 40px 5%; text-align: center; border-top: 1px solid var(--borda-suave); margin-top: 50px; background: rgba(0,0,0,0.5); }
-        .footer-social a:hover { color: var(--amarelo) !important; transform: scale(1.2); }
-
-        /* ESTRUTURA DE PÁGINAS E ANIMAÇÕES */
-        .page { display: none; min-height: 90vh; padding: 25px; max-width: 1600px; margin: auto; }
-        .active { display: block !important; animation: slideInUp 0.5s ease forwards; }
-        @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* HERO DINÂMICO */
-        .hero { text-align: center; margin-bottom: 40px; padding: 80px 20px; border-radius: 20px; border: 1px solid var(--borda-suave); background-position: center; background-size: cover; transition: background 0.8s ease; box-shadow: inset 0 0 100px rgba(0,0,0,0.8); margin-top: 80px; }
-        .hero h1 { font-size: 4rem; text-shadow: 3px 3px 20px rgba(0,0,0,1); margin-bottom: 10px; letter-spacing: 2px; }
-        .hero p.subtitle { font-size: 1.5rem; text-shadow: 2px 2px 10px rgba(0,0,0,1); margin-bottom: 30px; color: #ddd; }
-        
-        /* CRONÔMETRO */
-        .timer { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px; }
-        .unit-timer { background: rgba(20, 20, 20, 0.6); padding: 20px; border-radius: 15px; min-width: 110px; border: 2px solid var(--vermelho); backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(230, 57, 70, 0.2); transition: transform 0.3s; }
-        .unit-timer:hover { transform: translateY(-5px); }
-        .unit-timer b { font-size: 3rem; display: block; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .unit-timer span { font-size: 0.9rem; color: var(--amarelo); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .event-date-txt { font-weight: bold; font-size: 1.2rem; text-shadow: 2px 2px 5px #000; margin-top: 15px; display: block; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; width: fit-content; margin-left: auto; margin-right: auto; }
-        .timer-replacement { font-size: 1.8rem; font-weight: bold; background: rgba(0,0,0,0.8); padding: 25px 40px; border-radius: 15px; display: inline-block; border: 2px solid var(--amarelo); backdrop-filter: blur(5px); }
-
-        /* GALERIA MULTIMÍDIA */
-        .home-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; margin-top: 50px; }
-        .gallery-card { border-radius: 15px; overflow: hidden; border: 2px solid var(--borda-suave); position: relative; background: #000; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
-        .gallery-card:hover { transform: scale(1.02); z-index: 2; }
-        .gallery-card.layout-grid { height: 320px; } 
-        .gallery-card.layout-full { grid-column: 1 / -1; width: 100%; height: auto; min-height: 400px; }
-        .gallery-card.layout-title { grid-column: 1 / -1; background: transparent; border: none; text-align: center; margin: 40px 0 10px 0; box-shadow: none !important; height: auto; }
-        .gallery-card.layout-title h2 { color: var(--amarelo); font-size: 2.5rem; text-transform: uppercase; text-shadow: 0 0 15px rgba(255,204,0,0.3); }
-        .gallery-card.layout-title p { color: #aaa; font-size: 1.1rem; }
-        
-        .gallery-text-box { padding: 10px 15px; background: #111; text-align: center; }
-        .gallery-text-box h3 { color: var(--amarelo); margin-bottom: 5px; font-size: 1.2rem; }
-        .gallery-text-box p { color: #ccc; font-size: 0.95rem; }
-        .gallery-media-container { flex: 1; overflow: hidden; position: relative; min-height: 150px; display: flex; justify-content: center; align-items: center; background: #0a0a0a; }
-        .gallery-media-container img, .gallery-media-container video { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; }
-        .gallery-card.layout-full .gallery-media-container { max-height: 80vh; }
-        .gallery-card.layout-full .gallery-media-container img, .gallery-card.layout-full .gallery-media-container video { object-fit: contain; } 
-        .gallery-card:hover img { opacity: 0.8; }
-        .btn-del-media { position: absolute; top: 15px; right: 15px; background: rgba(230,57,70,0.9); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; z-index: 10; display: none; transition: 0.3s; font-size: 14px; }
-        .btn-del-media:hover { background: var(--vermelho); transform: scale(1.1); }
-
-        /* PAINEL ADMINISTRATIVO */
-        .panel-layout { display: grid; grid-template-columns: 300px 1fr 300px; gap: 30px; }
-        .sidebar { background: var(--cinza-card); padding: 25px; border-radius: 20px; border: 1px solid var(--borda-suave); position: sticky; top: 110px; height: fit-content; }
-        .sidebar-profile { text-align: center; margin-bottom: 30px; }
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--amarelo); margin-bottom: 15px; object-fit: cover; box-shadow: 0 0 20px rgba(255,204,0,0.2); }
-        
-        .main-content { background: var(--cinza-card); padding: 30px; border-radius: 20px; border: 1px solid var(--borda-suave); }
-        .ranking-column { display: flex; flex-direction: column; gap: 30px; }
-        .rank-box { background: var(--cinza-card); padding: 25px; border-radius: 20px; border: 1px solid var(--borda-suave); }
-        .rank-box h3 { margin-bottom: 20px; border-bottom: 2px solid var(--amarelo); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-
-        /* FORMULÁRIOS */
-        .form-box { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
-        .input-label { display: block; margin-bottom: 8px; font-weight: bold; color: #aaa; font-size: 0.9rem; }
-        .input-group { display: flex; align-items: center; background: #000; border: 1px solid #333; border-radius: 8px; padding: 10px 15px; margin-bottom: 15px; transition: 0.3s; }
-        .input-group:focus-within { border-color: var(--amarelo); box-shadow: 0 0 10px rgba(255,204,0,0.1); }
-        .input-group i { color: var(--amarelo); margin-right: 12px; width: 20px; text-align: center; }
-        .input-group input, .input-group select, .input-group textarea { background: transparent; border: none; color: white; width: 100%; font-size: 1rem; }
-        
-        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; background: #111; padding: 15px; border-radius: 8px; }
-        .perm-grid label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; }
-
-        /* LISTAS ADMIN */
-        .admin-list { max-height: 300px; overflow-y: auto; background: #000; border-radius: 8px; padding: 10px; }
-        .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #222; font-size: 0.9rem; }
-        .admin-list-item:last-child { border-bottom: none; }
-        .admin-list-item button { background: var(--vermelho); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-
-        /* CARDS DE MEMBROS */
-        .dbv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; }
-        .dbv-card { background: #111; border-radius: 15px; padding: 20px; text-align: center; border: 1px solid #333; position: relative; transition: 0.3s; }
-        .dbv-card:hover { border-color: var(--amarelo); transform: translateY(-5px); }
-        .dbv-card .btn-del { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #555; cursor: pointer; transition: 0.3s; }
-        .dbv-card .btn-del:hover { color: var(--vermelho); }
-        .dbv-card-pts { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .dbv-card-pts button { background: #222; border: 1px solid #444; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
-        .dbv-card-pts button:hover { background: var(--amarelo); color: black; border-color: var(--amarelo); }
-        .btn-hist { background: none; border: 1px solid #333; color: #888; width: 100%; margin-top: 10px; padding: 5px; border-radius: 5px; font-size: 0.75rem; cursor: pointer; }
-        .btn-hist:hover { border-color: var(--amarelo); color: var(--amarelo); }
-
-        /* RANKING ITEMS */
-        .rank-item { display: flex; align-items: center; gap: 15px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 10px; border-left: 4px solid transparent; transition: 0.3s; }
-        .rank-item:hover { background: rgba(255,255,255,0.06); transform: translateX(5px); }
-        .rank-pos { width: 30px; height: 30px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; }
-        .rank-item:nth-child(1) .rank-pos { background: var(--amarelo); color: black; }
-        .rank-item:nth-child(2) .rank-pos { background: #c0c0c0; color: black; }
-        .rank-item:nth-child(3) .rank-pos { background: #cd7f32; color: black; }
-        .rank-info { flex: 1; }
-        .rank-name { font-weight: bold; display: block; }
-        .rank-pts { font-size: 0.85rem; color: var(--amarelo); font-weight: bold; }
-
-        /* MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--cinza-card); padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; border: 1px solid var(--borda-suave); position: relative; }
-        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #888; }
-
-        /* FULLSCREEN MEDIA */
-        #fs-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; }
-        #fs-overlay img, #fs-overlay video { max-width: 95%; max-height: 95%; border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,1); }
-
-        /* CARROSSEL LIDERANÇA E GANHADORES */
-        .carousel-container { position: relative; overflow: hidden; margin: 40px 0; padding: 20px 0; }
-        .carousel-track { display: flex; transition: transform 0.5s ease-in-out; gap: 20px; }
-        .carousel-item { min-width: 280px; background: var(--cinza-card); padding: 25px; border-radius: 20px; border: 1px solid var(--borda-suave); text-align: center; transition: 0.3s; }
-        .carousel-item img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--amarelo); margin-bottom: 15px; object-fit: cover; }
-        .carousel-item h3 { color: var(--amarelo); margin-bottom: 5px; }
-        .carousel-item p { color: #aaa; font-size: 0.9rem; }
-        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,204,0,0.8); color: black; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 1.2rem; transition: 0.3s; }
-        .carousel-btn:hover { background: var(--amarelo); transform: translateY(-50%) scale(1.1); }
-        .btn-prev { left: 10px; } .btn-next { right: 10px; }
-
-        /* ========== RESPONSIVIDADE MOBILE (TELAS < 768px) ========== */
+        /* ========== RESPONSIVIDADE MOBILE AGRESSIVA ========== */
         @media (max-width: 768px) {
-            body { padding-top: 0 !important; }
+            header { height: 70px !important; padding: 0 15px !important; background: #000 !important; border-bottom: 2px solid var(--amarelo) !important; }
+            .mobile-menu-btn { display: block !important; }
             
-            header { 
-                height: 70px !important; 
-                padding: 0 15px !important;
-                flex-direction: row !important;
-                justify-content: space-between !important;
+            /* ESCONDER BOTÕES NO MOBILE E MOSTRAR NO MENU */
+            .nav-buttons { 
+                position: fixed !important; top: 70px !important; left: 0 !important; width: 100% !important; 
+                background: #000 !important; flex-direction: column !important; padding: 20px !important; 
+                gap: 15px !important; transform: translateY(-150%) !important; transition: 0.4s ease !important;
+                border-bottom: 3px solid var(--amarelo) !important; box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
+                z-index: 999 !important;
             }
+            .nav-buttons.active { transform: translateY(0) !important; }
             
-            .logo-container { 
-                position: relative !important; 
-                transform: none !important; 
-                width: auto !important;
-                order: 1;
-            }
+            .user-status, .btn-lideranca, .btn-custom { width: 100% !important; justify-content: center !important; padding: 15px !important; font-size: 1.1rem !important; }
+            .header-logo { height: 45px !important; }
             
-            .header-logo { 
-                height: 45px !important; 
-                margin: 0 !important;
-            }
+            /* AJUSTES DE CONTEÚDO */
+            .page { margin-top: 80px !important; padding: 15px !important; }
+            .hero h1 { font-size: 1.8rem !important; }
+            .hero p.subtitle { font-size: 1rem !important; }
+            .timer { gap: 10px !important; }
+            .unit-timer { min-width: 75px !important; padding: 10px !important; }
+            .unit-timer b { font-size: 1.6rem !important; }
             
-            .mobile-menu-btn { 
-                display: flex !important; 
-                align-items: center !important; 
-                justify-content: center !important; 
-                width: 45px !important; 
-                height: 45px !important; 
-                background: rgba(255,255,255,0.1) !important; 
-                border-radius: 8px !important; 
-                color: var(--amarelo) !important; 
-                font-size: 1.5rem !important; 
-                cursor: pointer !important; 
-                z-index: 1001 !important;
-                order: 2;
-                border: none !important;
-                padding: 0 !important;
-            }
-            
-            .user-info-header { 
-                display: none !important; 
-                flex-direction: column !important; 
-                position: fixed !important; 
-                top: 70px !important; 
-                left: 0 !important; 
-                width: 100% !important; 
-                background: #000000 !important; 
-                padding: 20px !important; 
-                border-bottom: 3px solid var(--amarelo) !important; 
-                gap: 12px !important; 
-                backdrop-filter: blur(15px) !important; 
-                z-index: 1000 !important;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
-                opacity: 0 !important;
-                transform: translateY(-20px) !important;
-                transition: all 0.3s ease !important;
-                right: auto !important;
-                border-radius: 0 !important;
-            }
-            
-            .user-info-header.active { 
-                display: flex !important; 
-                opacity: 1 !important; 
-                transform: translateY(0) !important; 
-            }
-            
-            .user-status { 
-                width: 100% !important; 
-                justify-content: center !important; 
-                margin-bottom: 10px !important; 
-                background: #111 !important;
-                padding: 12px !important;
-            }
-            
-            .btn-lideranca, .btn-custom { 
-                width: 100% !important; 
-                justify-content: center !important; 
-                padding: 15px !important; 
-                font-size: 1rem !important;
-                box-shadow: none !important;
-            }
-            
-            .btn-lideranca:active, .btn-custom:active { 
-                transform: scale(0.98) !important;
-            }
-
-            .page { 
-                margin-top: 70px !important;
-                padding: 15px !important;
-            }
-
-            .hero { 
-                padding: 50px 15px !important; 
-                margin-bottom: 20px !important;
-                margin-top: 0 !important;
-            }
-            
-            .hero h1 { 
-                font-size: 1.8rem !important; 
-                line-height: 1.2 !important; 
-            }
-            
-            .hero p.subtitle { 
-                font-size: 0.95rem !important; 
-                margin-bottom: 20px !important; 
-            }
-            
-            .timer { 
-                gap: 8px !important;
-                flex-wrap: wrap !important;
-            }
-            
-            .unit-timer { 
-                min-width: 70px !important; 
-                padding: 10px 5px !important;
-                border: 2px solid var(--vermelho) !important;
-            }
-            
-            .unit-timer b { 
-                font-size: 1.5rem !important; 
-            }
-            
-            .unit-timer span { 
-                font-size: 0.75rem !important;
-            }
-            
-            .home-gallery { 
-                grid-template-columns: 1fr !important; 
-                gap: 20px !important; 
-                padding: 0 !important; 
-            }
-            
-            .gallery-card.layout-grid { 
-                height: auto !important; 
-                min-height: 250px !important; 
-            }
-            
-            .panel-layout { 
-                display: flex !important; 
-                flex-direction: column !important; 
-                gap: 20px !important; 
-            }
-            
-            .sidebar, .main-content, .ranking-column { 
-                width: 100% !important; 
-                position: static !important;
-            }
-            
-            .sidebar { 
-                position: relative !important;
-                top: auto !important;
-            }
-            
-            .dbv-grid { 
-                grid-template-columns: 1fr 1fr !important; 
-                gap: 10px !important; 
-            }
-            
-            body.is-home header.initial-splash { 
-                height: 100vh !important; 
-            }
-            
-            body.is-home header.initial-splash .logo-container { 
-                position: absolute !important; 
-                top: 45vh !important; 
-                left: 50% !important; 
-                transform: translate(-50%, -50%) scale(1.5) !important; 
-            }
+            .panel-layout { display: flex !important; flex-direction: column !important; }
+            .sidebar, .main-content, .ranking-column { width: 100% !important; position: static !important; }
+            .dbv-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
         }
+
+        /* ESTILOS GERAIS (IGUAIS AO ORIGINAL) */
+        .page { display: none; min-height: 90vh; padding: 100px 25px 25px; max-width: 1600px; margin: auto; }
+        .active { display: block !important; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        @media (max-width: 480px) {
-            .dbv-grid { 
-                grid-template-columns: 1fr !important; 
-            }
-            
-            .hero h1 { 
-                font-size: 1.5rem !important; 
-            }
-            
-            .perm-grid { 
-                grid-template-columns: 1fr !important;
-            }
-        }
+        .hero { text-align: center; margin-bottom: 40px; padding: 60px 20px; border-radius: 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--borda-suave); }
+        .hero h1 { font-size: 3.5rem; color: var(--amarelo); margin-bottom: 10px; }
         
-        .mobile-menu-btn { 
-            display: none !important; 
-        }
+        .timer { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
+        .unit-timer { background: rgba(0,0,0,0.6); padding: 15px; border-radius: 12px; min-width: 100px; border: 2px solid var(--vermelho); }
+        .unit-timer b { font-size: 2.5rem; display: block; }
+        .unit-timer span { font-size: 0.8rem; color: var(--amarelo); text-transform: uppercase; }
 
+        .home-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 40px; }
+        .gallery-card { background: var(--cinza-card); border-radius: 15px; overflow: hidden; border: 1px solid var(--borda-suave); }
+        .gallery-media-container { height: 200px; background: #000; display: flex; align-items: center; justify-content: center; }
+        .gallery-media-container img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-text-box { padding: 15px; text-align: center; }
+
+        .dbv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .dbv-card { background: #111; border-radius: 15px; padding: 20px; text-align: center; border: 1px solid #333; }
+        
+        footer { padding: 40px; text-align: center; background: #000; border-top: 1px solid #222; margin-top: 50px; }
     </style>
 </head>
-<body>
-    
-    <!-- OVERLAY DE CARREGAMENTO INICIAL -->
+<body class="is-home">
+
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <p><i class="fa-solid fa-cloud-arrow-down"></i> CARREGANDO DADOS...</p>
+        <p><i class="fa-solid fa-bolt"></i> ATUALIZANDO SISTEMA...</p>
     </div>
 
-    <header id="main-header" class="initial-splash">
+    <header id="main-header">
         <div class="logo-container" onclick="location.reload()">
             <img id="main-logo-img" src="PNGDBV.webp" class="header-logo" onerror="this.src='https://via.placeholder.com/100'">
-            <div class="scroll-down-msg">
-                <span>Role para Explorar</span>
-                <i class="fa-solid fa-chevron-down"></i>
-            </div>
         </div>
 
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></button>
-        <div class="user-info-header" id="mobile-nav">
+        <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+
+        <div class="nav-buttons" id="nav-menu">
             <div class="user-status" id="status-txt"><i class="fa-solid fa-circle-notch fa-spin"></i> Conectando...</div>
             <button id="nav-custom" class="btn-custom" onclick="showPage('custom-page')"><i class="fa-solid fa-wand-magic-sparkles"></i> Customizar Site</button>
             <button id="nav-admin" class="btn-lideranca" onclick="abrirLogin()"><i class="fa-solid fa-lock"></i> Área do Líder</button>
         </div>
     </header>
 
-    <!-- PÁGINA HOME -->
     <section id="home-page" class="page active">
-        <div id="home-hero" class="hero">
+        <div class="hero">
             <h1 id="home-title-display">Portal Desbravadores</h1>
-            <p id="home-subtitle-display" class="subtitle">Sistema Integrado de Gestão e Rankings</p>
-            
-            <div id="timer-container">
-                <div class="timer">
-                    <div class="unit-timer"><b id="t-d">00</b><span>Dias</span></div>
-                    <div class="unit-timer"><b id="t-h">00</b><span>Horas</span></div>
-                    <div class="unit-timer"><b id="t-m">00</b><span>Min</span></div>
-                    <div class="unit-timer"><b id="t-s">00</b><span>Seg</span></div>
-                </div>
-                <span id="event-date-display" class="event-date-txt"></span>
-            </div>
-            <div id="timer-alt-display" class="timer-replacement" style="display:none;"></div>
-        </div>
-
-        <!-- SEÇÃO LIDERANÇA -->
-        <div id="lideranca-section" style="display:none;">
-            <div class="gallery-card layout-title"><h2>Nossa Liderança</h2><p>Conheça quem está à frente do nosso clube</p></div>
-            <div class="carousel-container">
-                <button class="carousel-btn btn-prev" onclick="moveCarousel('lider', -1)"><i class="fa-solid fa-chevron-left"></i></button>
-                <div class="carousel-track" id="lideranca-track"></div>
-                <button class="carousel-btn btn-next" onclick="moveCarousel('lider', 1)"><i class="fa-solid fa-chevron-right"></i></button>
+            <p id="home-subtitle-display" class="subtitle">Sistema de Gestão e Rankings</p>
+            <div class="timer">
+                <div class="unit-timer"><b id="t-d">00</b><span>Dias</span></div>
+                <div class="unit-timer"><b id="t-h">00</b><span>Horas</span></div>
+                <div class="unit-timer"><b id="t-m">00</b><span>Min</span></div>
+                <div class="unit-timer"><b id="t-s">00</b><span>Seg</span></div>
             </div>
         </div>
-
-        <!-- SEÇÃO UNIDADES -->
-        <div id="unidades-section" style="display:none;">
-            <div class="gallery-card layout-title"><h2>Nossas Unidades</h2><p>A força do nosso clube dividida em equipes</p></div>
-            <div id="unidades-showcase" class="home-gallery"></div>
-        </div>
-
-        <!-- SEÇÃO GANHADORES -->
-        <div id="ganhadores-section" style="display:none;">
-            <div class="gallery-card layout-title"><h2 id="ganhadores-titulo-display">Desbravadores Destaque</h2><p>Reconhecimento pelo esforço e dedicação</p></div>
-            <div class="carousel-container">
-                <button class="carousel-btn btn-prev" onclick="moveCarousel('ganhador', -1)"><i class="fa-solid fa-chevron-left"></i></button>
-                <div class="carousel-track" id="ganhadores-track"></div>
-                <button class="carousel-btn btn-next" onclick="moveCarousel('ganhador', 1)"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-        </div>
-
-        <!-- GALERIA GERAL -->
         <div id="home-gallery-grid" class="home-gallery"></div>
     </section>
 
-    <!-- PÁGINA CUSTOMIZAÇÃO -->
+    <!-- PÁGINAS SIMPLIFICADAS PARA O TESTE -->
     <section id="custom-page" class="page">
-        <div class="main-content" style="max-width: 900px; margin: auto;">
-            <h2 style="color:var(--amarelo); margin-bottom: 30px; text-align: center;"><i class="fa-solid fa-palette"></i> Personalização da Home Page</h2>
-            
-            <div class="form-box">
-                <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-heading"></i> Cabeçalho e Títulos</h3>
-                <label class="input-label">URL do Logo Principal:</label>
-                <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="cfg-logo" placeholder="Link da imagem .png ou .webp"></div>
-                <label class="input-label">Título Principal:</label>
-                <div class="input-group"><i class="fa-solid fa-font"></i><input type="text" id="cfg-title"></div>
-                <label class="input-label">Subtítulo:</label>
-                <div class="input-group"><i class="fa-solid fa-align-left"></i><input type="text" id="cfg-subtitle"></div>
-            </div>
-
-            <div class="form-box">
-                <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-shoe-prints"></i> Rodapé e Redes Sociais</h3>
-                <label class="input-label">Texto do Rodapé:</label>
-                <div class="input-group"><i class="fa-solid fa-copyright"></i><input type="text" id="cfg-footer"></div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                    <div class="input-group"><i class="fa-brands fa-facebook"></i><input type="text" id="cfg-footer-fb" placeholder="Link Facebook"></div>
-                    <div class="input-group"><i class="fa-brands fa-instagram"></i><input type="text" id="cfg-footer-ig" placeholder="Link Instagram"></div>
-                    <div class="input-group"><i class="fa-brands fa-youtube"></i><input type="text" id="cfg-footer-yt" placeholder="Link YouTube"></div>
-                </div>
-            </div>
-
-            <div class="form-box">
-                <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-clock"></i> Cronômetro do Evento</h3>
-                <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 15px;">
-                    <label><input type="checkbox" id="cfg-timer-on"> Ativar Cronômetro</label>
-                    <label><input type="checkbox" id="cfg-show-date"> Mostrar Data do Evento</label>
-                </div>
-                <label class="input-label">Data e Hora do Evento:</label>
-                <div class="input-group"><i class="fa-solid fa-calendar-day"></i><input type="datetime-local" id="cfg-timer-date"></div>
-                <label class="input-label">Texto para quando o tempo acabar:</label>
-                <div class="input-group"><i class="fa-solid fa-comment-dots"></i><input type="text" id="cfg-timer-replace"></div>
-            </div>
-
-            <div class="form-box">
-                <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-layer-group"></i> Seções e Estilo</h3>
-                <div class="perm-grid">
-                    <label><input type="checkbox" id="cfg-show-lideranca"> Mostrar Liderança</label>
-                    <label><input type="checkbox" id="cfg-show-unidades"> Mostrar Unidades</label>
-                    <label><input type="checkbox" id="cfg-show-ganhadores"> Mostrar Ganhadores</label>
-                    <label><input type="checkbox" id="cfg-glow"> Efeito Brilho nos Cards</label>
-                </div>
-                <label class="input-label">Título da Seção de Ganhadores:</label>
-                <div class="input-group"><i class="fa-solid fa-medal"></i><input type="text" id="cfg-title-ganhadores"></div>
-                
-                <label class="input-label">Cores do Site:</label>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="input-group"><span>Fundo:</span><input type="color" id="clr-bg"></div>
-                    <div class="input-group"><span>Texto:</span><input type="color" id="clr-txt"></div>
-                    <div class="input-group"><span>Header:</span><input type="color" id="clr-h-bg"></div>
-                    <div class="input-group"><span>Header Txt:</span><input type="color" id="clr-h-txt"></div>
-                    <div class="input-group"><span>Footer:</span><input type="color" id="clr-f-bg"></div>
-                    <div class="input-group"><span>Footer Txt:</span><input type="color" id="clr-f-txt"></div>
-                </div>
-                
-                <label class="input-label">Cores das Unidades:</label>
-                <div id="unidades-cores-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #111; padding: 15px; border-radius: 8px;"></div>
-            </div>
-
-            <div class="form-box">
-                <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-images"></i> Gerenciar Slideshow e Galeria</h3>
-                <div style="background: #111; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="font-size: 0.9rem; color: var(--amarelo); margin-bottom: 10px;">Adicionar Slideshow no Hero (Fundo do Título)</h4>
-                    <div class="input-group"><i class="fa-solid fa-map-location-dot"></i><input type="text" id="hero-loc" placeholder="Local (Ex: Home, Campori)"></div>
-                    <div class="input-group"><i class="fa-solid fa-images"></i><input type="text" id="hero-imgs" placeholder="URLs das imagens separadas por vírgula"></div>
-                    <button onclick="addHeroConfig()" class="btn-save" style="font-size: 12px;"><i class="fa-solid fa-plus"></i> ADICIONAR SLIDESHOW</button>
-                    <div id="admin-heroes-list" class="admin-list" style="margin-top: 10px;"></div>
-                </div>
-
-                <div style="background: #111; padding: 15px; border-radius: 8px;">
-                    <h4 style="font-size: 0.9rem; color: var(--amarelo); margin-bottom: 10px;">Adicionar Mídia na Galeria</h4>
-                    <div class="input-group"><i class="fa-solid fa-tag"></i><select id="media-type" onchange="toggleMediaInputs()"><option value="img">Imagem</option><option value="video">Vídeo</option><option value="divider">Divisor de Seção</option></select></div>
-                    <div id="media-url-group" class="input-group"><i class="fa-solid fa-link"></i><input type="text" id="media-url" placeholder="URL da Imagem ou Vídeo"></div>
-                    <div id="media-title-group" class="input-group"><i class="fa-solid fa-heading"></i><input type="text" id="media-title" placeholder="Título (Opcional)"></div>
-                    <div id="media-desc-group" class="input-group"><i class="fa-solid fa-align-left"></i><input type="text" id="media-desc" placeholder="Descrição (Opcional)"></div>
-                    <div id="media-layout-group" class="input-group"><i class="fa-solid fa-table-cells-large"></i><select id="media-layout"><option value="grid">Tamanho Normal (Grid)</option><option value="full">Largura Total (Destaque)</option></select></div>
-                    <button onclick="addMedia()" class="btn-save" style="font-size: 12px;"><i class="fa-solid fa-plus"></i> ADICIONAR À GALERIA</button>
-                    <div id="admin-gallery-list" class="admin-list" style="margin-top: 10px;"></div>
-                </div>
-            </div>
-
-            <button onclick="salvarCustomizacao()" class="btn-save" style="margin-top: 20px; height: 60px; font-size: 1.2rem;"><i class="fa-solid fa-floppy-disk"></i> SALVAR TODAS AS ALTERAÇÕES</button>
-            <button onclick="showPage('home-page')" style="width:100%; background:none; border:1px solid #444; color:#888; padding:15px; border-radius:8px; margin-top:15px; cursor:pointer;"><i class="fa-solid fa-arrow-left"></i> Voltar para Home</button>
+        <div style="text-align:center; padding: 50px;">
+            <h2>Painel de Customização</h2>
+            <p>Clique no botão abaixo para voltar.</p>
+            <button onclick="showPage('home-page')" class="btn-lideranca" style="margin: 20px auto;">Voltar para Home</button>
         </div>
     </section>
 
-    <!-- PÁGINA ADMIN -->
     <section id="admin-page" class="page">
-        <div class="panel-layout">
-            
-            <aside class="sidebar">
-                <div class="sidebar-profile">
-                    <img id="my-profile-img" src="" class="profile-img" onerror="this.src='https://via.placeholder.com/150'">
-                    <h2 id="my-name-display">Líder</h2>
-                    <p id="my-unid-display" style="color:var(--amarelo);font-size:14px;margin-bottom:20px;font-weight:bold;"><i class="fa-solid fa-campground"></i> </p>
-                    <label class="input-label"><i class="fa-solid fa-camera-rotate"></i> Atualizar URL da sua Foto:</label>
-                    <div class="input-group"><i class="fa-solid fa-link"></i><input type="text" placeholder="Cole o link da imagem aqui" onchange="alterarMinhaFoto(this.value)"></div>
-                </div>
-                
-                <div id="box-gerenciamento-unid" class="form-box" style="display:none; background:#111; margin-top:20px;">
-                    <h4 id="titulo-edit-unid" style="color:var(--amarelo); font-size:14px; margin-bottom:15px;"><i class="fa-solid fa-pen-to-square"></i> Editar Unidade</h4>
-                    <div class="input-group" style="display:none;" id="container-edit-unid-sel"><i class="fa-solid fa-list"></i><select id="edit-unid-sel" onchange="carregarDadosUnidade()"></select></div>
-                    <label class="input-label">Nome da Unidade:</label>
-                    <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="edit-unid-nome" placeholder="Nome"></div>
-                    <label class="input-label">Logo da Unidade (URL):</label>
-                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="edit-unid-logo" placeholder="URL do Logo"></div>
-                    <button onclick="atualizarMinhaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px;"><i class="fa-solid fa-check"></i> SALVAR UNIDADE</button>
-                </div>
-                
-                <button onclick="resetSistema()" style="width:100%; background:rgba(230,57,70,0.1); color:var(--vermelho); border:1px solid var(--vermelho); border-radius:8px; padding:12px; cursor:pointer; font-weight:bold; margin-top:30px; transition:0.3s;"><i class="fa-solid fa-triangle-exclamation"></i> RESET TOTAL DO SISTEMA</button>
-            </aside>
-
-            <div class="main-content">
-                
-                <div id="admin-only-users" class="form-box" style="display:none; margin-bottom: 30px;">
-                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-user-gear"></i> Gerenciar Usuários/Líderes</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><i class="fa-solid fa-user-plus"></i><input type="text" id="new-u" placeholder="Novo Login"></div>
-                        <div class="input-group"><i class="fa-solid fa-key"></i><input type="text" id="new-p" placeholder="Senha"></div>
-                    </div>
-                    <label class="input-label">Vincular a qual Unidade?</label>
-                    <div class="input-group"><i class="fa-solid fa-campground"></i><select id="new-unid-sel"></select></div>
-                    <label class="input-label">Permissões do Usuário:</label>
-                    <div class="perm-grid">
-                        <label><input type="checkbox" id="perm-h"> 🏠 Editar Home</label>
-                        <label><input type="checkbox" id="perm-u"> ⛺ Editar Unidade</label>
-                        <label><input type="checkbox" id="perm-m"> 👥 Gerir Membros</label>
-                        <label><input type="checkbox" id="perm-w"> 🏆 Gerir Ganhadores</label>
-                        <label><input type="checkbox" id="perm-t"> 🌟 Acesso Total</label>
-                    </div>
-                    <button onclick="criarUsuario()" class="btn-save"><i class="fa-solid fa-plus"></i> CRIAR ACESSO</button>
-                </div>
-
-                <div id="hall-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid var(--amarelo);">
-                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-ranking-star"></i> Registrar Ganhador (Semestre/Trimestre)</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="g-nome" placeholder="Nome do Desbravador"></div>
-                        <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="g-foto" placeholder="URL da Foto"></div>
-                    </div>
-                    <div class="input-group"><i class="fa-regular fa-calendar-check"></i><input type="text" id="g-edicao" placeholder="Edição (Ex: 01.2026, 1º Trimestre 2026)"></div>
-                    <button onclick="cadastrarGanhador()" class="btn-save" style="margin-bottom: 20px;"><i class="fa-solid fa-medal"></i> REGISTRAR NO HALL DA FAMA</button>
-                    
-                    <h4 style="margin-bottom: 10px; color:#aaa; font-size: 0.9rem;">Ganhadores Registrados (Mais recentes primeiro):</h4>
-                    <div id="admin-ganhadores-list" class="admin-list"></div>
-                </div>
-
-                <div id="delete-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border: 1px solid var(--vermelho);">
-                    <h3 style="color:var(--vermelho); margin-bottom: 15px;"><i class="fa-solid fa-trash-can"></i> Apagar Unidades</h3>
-                    <div class="input-group"><i class="fa-solid fa-campground"></i><select id="del-unid-sel"></select></div>
-                    <button onclick="apagarUnidade()" class="btn-save" style="background:var(--vermelho); color:white; box-shadow: 0 4px 15px rgba(230,57,70,0.4);"><i class="fa-solid fa-triangle-exclamation"></i> EXCLUIR UNIDADE</button>
-                </div>
-
-                <div id="memb-section" class="form-box" style="display:none">
-                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-users"></i> Gerenciar Membros (Desbravadores)</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="m-nome" placeholder="Nome do Membro"></div>
-                        <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="m-foto" placeholder="URL da Foto (Opcional)"></div>
-                    </div>
-                    <div class="input-group" id="container-m-unid-dest" style="display:none;"><i class="fa-solid fa-campground"></i><select id="m-unid-dest"></select></div>
-                    <button onclick="cadastrarMembro()" class="btn-save" style="margin-bottom: 30px;"><i class="fa-solid fa-user-plus"></i> ADICIONAR MEMBRO</button>
-                    <h4 style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom:10px;"><i class="fa-solid fa-address-book"></i> Lista de Membros</h4>
-                    <div id="meus-membros-grid" class="dbv-grid"></div>
-                </div>
-            </div>
-
-            <div class="ranking-column">
-                <div class="rank-box">
-                    <h3><i class="fa-solid fa-trophy" style="color:var(--amarelo);"></i> Ranking Unidades</h3>
-                    <div id="ranking-unidades-list"></div>
-                </div>
-                <div class="rank-box">
-                    <h3><i class="fa-solid fa-medal" style="color:#c0c0c0;"></i> Top 5 Desbravadores</h3>
-                    <div id="ranking-membros-list"></div>
-                </div>
-            </div>
+        <div style="text-align:center; padding: 50px;">
+            <h2>Painel Administrativo</h2>
+            <p>Bem-vindo, <span id="user-name">Líder</span>!</p>
+            <button onclick="showPage('home-page')" class="btn-lideranca" style="margin: 20px auto;">Voltar para Home</button>
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer id="main-footer">
-        <div id="footer-text"></div>
+    <footer>
+        <p id="footer-text">© 2026 Portal Desbravadores - Mobile Optimized</p>
     </footer>
 
-    <!-- MODAL PONTOS -->
-    <div id="modal-pontos" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="fecharModalPontos()">&times;</span>
-            <h3 id="modal-m-nome" style="color:var(--amarelo); margin-bottom: 20px;">Membro</h3>
-            <label class="input-label">Motivo da Pontuação:</label>
-            <div class="input-group"><i class="fa-solid fa-comment"></i><input type="text" id="p-motivo" placeholder="Ex: Presença, Uniforme, Especialidade"></div>
-            <label class="input-label">Valor dos Pontos:</label>
-            <div class="input-group"><i class="fa-solid fa-star"></i><input type="number" id="p-valor"></div>
-            <button onclick="confirmarPontos()" class="btn-save"><i class="fa-solid fa-check"></i> CONFIRMAR PONTOS</button>
-        </div>
-    </div>
-
-    <!-- MODAL HISTÓRICO -->
-    <div id="modal-historico" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <span class="close-modal" onclick="fecharHistorico()">&times;</span>
-            <h3 id="hist-m-nome" style="color:var(--amarelo); margin-bottom: 20px;">Histórico</h3>
-            <div id="hist-lista" class="admin-list" style="max-height: 400px;"></div>
-        </div>
-    </div>
-
-    <!-- OVERLAY FULLSCREEN -->
-    <div id="fs-overlay" onclick="this.style.display='none'"></div>
-
-    
-    
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script>
-
-        function toggleMobileMenu() {
-            const nav = document.getElementById('mobile-nav');
-            const btn = document.querySelector('.mobile-menu-btn i');
-            if(!nav) return;
-            nav.classList.toggle('active');
-            if(nav.classList.contains('active')) {
-                btn.classList.replace('fa-bars', 'fa-xmark');
-            } else {
-                btn.classList.replace('fa-xmark', 'fa-bars');
-            }
-        }
-        
-        // Fechar menu ao clicar fora ou em links
-        document.addEventListener('click', (e) => {
-            const nav = document.getElementById('mobile-nav');
-            const btn = document.querySelector('.mobile-menu-btn');
-            if(nav && nav.classList.contains('active') && !nav.contains(e.target) && !btn.contains(e.target)) {
-                toggleMobileMenu();
-            }
-        });
-
+        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = { 
             apiKey: "AIzaSyBfmk3fKbRWy3HhcJ47qStH7VChI6U0tWM", 
             authDomain: "clube-guardioes.firebaseapp.com", 
@@ -768,483 +170,82 @@
             appId: "1:106491860016:web:bef77d52150c8e915d09f5" 
         };
         firebase.initializeApp(firebaseConfig);
-        const firestoreDb = firebase.firestore();
-        const DOC_REF = firestoreDb.collection("sistema").doc("dados");
-        const DB_PADRAO = { 
-            usuarios: [{u:"admin", p:"123", tipo:"geral", unid:"Administração", foto:"", perms:{h:true,u:true,m:true,w:true,t:true}}], 
-            unidades: [{nome:"Administração", logo:"", cor:"#333333"}, {nome:"Águia", logo:"", cor:"#e63946"}], 
-            membros: [], 
-            home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""}, timer: "2026-12-31T23:59", showTimer: true, timerReplace: "O evento começou!", showEventDate: true, heroesList: [], showLideranca: true, showUnidades: true, showGanhadores: true, ganhadoresTitulo: "Desbravadores Destaque", ganhadores: [], gallery: [], colors: { bg: "#121212", txt: "#ffffff", hBg: "transparent", hTxt: "#ffcc00", fBg: "#000000", fTxt: "#ffffff" }, glow: false, logoUrl: "" } 
-        };
-        let db = null; let user = null; let slideIntervalIdMap = {}; let liderIdx = 0, ganhadorIdx = 0; let carrosselLiderId = null, carrosselGanhadorId = null;
-        async function save() { try { await DOC_REF.set(db); } catch(e) { console.error(e); alert("Erro ao salvar"); } render(); }
-        async function carregarDados() { 
-            try { 
-                const snap = await DOC_REF.get(); 
-                if (snap.exists) { 
-                    db = snap.data(); 
-                } else { 
-                    db = JSON.parse(JSON.stringify(DB_PADRAO)); 
-                    await DOC_REF.set(db); 
-                } 
-            } catch(e) { 
-                console.error(e); 
-                db = JSON.parse(JSON.stringify(DB_PADRAO)); 
-            }
-            document.getElementById("loading-overlay").style.display = "none"; 
-            render(); 
-            iniciarTimer(); 
-            toggleTimerInputs(); 
+        const db_fs = firebase.firestore();
+        const DOC_REF = db_fs.collection("sistema").doc("dados");
+
+        let db_data = null;
+        let currentUser = null;
+
+        function toggleMenu() {
+            document.getElementById('nav-menu').classList.toggle('active');
+            const icon = document.querySelector('.mobile-menu-btn i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-xmark');
         }
 
-        /* NAVEGAÇÃO E LOGIN */
         function showPage(id) {
-            const nav = document.getElementById("mobile-nav"); if(nav) nav.classList.remove("active");
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            const header = document.getElementById('main-header');
-            if(id === 'home-page') {
-                document.body.classList.add('is-home');
-                header.classList.add('initial-splash');
-                header.classList.remove('scrolled');
-            } else {
-                document.body.classList.remove('is-home');
-                header.classList.remove('initial-splash');
-                header.classList.add('scrolled');
-                header.style.backgroundColor = db.home.colors.hBg === 'transparent' ? '#000000' : db.home.colors.hBg;
-            }
+            document.getElementById('nav-menu').classList.remove('active');
+            window.scrollTo(0,0);
         }
 
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('main-header');
-            if(!document.body.classList.contains('is-home')) return;
+        async function carregarDados() {
+            try {
+                const snap = await DOC_REF.get();
+                if(snap.exists) {
+                    db_data = snap.data();
+                    renderSite();
+                }
+            } catch(e) { console.error(e); }
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        function renderSite() {
+            if(!db_data) return;
+            document.getElementById('home-title-display').innerText = db_data.home.title;
+            document.getElementById('home-subtitle-display').innerText = db_data.home.subTitle;
+            document.getElementById('footer-text').innerText = db_data.home.footer || "© 2026 Portal Desbravadores";
             
-            if(window.scrollY > 100) {
-                header.classList.remove('initial-splash');
-                header.classList.add('scrolled');
-                header.style.backgroundColor = db.home.colors.hBg === 'transparent' ? '#000000' : db.home.colors.hBg;
-            } else {
-                header.classList.add('initial-splash');
-                header.classList.remove('scrolled');
-                header.style.backgroundColor = 'transparent';
-            }
-        });
+            // Renderizar Galeria Simples
+            document.getElementById('home-gallery-grid').innerHTML = db_data.home.gallery.map(m => `
+                <div class="gallery-card">
+                    <div class="gallery-media-container">
+                        <img src="${m.url}" onerror="this.src='https://via.placeholder.com/300'">
+                    </div>
+                    <div class="gallery-text-box"><h3>${m.title || ''}</h3></div>
+                </div>
+            `).join('');
+        }
 
         function abrirLogin() {
-            if(user) { showPage('admin-page'); return; }
             const u = prompt("Usuário:");
             const p = prompt("Senha:");
-            const found = db.usuarios.find(x => x.u === u && x.p === p);
+            const found = db_data.usuarios.find(x => x.u === u && x.p === p);
             if(found) {
-                user = found;
-                document.getElementById('nav-admin').innerHTML = `<i class="fa-solid fa-user-gear"></i> Painel Admin`;
+                currentUser = found;
+                document.getElementById('status-txt').innerHTML = `<i class="fa-solid fa-user-check"></i> ${found.unid}`;
+                document.getElementById('nav-custom').style.display = found.perms.h ? 'flex' : 'none';
                 showPage('admin-page');
-                render();
-            } else {
-                alert("Acesso negado!");
-            }
+            } else { alert("Erro!"); }
         }
 
-        function logout() {
-            user = null;
-            document.getElementById('nav-admin').innerHTML = `<i class="fa-solid fa-lock"></i> Área do Líder`;
-            showPage('home-page');
-            render();
-        }
+        // TIMER SIMPLES
+        setInterval(() => {
+            const diff = new Date("2026-12-31T23:59").getTime() - new Date().getTime();
+            if(diff < 0) return;
+            document.getElementById('t-d').innerText = Math.floor(diff / 86400000).toString().padStart(2,'0');
+            document.getElementById('t-h').innerText = Math.floor((diff % 86400000) / 3600000).toString().padStart(2,'0');
+            document.getElementById('t-m').innerText = Math.floor((diff % 3600000) / 60000).toString().padStart(2,'0');
+            document.getElementById('t-s').innerText = Math.floor((diff % 60000) / 1000).toString().padStart(2,'0');
+        }, 1000);
 
-        /* CRONÔMETRO */
-        let timerInterval;
-        function iniciarTimer() {
-            if(timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                const now = new Date().getTime();
-                const target = new Date(db.home.timer).getTime();
-                const diff = target - now;
-                
-                if(diff <= 0) {
-                    document.getElementById('timer-container').style.display = 'none';
-                    document.getElementById('timer-alt-display').style.display = 'inline-block';
-                    return;
-                }
-                
-                document.getElementById('timer-container').style.display = 'block';
-                document.getElementById('timer-alt-display').style.display = 'none';
-                
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-                
-                document.getElementById('t-d').innerText = d.toString().padStart(2, '0');
-                document.getElementById('t-h').innerText = h.toString().padStart(2, '0');
-                document.getElementById('t-m').innerText = m.toString().padStart(2, '0');
-                document.getElementById('t-s').innerText = s.toString().padStart(2, '0');
-            }, 1000);
-        }
+        window.addEventListener('scroll', () => {
+            if(window.scrollY > 50) document.getElementById('main-header').classList.add('scrolled');
+            else document.getElementById('main-header').classList.remove('scrolled');
+        });
 
-        /* SLIDESHOW HERO */
-        function renderHeroes() {
-            const h = db.home;
-            const hero = document.getElementById('home-hero');
-            
-            // Limpar intervalos antigos
-            for(let key in slideIntervalIdMap) { clearInterval(slideIntervalIdMap[key]); }
-            slideIntervalIdMap = {};
-
-            if(h.heroesList.length > 0) {
-                const config = h.heroesList[0]; // Por enquanto usa a primeira config
-                startSlideshow('home-hero', config.imgs);
-            } else {
-                hero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80')`;
-            }
-        }
-
-        function startSlideshow(divId, imgsStr) {
-            const div = document.getElementById(divId);
-            if(!div) return;
-            const images = imgsStr.split(',').map(s => s.trim()).filter(s => s !== "");
-            if(images.length === 0) return;
-            
-            div.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('${images[0]}')`;
-            
-            if (images.length > 1) {
-                let current = 0;
-                slideIntervalIdMap[divId] = setInterval(() => {
-                    current = (current + 1) % images.length;
-                    div.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('${images[current]}')`;
-                }, 4000);
-            }
-        }
-
-        /* RENDERIZAÇÃO GERAL */
-        function render() {
-            const h = db.home;
-            const page = document.getElementById('home-page');
-            page.style.backgroundColor = h.colors.bg; page.style.color = h.colors.txt;
-            document.documentElement.style.setProperty('--home-bg', h.colors.bg);
-            
-            const head = document.getElementById('main-header');
-            head.style.backgroundColor = h.colors.hBg === 'transparent' ? 'transparent' : h.colors.hBg; 
-            document.getElementById('status-txt').style.color = h.colors.hTxt;
-            
-            const mainLogo = document.getElementById('main-logo-img');
-            if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
-            
-            const foot = document.getElementById('main-footer');
-            foot.style.backgroundColor = h.colors.fBg; foot.style.color = h.colors.fTxt;
-            let footHtml = `<p>${h.footer || "© 2026 Portal Desbravadores"}</p>`;
-            if (h.social && (h.social.fb || h.social.ig || h.social.yt)) {
-                footHtml += `<div class="footer-social" style="margin-top: 15px; font-size: 1.8rem; display: flex; justify-content: center; gap: 25px;">`;
-                if(h.social.fb) footHtml += `<a href="${h.social.fb}" target="_blank" style="color: inherit; transition: 0.3s;"><i class="fa-brands fa-facebook"></i></a>`;
-                if(h.social.ig) footHtml += `<a href="${h.social.ig}" target="_blank" style="color: inherit; transition: 0.3s;"><i class="fa-brands fa-instagram"></i></a>`;
-                if(h.social.yt) footHtml += `<a href="${h.social.yt}" target="_blank" style="color: inherit; transition: 0.3s;"><i class="fa-brands fa-youtube"></i></a>`;
-                footHtml += `</div>`;
-            }
-            document.getElementById('footer-text').innerHTML = footHtml;
-
-            document.getElementById('home-title-display').innerText = h.title;
-            document.getElementById('home-subtitle-display').innerText = h.subTitle;
-
-            renderHeroes();
-
-            // Timer
-            document.getElementById('timer-container').style.display = h.showTimer ? 'block' : 'none';
-            document.getElementById('timer-alt-display').innerText = h.timerReplace;
-            if(h.showTimer && h.showEventDate) {
-                const d = new Date(h.timer);
-                document.getElementById('event-date-display').innerHTML = `<i class="fa-regular fa-calendar-days"></i> Data do Evento: ${d.toLocaleDateString()} às ${d.toLocaleTimeString()}`;
-            } else {
-                document.getElementById('event-date-display').innerText = "";
-            }
-
-            // Galeria
-            document.getElementById('home-gallery-grid').innerHTML = h.gallery.map((m, i) => {
-                if(m.type === 'divider') return `<div class="gallery-card layout-title"><h2>${m.title||''}</h2><p>${m.desc||''}</p></div>`;
-                const layoutClass = m.layout === 'full' ? 'layout-full' : 'layout-grid';
-                return `
-                <div class="gallery-card ${layoutClass}" style="${h.glow ? 'box-shadow: 0 0 20px var(--amarelo); border-color:var(--amarelo);' : ''}">
-                    ${m.title ? `<div class="gallery-text-box"><h3>${m.title}</h3></div>` : ''}
-                    <div class="gallery-media-container">
-                        ${m.type === 'img' ? `<img src="${m.url}" onclick="openFS('${m.url}')" style="cursor:zoom-in;">` : `<video src="${m.url}" controls></video>`}
-                    </div>
-                    ${m.desc ? `<div class="gallery-text-box"><p>${m.desc}</p></div>` : ''}
-                </div>`;
-            }).join('');
-
-            // Inputs Custom
-            document.getElementById('cfg-logo').value = h.logoUrl || "";
-            document.getElementById('cfg-title').value = h.title;
-            document.getElementById('cfg-subtitle').value = h.subTitle;
-            document.getElementById('cfg-footer').value = h.footer || "";
-            if(h.social) { document.getElementById('cfg-footer-fb').value = h.social.fb; document.getElementById('cfg-footer-ig').value = h.social.ig; document.getElementById('cfg-footer-yt').value = h.social.yt; }
-            document.getElementById('cfg-timer-on').checked = h.showTimer; document.getElementById('cfg-timer-date').value = h.timer;
-            document.getElementById('cfg-show-date').checked = h.showEventDate; document.getElementById('cfg-timer-replace').value = h.timerReplace;
-            document.getElementById('cfg-glow').checked = h.glow;
-            document.getElementById('cfg-show-lideranca').checked = h.showLideranca;
-            document.getElementById('cfg-show-unidades').checked = h.showUnidades;
-            document.getElementById('cfg-show-ganhadores').checked = h.showGanhadores;
-            document.getElementById('cfg-title-ganhadores').value = h.ganhadoresTitulo;
-            document.getElementById('clr-bg').value = h.colors.bg; document.getElementById('clr-txt').value = h.colors.txt;
-            document.getElementById('clr-h-bg').value = h.colors.hBg === 'transparent' ? '#000000' : h.colors.hBg; 
-            document.getElementById('clr-h-txt').value = h.colors.hTxt; document.getElementById('clr-f-bg').value = h.colors.fBg; document.getElementById('clr-f-txt').value = h.colors.fTxt;
-
-            // Listas Admin
-            document.getElementById('admin-heroes-list').innerHTML = h.heroesList.map(he => `<div class="admin-list-item"><span>${he.location.toUpperCase()}</span> <button onclick="delHeroConfig(${he.id})"><i class="fa-solid fa-trash"></i></button></div>`).join('');
-            document.getElementById('admin-gallery-list').innerHTML = h.gallery.map((m, i) => `<div class="admin-list-item"><span>${m.type.toUpperCase()} - ${m.title || 'Sem título'}</span> <button onclick="delMedia(${i})"><i class="fa-solid fa-trash"></i></button></div>`).join('');
-            document.getElementById('unidades-cores-list').innerHTML = db.unidades.filter(u=>u.nome!=='Administração').map(u => `<div style="display:flex; justify-content:space-between; align-items:center;"><span>${u.nome}:</span> <input type="color" id="cor-unid-${u.nome.replace(/\s+/g,'-')}" value="${u.cor}"></div>`).join('');
-
-            renderCarrosseisEUnidades();
-
-            // Painel Admin
-            if(!user) return;
-            const isGeral = user.tipo === 'geral';
-            document.getElementById('status-txt').innerHTML = `<i class="fa-solid fa-user-check"></i> ${user.unid}`;
-            document.getElementById('my-name-display').innerText = user.u;
-            document.getElementById('my-unid-display').innerHTML = `<i class="fa-solid fa-campground"></i> ${user.unid}`;
-            document.getElementById('my-profile-img').src = user.foto || 'https://via.placeholder.com/150';
-            
-            document.getElementById('nav-custom').style.display = user.perms.h ? 'flex' : 'none';
-            document.getElementById('admin-only-users').style.display = isGeral ? 'block' : 'none';
-            document.getElementById('delete-unid-section').style.display = isGeral ? 'block' : 'none';
-            document.getElementById('box-gerenciamento-unid').style.display = user.perms.u ? 'block' : 'none';
-            document.getElementById('memb-section').style.display = user.perms.m ? 'block' : 'none';
-            document.getElementById('hall-section').style.display = user.perms.w ? 'block' : 'none';
-
-            const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
-            document.getElementById('new-unid-sel').innerHTML = htmlUnid; document.getElementById('del-unid-sel').innerHTML = htmlUnid;
-            document.getElementById('m-unid-dest').innerHTML = htmlUnid; document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
-            
-            const meusM = db.membros.filter(m => isGeral || user.perms.t || m.unid === user.unid);
-            document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
-                <div class="dbv-card" style="${h.glow ? 'box-shadow: 0 0 15px var(--amarelo)' : ''}">
-                    <button class="btn-del" onclick="excluirMembro(${m.id})"><i class="fa-solid fa-times"></i></button>
-                    <img src="${m.foto || 'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--amarelo);object-fit:cover;">
-                    <div style="font-weight:bold; margin-top:10px;">${m.nome}</div>
-                    <div style="color:#aaa; font-size:0.8rem;"><i class="fa-solid fa-campground"></i> ${m.unid}</div>
-                    <div style="color:var(--amarelo); font-size:1.3rem; font-weight:bold; margin-top:5px;">${m.pontos} <i class="fa-solid fa-star"></i></div>
-                    <div class="dbv-card-pts">
-                        <button onclick="abrirModalPontos(${m.id}, 10)">+10</button>
-                        <button onclick="abrirModalPontos(${m.id}, -10)">-10</button>
-                    </div>
-                    <button class="btn-hist" onclick="abrirHistorico(${m.id})">Histórico</button>
-                </div>`).join('');
-
-            document.getElementById('admin-ganhadores-list').innerHTML = [...db.home.ganhadores].reverse().map(g => `<div class="admin-list-item"><span>${g.edicao} - ${g.nome}</span> <button onclick="delGanhador(${g.id})"><i class="fa-solid fa-trash"></i></button></div>`).join('');
-            renderRankings();
-        }
-
-        function renderCarrosseisEUnidades() {
-            const h = db.home;
-            document.getElementById('lideranca-section').style.display = h.showLideranca ? 'block' : 'none';
-            if(h.showLideranca) {
-                const lideres = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral');
-                document.getElementById('lideranca-track').innerHTML = lideres.map(l => `
-                    <div class="carousel-item">
-                        <img src="${l.foto||'https://via.placeholder.com/150'}">
-                        <h3>${l.u}</h3>
-                        <p>${l.unid}</p>
-                    </div>`).join('');
-            }
-
-            document.getElementById('unidades-section').style.display = h.showUnidades ? 'block' : 'none';
-            if(h.showUnidades) {
-                document.getElementById('unidades-showcase').innerHTML = db.unidades.filter(u=>u.nome!=='Administração').map(u => `
-                    <div class="gallery-card layout-grid" style="border-color:${u.cor}; ${h.glow ? 'box-shadow: 0 0 15px '+u.cor : ''}">
-                        <div class="gallery-text-box"><h3 style="color:${u.cor}">${u.nome}</h3></div>
-                        <div class="gallery-media-container"><img src="${u.logo||'PNGDBV.webp'}"></div>
-                    </div>`).join('');
-            }
-
-            document.getElementById('ganhadores-section').style.display = h.showGanhadores ? 'block' : 'none';
-            document.getElementById('ganhadores-titulo-display').innerText = h.ganhadoresTitulo;
-            if(h.showGanhadores) {
-                document.getElementById('ganhadores-track').innerHTML = db.home.ganhadores.map(g => `
-                    <div class="carousel-item">
-                        <img src="${g.foto||'https://via.placeholder.com/150'}">
-                        <h3>${g.nome}</h3>
-                        <p>${g.edicao}</p>
-                    </div>`).join('');
-            }
-        }
-
-        function moveCarousel(type, dir) {
-            const track = document.getElementById(type === 'lider' ? 'lideranca-track' : 'ganhadores-track');
-            const step = 300;
-            track.scrollBy({ left: dir * step, behavior: 'smooth' });
-        }
-
-        function renderRankings() {
-            const unidRank = db.unidades.filter(u=>u.nome!=='Administração').map(u => {
-                const pts = db.membros.filter(m => m.unid === u.nome).reduce((acc, cur) => acc + cur.pontos, 0);
-                return { nome: u.nome, pontos: pts, cor: u.cor };
-            }).sort((a, b) => b.pontos - a.pontos);
-
-            document.getElementById('ranking-unidades-list').innerHTML = unidRank.map((u, i) => `
-                <div class="rank-item" style="border-left-color:${u.cor}">
-                    <div class="rank-pos">${i+1}</div>
-                    <div class="rank-info"><span class="rank-name">${u.nome}</span><span class="rank-pts">${u.pontos} pts</span></div>
-                </div>`).join('');
-
-            const membRank = [...db.membros].sort((a, b) => b.pontos - a.pontos).slice(0, 5);
-            document.getElementById('ranking-membros-list').innerHTML = membRank.map((m, i) => `
-                <div class="rank-item">
-                    <div class="rank-pos">${i+1}</div>
-                    <div class="rank-info"><span class="rank-name">${m.nome}</span><span class="rank-pts">${m.pontos} pts</span></div>
-                </div>`).join('');
-        }
-
-        /* FUNÇÕES DE AÇÃO */
-        function openFS(url) {
-            const overlay = document.getElementById('fs-overlay');
-            overlay.innerHTML = `<img src="${url}">`;
-            overlay.style.display = 'flex';
-        }
-
-        function toggleMediaInputs() {
-            const type = document.getElementById('media-type').value;
-            document.getElementById('media-url-group').style.display = type === 'divider' ? 'none' : 'flex';
-            document.getElementById('media-layout-group').style.display = type === 'divider' ? 'none' : 'flex';
-        }
-
-        async function addMedia() {
-            const type = document.getElementById('media-type').value;
-            const url = document.getElementById('media-url').value;
-            const title = document.getElementById('media-title').value;
-            const desc = document.getElementById('media-desc').value;
-            const layout = document.getElementById('media-layout').value;
-            if(type !== 'divider' && !url) return alert("Insira a URL");
-            db.home.gallery.push({ type, url, title, desc, layout });
-            await save();
-            document.getElementById('media-url').value = ""; document.getElementById('media-title').value = ""; document.getElementById('media-desc').value = "";
-        }
-
-        async function delMedia(idx) { if(confirm("Excluir mídia?")) { db.home.gallery.splice(idx, 1); await save(); } }
-
-        async function addHeroConfig() {
-            const loc = document.getElementById('hero-loc').value;
-            const imgs = document.getElementById('hero-imgs').value;
-            if(!loc || !imgs) return alert("Preencha tudo");
-            db.home.heroesList = [{ id: Date.now(), location: loc, imgs: imgs }];
-            await save();
-        }
-
-        async function delHeroConfig(id) { db.home.heroesList = db.home.heroesList.filter(h => h.id !== id); await save(); }
-
-        async function salvarCustomizacao() {
-            db.home.logoUrl = document.getElementById('cfg-logo').value;
-            db.home.title = document.getElementById('cfg-title').value;
-            db.home.subTitle = document.getElementById('cfg-subtitle').value;
-            db.home.footer = document.getElementById('cfg-footer').value;
-            db.home.social = { fb: document.getElementById('cfg-footer-fb').value, ig: document.getElementById('cfg-footer-ig').value, yt: document.getElementById('cfg-footer-yt').value };
-            db.home.showTimer = document.getElementById('cfg-timer-on').checked;
-            db.home.timer = document.getElementById('cfg-timer-date').value;
-            db.home.showEventDate = document.getElementById('cfg-show-date').checked;
-            db.home.timerReplace = document.getElementById('cfg-timer-replace').value;
-            db.home.glow = document.getElementById('cfg-glow').checked;
-            db.home.showLideranca = document.getElementById('cfg-show-lideranca').checked;
-            db.home.showUnidades = document.getElementById('cfg-show-unidades').checked;
-            db.home.showGanhadores = document.getElementById('cfg-show-ganhadores').checked;
-            db.home.ganhadoresTitulo = document.getElementById('cfg-title-ganhadores').value || "Desbravadores Destaque";
-            db.home.colors = { bg: document.getElementById('clr-bg').value, txt: document.getElementById('clr-txt').value, hBg: document.getElementById('clr-h-bg').value, hTxt: document.getElementById('clr-h-txt').value, fBg: document.getElementById('clr-f-bg').value, fTxt: document.getElementById('clr-f-txt').value };
-            
-            db.unidades.forEach(u => {
-                const el = document.getElementById(`cor-unid-${u.nome.replace(/\s+/g,'-')}`);
-                if(el) u.cor = el.value;
-            });
-            await save();
-            alert("Site Personalizado!");
-        }
-
-        async function criarUsuario() {
-            const u = document.getElementById('new-u').value;
-            const p = document.getElementById('new-p').value;
-            const unid = document.getElementById('new-unid-sel').value;
-            if(!u || !p) return alert("Preencha tudo");
-            db.usuarios.push({ u, p, tipo: 'lider', unid, foto: '', perms: { h: document.getElementById('perm-h').checked, u: document.getElementById('perm-u').checked, m: document.getElementById('perm-m').checked, w: document.getElementById('perm-w').checked, t: document.getElementById('perm-t').checked } });
-            await save();
-        }
-
-        async function cadastrarMembro() {
-            const nome = document.getElementById('m-nome').value;
-            const foto = document.getElementById('m-foto').value;
-            const unid = document.getElementById('m-unid-dest').value || user.unid;
-            if(!nome) return alert("Nome obrigatório");
-            db.membros.push({ id: Date.now(), nome, foto, unid, pontos: 0, historico: [] });
-            await save();
-            document.getElementById('m-nome').value = ""; document.getElementById('m-foto').value = "";
-        }
-
-        async function excluirMembro(id) { if(confirm("Excluir membro?")) { db.membros = db.membros.filter(m => m.id !== id); await save(); } }
-
-        let membroAtualId = null;
-        function abrirModalPontos(id, valorPadrao) {
-            membroAtualId = id;
-            const m = db.membros.find(x => x.id === id);
-            document.getElementById('modal-m-nome').innerText = `Pontuar: ${m.nome}`;
-            document.getElementById('p-valor').value = valorPadrao;
-            document.getElementById('modal-pontos').style.display = 'flex';
-        }
-        function fecharModalPontos() { document.getElementById('modal-pontos').style.display = 'none'; }
-
-        async function confirmarPontos() {
-            const valor = parseInt(document.getElementById('p-valor').value);
-            const motivo = document.getElementById('p-motivo').value || "Sem motivo";
-            const m = db.membros.find(x => x.id === membroAtualId);
-            m.pontos += valor;
-            m.historico.push({ data: new Date().toLocaleString(), motivo, valor });
-            fecharModalPontos();
-            await save();
-        }
-
-        function abrirHistorico(id) {
-            const m = db.membros.find(x => x.id === id);
-            document.getElementById('hist-m-nome').innerText = `Histórico: ${m.nome}`;
-            document.getElementById('hist-lista').innerHTML = m.historico.length ? m.historico.reverse().map(h => `<div class="admin-list-item"><span>${h.data} - ${h.motivo}</span> <b style="color:${h.valor>=0?'var(--amarelo)':'var(--vermelho)'}">${h.valor>=0?'+':''}${h.valor}</b></div>`).join('') : '<p style="padding:20px; text-align:center; color:#666;">Nenhum registro.</p>';
-            document.getElementById('modal-historico').style.display = 'flex';
-        }
-        function fecharHistorico() { document.getElementById('modal-historico').style.display = 'none'; }
-
-        async function cadastrarGanhador() {
-            const nome = document.getElementById('g-nome').value;
-            const foto = document.getElementById('g-foto').value;
-            const edicao = document.getElementById('g-edicao').value;
-            if(!nome || !edicao) return alert("Preencha nome e edição");
-            db.home.ganhadores.push({ id: Date.now(), nome, foto, edicao });
-            await save();
-        }
-        async function delGanhador(id) { if(confirm("Excluir ganhador?")) { db.home.ganhadores = db.home.ganhadores.filter(g => g.id !== id); await save(); } }
-
-        async function atualizarMinhaUnidade() {
-            const u = db.unidades.find(x => x.nome === user.unid);
-            u.nome = document.getElementById('edit-unid-nome').value;
-            u.logo = document.getElementById('edit-unid-logo').value;
-            user.unid = u.nome;
-            await save();
-            alert("Unidade Atualizada!");
-        }
-
-        async function alterarMinhaFoto(url) { user.foto = url; await save(); }
-
-        async function resetSistema() { 
-            if(confirm("CUIDADO: Isso apagará TUDO. Deseja continuar?")) { 
-                db = JSON.parse(JSON.stringify(DB_PADRAO));
-                await DOC_REF.set(db);
-                location.reload();
-            } 
-        }
-
-        function toggleTimerInputs() {
-            const on = document.getElementById('cfg-timer-on').checked;
-            document.getElementById('cfg-timer-date').disabled = !on;
-            document.getElementById('cfg-timer-replace').disabled = !on;
-        }
-
-        /* INICIALIZAÇÃO */
-        document.body.classList.add('is-home');
         carregarDados();
-
     </script>
 </body>
 </html>
