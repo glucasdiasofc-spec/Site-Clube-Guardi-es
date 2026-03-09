@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Desbravadores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -262,6 +263,56 @@
         .close-modal { text-align: right; cursor: pointer; color: #888; font-size: 1.2rem; }
         .close-modal:hover { color: white; }
     
+    
+        /* --- OTIMIZAÇÃO MOBILE --- */
+        @media (max-width: 768px) {
+            body { padding-top: 70px; }
+            header { height: 70px; }
+            
+            /* Menu Hamburguer */
+            .mobile-menu-btn { display: block !important; position: absolute; right: 5%; top: 50%; transform: translateY(-50%); font-size: 1.5rem; color: var(--amarelo); cursor: pointer; z-index: 1001; }
+            .user-info-header { display: none; flex-direction: column; position: fixed; top: 70px; left: 0; width: 100%; background: rgba(0,0,0,0.95); padding: 20px; border-bottom: 2px solid var(--amarelo); gap: 15px; backdrop-filter: blur(10px); }
+            .user-info-header.active { display: flex; }
+            .user-status { width: 100%; justify-content: center; }
+            .btn-lideranca, .btn-custom { width: 100%; justify-content: center; }
+
+            /* Hero e Textos */
+            .hero h1 { font-size: 2.2rem; }
+            .hero p.subtitle { font-size: 1.1rem; }
+            
+            /* Timer */
+            .unit-timer { min-width: 80px; padding: 10px; }
+            .unit-timer b { font-size: 1.8rem; }
+            .unit-timer span { font-size: 0.7rem; }
+            
+            /* Galeria */
+            .home-gallery { grid-template-columns: 1fr; gap: 20px; }
+            .gallery-card.layout-grid { height: auto; }
+            
+            /* Painel Admin */
+            .panel-layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; width: 100%; margin-bottom: 20px; }
+            .ranking-column { position: static; width: 100%; }
+            .dbv-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .dbv-card { padding: 10px; }
+            .dbv-card img { width: 60px !important; height: 60px !important; }
+            
+            /* Tabelas e Listas */
+            .admin-list-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .admin-list-item button { width: 100%; }
+            
+            /* Splash Screen Mobile */
+            body.is-home header.initial-splash .logo-container { transform: translate(-50%, -50%) scale(1.5); }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.8rem; }
+            .dbv-grid { grid-template-columns: 1fr; }
+            .unit-timer { min-width: 70px; }
+        }
+        
+        .mobile-menu-btn { display: none; }
+
     </style>
 </head>
 <body>
@@ -278,7 +329,8 @@
             <img src="PNGDBV.webp" class="header-logo" id="main-logo-img" alt="Logo Desbravadores">
             <div class="scroll-down-msg">Role para baixo <i class="fa-solid fa-chevron-down"></i></div>
         </div>
-        <div class="user-info-header">
+        <div class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></div>
+            <div class="user-info-header" id="mobile-nav">
             <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> Visitante</span>
             <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> Customizar Site</button>
             <button class="btn-lideranca" onclick="abrirLogin()"><i class="fa-solid fa-lock"></i> Área do Líder</button>
@@ -612,6 +664,27 @@
             membros: [], 
             home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""}, timer: "2026-12-31T23:59", showTimer: true, timerReplace: "O evento começou!", showEventDate: true, heroesList: [], showLideranca: true, showUnidades: true, showGanhadores: true, ganhadoresTitulo: "Desbravadores Destaque", ganhadores: [], gallery: [], colors: { bg: "#121212", txt: "#ffffff", hBg: "transparent", hTxt: "#ffcc00", fBg: "#000000", fTxt: "#ffffff" }, glow: false, logoUrl: "" } 
         };
+        
+        function toggleMobileMenu() {
+            const nav = document.getElementById('mobile-nav');
+            const btn = document.querySelector('.mobile-menu-btn i');
+            nav.classList.toggle('active');
+            if(nav.classList.contains('active')) {
+                btn.classList.replace('fa-bars', 'fa-xmark');
+            } else {
+                btn.classList.replace('fa-xmark', 'fa-bars');
+            }
+        }
+        
+        // Fechar menu ao clicar em botões
+        document.addEventListener('click', (e) => {
+            const nav = document.getElementById('mobile-nav');
+            const btn = document.querySelector('.mobile-menu-btn');
+            if(!nav.contains(e.target) && !btn.contains(e.target) && nav.classList.contains('active')) {
+                toggleMobileMenu();
+            }
+        });
+
         let db = null; let user = null; let slideIntervalIdMap = {}; let liderIdx = 0, ganhadorIdx = 0; let carrosselLiderId = null, carrosselGanhadorId = null;
         async function save() { try { await DOC_REF.set(db); } catch(e) { console.error(e); alert("Erro ao salvar"); } render(); }
         async function carregarDados() { 
