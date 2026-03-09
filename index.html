@@ -2,165 +2,651 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Portal Desbravadores - Mobile OK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Desbravadores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* TESTE DO VERDE - SE O CARREGAMENTO ESTIVER VERDE, O SITE ATUALIZOU! */
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-        #loading-overlay p { color: #00ff00 !important; font-weight: bold; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px #00ff00; }
-        .spinner { width: 60px; height: 60px; border: 5px solid #111; border-top-color: #00ff00 !important; border-radius: 50%; animation: spin 0.8s linear infinite; box-shadow: 0 0 15px #00ff00; }
+        
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+        #loading-overlay p { color: #ffcc00; font-weight: bold; font-size: 1.1rem; letter-spacing: 2px; }
+        .spinner { width: 60px; height: 60px; border: 5px solid #333; border-top-color: #ffcc00; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* RESET E CORES */
+        
+        /* RESET E CORES DINÂMICAS */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         :root { 
             --amarelo: #ffcc00; 
+            --amarelo-hover: #ffdb4d;
             --vermelho: #e63946; 
+            --vermelho-hover: #f04b58;
             --preto: #000000; 
             --cinza-dark: #121212; 
             --cinza-card: #1e1e1e; 
             --borda-suave: #333333;
         }
         
-        body { background-color: var(--cinza-dark); color: white; font-family: 'Segoe UI', Roboto, sans-serif; line-height: 1.6; overflow-x: hidden; }
+        body { 
+            background-color: var(--cinza-dark); 
+            color: white; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            line-height: 1.6; 
+            transition: background-color 0.3s ease; 
+            overflow-x: hidden;
+            padding-top: 80px; 
+        }
         
-        /* HEADER PADRÃO (PC) */
+        /* HEADER PERSONALIZÁVEL */
         header { 
-            width: 100%; height: 80px; position: fixed; top: 0; left: 0; z-index: 1000; 
-            display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
-            transition: all 0.4s ease; backdrop-filter: blur(10px); background: rgba(0,0,0,0.5);
-        }
-        header.scrolled { border-bottom: 3px solid var(--amarelo); background: rgba(0,0,0,0.9); }
-
-        .logo-container { display: flex; align-items: center; cursor: pointer; }
-        .header-logo { height: 55px; transition: 0.3s; }
-        
-        .nav-buttons { display: flex; align-items: center; gap: 15px; }
-        .user-status { font-weight: 600; background: rgba(255, 255, 255, 0.1); padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; gap: 8px; }
-
-        .btn-lideranca { background: linear-gradient(135deg, var(--vermelho), #9b1d26); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-custom { background: linear-gradient(135deg, #444, #222); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; align-items: center; gap: 8px; transition: 0.2s; }
-
-        /* MOBILE MENU BUTTON (OCULTO NO PC) */
-        .mobile-menu-btn { display: none; background: none; border: none; color: var(--amarelo); font-size: 1.8rem; cursor: pointer; z-index: 1100; }
-
-        /* ========== RESPONSIVIDADE MOBILE AGRESSIVA ========== */
-        @media (max-width: 768px) {
-            header { height: 70px !important; padding: 0 15px !important; background: #000 !important; border-bottom: 2px solid var(--amarelo) !important; }
-            .mobile-menu-btn { display: block !important; }
-            
-            /* ESCONDER BOTÕES NO MOBILE E MOSTRAR NO MENU */
-            .nav-buttons { 
-                position: fixed !important; top: 70px !important; left: 0 !important; width: 100% !important; 
-                background: #000 !important; flex-direction: column !important; padding: 20px !important; 
-                gap: 15px !important; transform: translateY(-150%) !important; transition: 0.4s ease !important;
-                border-bottom: 3px solid var(--amarelo) !important; box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
-                z-index: 999 !important;
-            }
-            .nav-buttons.active { transform: translateY(0) !important; }
-            
-            .user-status, .btn-lideranca, .btn-custom { width: 100% !important; justify-content: center !important; padding: 15px !important; font-size: 1.1rem !important; }
-            .header-logo { height: 45px !important; }
-            
-            /* AJUSTES DE CONTEÚDO */
-            .page { margin-top: 80px !important; padding: 15px !important; }
-            .hero h1 { font-size: 1.8rem !important; }
-            .hero p.subtitle { font-size: 1rem !important; }
-            .timer { gap: 10px !important; }
-            .unit-timer { min-width: 75px !important; padding: 10px !important; }
-            .unit-timer b { font-size: 1.6rem !important; }
-            
-            .panel-layout { display: flex !important; flex-direction: column !important; }
-            .sidebar, .main-content, .ranking-column { width: 100% !important; position: static !important; }
-            .dbv-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+            width: 100%; 
+            height: 80px; 
+            position: fixed; 
+            top: 0; left: 0;
+            z-index: 1000; 
+            border-bottom: 3px solid transparent; 
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); 
+            backdrop-filter: blur(10px);
         }
 
-        /* ESTILOS GERAIS (IGUAIS AO ORIGINAL) */
-        .page { display: none; min-height: 90vh; padding: 100px 25px 25px; max-width: 1600px; margin: auto; }
-        .active { display: block !important; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .hero { text-align: center; margin-bottom: 40px; padding: 60px 20px; border-radius: 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--borda-suave); }
-        .hero h1 { font-size: 3.5rem; color: var(--amarelo); margin-bottom: 10px; }
-        
-        .timer { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
-        .unit-timer { background: rgba(0,0,0,0.6); padding: 15px; border-radius: 12px; min-width: 100px; border: 2px solid var(--vermelho); }
-        .unit-timer b { font-size: 2.5rem; display: block; }
-        .unit-timer span { font-size: 0.8rem; color: var(--amarelo); text-transform: uppercase; }
+        .logo-container {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            transform: translate(0, -50%) scale(1); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+        }
 
-        .home-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 40px; }
-        .gallery-card { background: var(--cinza-card); border-radius: 15px; overflow: hidden; border: 1px solid var(--borda-suave); }
-        .gallery-media-container { height: 200px; background: #000; display: flex; align-items: center; justify-content: center; }
-        .gallery-media-container img { width: 100%; height: 100%; object-fit: cover; }
-        .gallery-text-box { padding: 15px; text-align: center; }
+        .header-logo { 
+            height: 50px; 
+            transition: all 0.3s ease; 
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+        
+        .logo-container:hover .header-logo { transform: scale(1.05) rotate(3deg); }
+        
+        .scroll-down-msg { display: none; }
 
+        .user-info-header { 
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            transition: opacity 0.5s ease;
+            opacity: 1;
+        }
+        
+        .user-status {
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* EFEITO SPLASH */
+        body.is-home header.initial-splash {
+            height: 100vh; 
+            background-color: var(--home-bg, #121212) !important; 
+            backdrop-filter: none;
+            border-bottom: none;
+        }
+
+        @keyframes fadeInStart { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes pulseSplash {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 0 30px rgba(255,204,0,0.6)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); }
+        }
+
+        body.is-home header.initial-splash .logo-container {
+            top: 45vh; 
+            left: 50%;
+            transform: translate(-50%, -50%) scale(2.5); 
+            animation: fadeInStart 1s ease-out forwards;
+        }
+        
+        body.is-home header.initial-splash .header-logo { animation: pulseSplash 2.5s infinite ease-in-out; }
+        body.is-home header.initial-splash .scroll-down-msg {
+            display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 15px;
+            color: var(--amarelo); font-size: 0.6rem; text-transform: uppercase; font-weight: bold;
+            letter-spacing: 2px; animation: bounce 2s infinite;
+        }
+        body.is-home header.initial-splash .user-info-header { opacity: 0; pointer-events: none; }
+
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 60% { transform: translateY(-4px); } }
+        header.scrolled { border-bottom: 3px solid var(--amarelo); box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+        
+        /* BOTÕES ESTILIZADOS */
+        .btn-lideranca { background: linear-gradient(135deg, var(--vermelho), #9b1d26); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #7a151e; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+        .btn-lideranca:hover { background: var(--vermelho-hover); transform: translateY(-2px); box-shadow: 0 6px 0 #7a151e; }
+        .btn-lideranca:active { transform: translateY(2px); box-shadow: 0 0 0 #7a151e; }
+        
+        .btn-custom { background: linear-gradient(135deg, #444, #222); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #111; transition: all 0.2s; display: none; align-items: center; gap: 8px; }
+        .btn-custom:hover { background: #555; transform: translateY(-2px); box-shadow: 0 6px 0 #111;}
+        .btn-custom:active { transform: translateY(2px); box-shadow: 0 0 0 #111; }
+
+        .btn-save { background: linear-gradient(135deg, var(--amarelo), #d4aa00); color: black; width: 100%; padding: 14px; font-weight: 800; border-radius: 8px; cursor: pointer; text-transform: uppercase; border: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2); display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-save:hover { background: var(--amarelo-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 204, 0, 0.4); }
+
+        /* RODAPÉ PERSONALIZÁVEL */
+        footer { padding: 40px 5%; text-align: center; border-top: 1px solid var(--borda-suave); margin-top: 50px; background: rgba(0,0,0,0.5); }
+        .footer-social a:hover { color: var(--amarelo) !important; transform: scale(1.2); }
+
+        /* ESTRUTURA DE PÁGINAS E ANIMAÇÕES */
+        .page { display: none; min-height: 90vh; padding: 25px; max-width: 1600px; margin: auto; }
+        .active { display: block !important; animation: slideInUp 0.5s ease forwards; }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* HERO DINÂMICO */
+        .hero { text-align: center; margin-bottom: 40px; padding: 80px 20px; border-radius: 20px; border: 1px solid var(--borda-suave); background-position: center; background-size: cover; transition: background 0.8s ease; box-shadow: inset 0 0 100px rgba(0,0,0,0.8); }
+        .hero h1 { font-size: 4rem; text-shadow: 3px 3px 20px rgba(0,0,0,1); margin-bottom: 10px; letter-spacing: 2px; }
+        .hero p.subtitle { font-size: 1.5rem; text-shadow: 2px 2px 10px rgba(0,0,0,1); margin-bottom: 30px; color: #ddd; }
+        
+        /* CRONÔMETRO */
+        .timer { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px; }
+        .unit-timer { background: rgba(20, 20, 20, 0.6); padding: 20px; border-radius: 15px; min-width: 110px; border: 2px solid var(--vermelho); backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(230, 57, 70, 0.2); transition: transform 0.3s; }
+        .unit-timer:hover { transform: translateY(-5px); }
+        .unit-timer b { font-size: 3rem; display: block; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .unit-timer span { font-size: 0.9rem; color: var(--amarelo); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .event-date-txt { font-weight: bold; font-size: 1.2rem; text-shadow: 2px 2px 5px #000; margin-top: 15px; display: block; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; width: fit-content; margin-left: auto; margin-right: auto; }
+        .timer-replacement { font-size: 1.8rem; font-weight: bold; background: rgba(0,0,0,0.8); padding: 25px 40px; border-radius: 15px; display: inline-block; border: 2px solid var(--amarelo); backdrop-filter: blur(5px); }
+
+        /* GALERIA MULTIMÍDIA */
+        .home-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; margin-top: 50px; }
+        .gallery-card { border-radius: 15px; overflow: hidden; border: 2px solid var(--borda-suave); position: relative; background: #000; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+        .gallery-card:hover { transform: scale(1.02); z-index: 2; }
+        .gallery-card.layout-grid { height: 320px; } 
+        .gallery-card.layout-full { grid-column: 1 / -1; width: 100%; height: auto; min-height: 400px; }
+        .gallery-card.layout-title { grid-column: 1 / -1; background: transparent; border: none; text-align: center; margin: 40px 0 10px 0; box-shadow: none !important; height: auto; }
+        .gallery-card.layout-title h2 { color: var(--amarelo); font-size: 2.5rem; text-transform: uppercase; text-shadow: 0 0 15px rgba(255,204,0,0.3); }
+        .gallery-card.layout-title p { color: #aaa; font-size: 1.1rem; }
+        
+        .gallery-text-box { padding: 10px 15px; background: #111; text-align: center; }
+        .gallery-text-box h3 { color: var(--amarelo); margin-bottom: 5px; font-size: 1.2rem; }
+        .gallery-text-box p { color: #ccc; font-size: 0.95rem; }
+        .gallery-media-container { flex: 1; overflow: hidden; position: relative; min-height: 150px; display: flex; justify-content: center; align-items: center; background: #0a0a0a; }
+        .gallery-media-container img, .gallery-media-container video { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; }
+        .gallery-card.layout-full .gallery-media-container { max-height: 80vh; }
+        .gallery-card.layout-full .gallery-media-container img, .gallery-card.layout-full .gallery-media-container video { object-fit: contain; } 
+        .gallery-card:hover img { opacity: 0.8; }
+        .btn-del-media { position: absolute; top: 15px; right: 15px; background: rgba(230,57,70,0.9); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; z-index: 10; display: none; transition: 0.3s; font-size: 14px; }
+        .btn-del-media:hover { background: red; transform: scale(1.2); }
+
+        /* LISTA ADMIN */
+        .admin-list { background: #0a0a0a; border: 1px solid #333; border-radius: 10px; max-height: 300px; overflow-y: auto; margin-top: 15px; padding: 10px; }
+        .admin-list-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 3px solid var(--amarelo); }
+        .admin-list-item button { background: var(--vermelho); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+
+        /* CARROSSEIS (GANHADORES E LIDERANÇA) */
+        .showcase-section { text-align: center; margin: 60px 0; padding: 40px 20px; background: rgba(0,0,0,0.4); border-radius: 20px; border: 1px solid #333; position: relative; }
+        .showcase-section h2 { color: var(--amarelo); font-size: 2.2rem; margin-bottom: 30px; }
+        .carousel-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; }
+        .carousel-track { display: flex; gap: 20px; overflow: hidden; width: 300px; height: 350px; justify-content: center; align-items: center; position: relative; }
+        .carousel-item { position: absolute; width: 100%; height: 100%; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: scale(0.9); pointer-events: none; background: #111; border-radius: 15px; border: 2px solid var(--amarelo); padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .carousel-item.active { opacity: 1; transform: scale(1); pointer-events: auto; }
+        .carousel-item img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--amarelo); margin-bottom: 15px; }
+        .carousel-item h3 { color: white; margin-bottom: 5px; font-size: 1.4rem; }
+        .carousel-item p { color: var(--amarelo); font-weight: bold; }
+        .carousel-btn { background: #333; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: 0.3s; z-index: 10; }
+        .carousel-btn:hover { background: var(--amarelo); color: black; }
+        
+        /* UNIDADES NA HOME */
+        .units-home-wrap { display: flex; flex-direction: column; gap: 50px; margin-top: 50px; }
+        .unit-home-box { background: #111; border-radius: 20px; padding: 30px; border-top: 5px solid var(--amarelo); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .unit-home-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        .unit-home-header img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--amarelo); }
+        .unit-home-header h2 { font-size: 2rem; }
+
+        /* LAYOUT PAINEL */
+        .panel-layout { display: grid; grid-template-columns: 320px 1fr 350px; gap: 30px; }
+        @media (max-width: 1200px) { .panel-layout { grid-template-columns: 1fr; } }
+        .sidebar, .ranking-column, .form-box { background: var(--cinza-card); padding: 30px; border-radius: 20px; border: 1px solid var(--borda-suave); height: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .sidebar-profile { text-align: center; margin-bottom: 20px; }
+        .profile-img { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--vermelho); object-fit: cover; margin-bottom: 15px; box-shadow: 0 0 20px rgba(230,57,70,0.4); }
+        
+        /* INPUTS ESTILIZADOS */
+        .input-group { position: relative; margin: 12px 0; width: 100%; }
+        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--amarelo); z-index: 2; font-size: 1.1rem; }
+        .input-group input, .input-group select { width: 100%; padding: 14px 14px 14px 45px; border-radius: 10px; border: 1px solid #444; background: #111; color: white; font-size: 1rem; transition: all 0.3s; }
+        .input-group input:focus, .input-group select:focus { border-color: var(--amarelo); box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); background: #1a1a1a; }
+        input:not(.input-group input):not([type="checkbox"]):not([type="color"]), select:not(.input-group select), textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #111; color: white; transition: 0.3s; font-family: inherit; }
+        input:focus, select:focus, textarea:focus { border-color: var(--amarelo); }
+        .input-label { display: block; text-align: left; font-size: 0.85rem; color: #aaa; margin-bottom: -5px; margin-top: 10px; font-weight: bold; }
+
+        /* CUSTOMIZADOR UI */
+        .custom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 900px) { .custom-grid { grid-template-columns: 1fr; } }
+        .config-sec { border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+        .config-sec h4 { color: var(--amarelo); margin-bottom: 15px; text-transform: uppercase; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
+        .color-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; font-size: 0.9rem; background: #111; padding: 10px 15px; border-radius: 8px; border: 1px solid #333; }
+        .color-row input[type="color"] { width: 40px; height: 40px; padding: 0; margin: 0; border: none; cursor: pointer; border-radius: 50%; overflow: hidden; }
+        .color-row input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-row input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+
+        /* GRID MEMBROS (DBV) */
         .dbv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .dbv-card { background: #111; border-radius: 15px; padding: 20px; text-align: center; border: 1px solid #333; }
+        .dbv-card { background: linear-gradient(145deg, #2a2a2a, #1f1f1f); border-radius: 15px; padding: 20px; text-align: center; border-bottom: 5px solid var(--vermelho); position: relative; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .dbv-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-bottom-color: var(--amarelo); }
+        .btn-del { position: absolute; top: -10px; right: -10px; background: var(--vermelho); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: 0.2s; }
+        .btn-del:hover { background: #ff0000; transform: scale(1.1); }
+        .dbv-card-pts { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        .dbv-card-pts button { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        .dbv-card-pts button:hover { background: var(--amarelo); color: black; }
+        .btn-hist { background: transparent; color: #888; border: 1px solid #444; width: 100%; padding: 5px; border-radius: 5px; margin-top: 10px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .btn-hist:hover { background: #333; color: white; }
+
+        /* RANKING */
+        .rank-box { margin-bottom: 30px; }
+        .rank-box h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: var(--amarelo); border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .rank-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: #111; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; transition: 0.3s; border-left: 4px solid #444; }
+        .rank-item:hover { background: #1a1a1a; transform: translateX(5px); border-left-color: var(--amarelo); }
+        .rank-item b { font-size: 1.2rem; color: var(--amarelo); width: 30px; }
+
+        /* CHECKBOXES CUSTOMIZADAS */
+        label { display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 10px 0; }
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--amarelo); cursor: pointer; }
+        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; background: #111; padding: 15px; border-radius: 10px; border: 1px solid #333; margin: 15px 0; }
+
+        /* MODAIS GERAIS (HISTÓRICO / PONTOS / ALL WINNERS) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 9000; display: none; align-items: center; justify-content: center; }
+        .modal-box { background: var(--cinza-card); padding: 30px; border-radius: 20px; width: 95%; max-width: 500px; border: 2px solid var(--amarelo); box-shadow: 0 15px 35px rgba(0,0,0,0.8); max-height: 80vh; overflow-y: auto; }
+        .close-modal { text-align: right; cursor: pointer; color: #888; font-size: 1.2rem; }
+        .close-modal:hover { color: white; }
+    
+    
+        /* --- OTIMIZAÇÃO MOBILE --- */
+        @media (max-width: 768px) {
+            body { padding-top: 70px; }
+            header { height: 70px; }
+            
+            /* Menu Hamburguer */
+            .mobile-menu-btn { display: block !important; position: absolute; right: 5%; top: 50%; transform: translateY(-50%); font-size: 1.5rem; color: var(--amarelo); cursor: pointer; z-index: 1001; }
+            .user-info-header { display: none; flex-direction: column; position: fixed; top: 70px; left: 0; width: 100%; background: rgba(0,0,0,0.95); padding: 20px; border-bottom: 2px solid var(--amarelo); gap: 15px; backdrop-filter: blur(10px); }
+            .user-info-header.active { display: flex; }
+            .user-status { width: 100%; justify-content: center; }
+            .btn-lideranca, .btn-custom { width: 100%; justify-content: center; }
+
+            /* Hero e Textos */
+            .hero h1 { font-size: 2.2rem; }
+            .hero p.subtitle { font-size: 1.1rem; }
+            
+            /* Timer */
+            .unit-timer { min-width: 80px; padding: 10px; }
+            .unit-timer b { font-size: 1.8rem; }
+            .unit-timer span { font-size: 0.7rem; }
+            
+            /* Galeria */
+            .home-gallery { grid-template-columns: 1fr; gap: 20px; }
+            .gallery-card.layout-grid { height: auto; }
+            
+            /* Painel Admin */
+            .panel-layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; width: 100%; margin-bottom: 20px; }
+            .ranking-column { position: static; width: 100%; }
+            .dbv-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .dbv-card { padding: 10px; }
+            .dbv-card img { width: 60px !important; height: 60px !important; }
+            
+            /* Tabelas e Listas */
+            .admin-list-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .admin-list-item button { width: 100%; }
+            
+            /* Splash Screen Mobile */
+            body.is-home header.initial-splash .logo-container { transform: translate(-50%, -50%) scale(1.5); }
+        }
         
-        footer { padding: 40px; text-align: center; background: #000; border-top: 1px solid #222; margin-top: 50px; }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.8rem; }
+            .dbv-grid { grid-template-columns: 1fr; }
+            .unit-timer { min-width: 70px; }
+        }
+        
+        .mobile-menu-btn { display: none; }
+
     </style>
 </head>
-<body class="is-home">
-
+<body>
+    
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <p><i class="fa-solid fa-bolt"></i> ATUALIZANDO SISTEMA...</p>
+        <p><i class="fa-solid fa-cloud-arrow-down"></i> CARREGANDO DADOS...</p>
     </div>
 
-    <header id="main-header">
-        <div class="logo-container" onclick="location.reload()">
-            <img id="main-logo-img" src="PNGDBV.webp" class="header-logo" onerror="this.src='https://via.placeholder.com/100'">
+    
+
+    <header id="main-header" class="initial-splash">
+        <div class="logo-container" onclick="window.location.reload()">
+            <img src="PNGDBV.webp" class="header-logo" id="main-logo-img" alt="Logo Desbravadores">
+            <div class="scroll-down-msg">Role para baixo <i class="fa-solid fa-chevron-down"></i></div>
         </div>
-
-        <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
-
-        <div class="nav-buttons" id="nav-menu">
-            <div class="user-status" id="status-txt"><i class="fa-solid fa-circle-notch fa-spin"></i> Conectando...</div>
-            <button id="nav-custom" class="btn-custom" onclick="showPage('custom-page')"><i class="fa-solid fa-wand-magic-sparkles"></i> Customizar Site</button>
-            <button id="nav-admin" class="btn-lideranca" onclick="abrirLogin()"><i class="fa-solid fa-lock"></i> Área do Líder</button>
+        <div class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></div>
+            <div class="user-info-header" id="mobile-nav">
+            <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> Visitante</span>
+            <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> Customizar Site</button>
+            <button class="btn-lideranca" onclick="abrirLogin()"><i class="fa-solid fa-lock"></i> Área do Líder</button>
         </div>
     </header>
 
-    <section id="home-page" class="page active">
-        <div class="hero">
-            <h1 id="home-title-display">Portal Desbravadores</h1>
-            <p id="home-subtitle-display" class="subtitle">Sistema de Gestão e Rankings</p>
-            <div class="timer">
-                <div class="unit-timer"><b id="t-d">00</b><span>Dias</span></div>
-                <div class="unit-timer"><b id="t-h">00</b><span>Horas</span></div>
-                <div class="unit-timer"><b id="t-m">00</b><span>Min</span></div>
-                <div class="unit-timer"><b id="t-s">00</b><span>Seg</span></div>
+    <div id="fullscreen-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center;" onclick="this.style.display='none'">
+        <img id="fs-img" style="max-width:90%; max-height:90%; border-radius:10px; box-shadow: 0 0 30px rgba(255,204,0,0.3);">
+    </div>
+
+    <div id="modal-pontos" class="modal-overlay">
+        <div class="modal-box">
+            <div class="close-modal" onclick="document.getElementById('modal-pontos').style.display='none'"><i class="fa-solid fa-times"></i></div>
+            <h3 style="color:var(--amarelo); margin-bottom: 20px; text-align: center;"><i class="fa-solid fa-star"></i> Atribuir Pontuação</h3>
+            <p id="txt-acao-pontos" style="text-align: center; margin-bottom: 15px; font-weight: bold;"></p>
+            <input type="text" id="input-just-pontos" placeholder="Justificativa (Opcional)">
+            <input type="hidden" id="hdn-membro-id">
+            <input type="hidden" id="hdn-membro-valor">
+            <button onclick="confirmarPontos()" class="btn-save" style="margin-top:20px;">CONFIRMAR AÇÃO</button>
+        </div>
+    </div>
+
+    <div id="modal-historico" class="modal-overlay">
+        <div class="modal-box" style="max-width: 600px;">
+            <div class="close-modal" onclick="document.getElementById('modal-historico').style.display='none'"><i class="fa-solid fa-times"></i></div>
+            <h3 style="color:var(--amarelo); margin-bottom: 20px;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pontos</h3>
+            <button onclick="limparHistoricoMembroAtual()" style="background: var(--vermelho); color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; margin-bottom: 15px; width:100%; font-weight:bold;"><i class="fa-solid fa-trash-can"></i> APAGAR TODO O HISTÓRICO DESTE MEMBRO</button>
+            <div id="lista-historico-membro" style="display: flex; flex-direction: column; gap: 10px;"></div>
+        </div>
+    </div>
+
+    <div id="modal-all-winners" class="modal-overlay">
+        <div class="modal-box" style="max-width: 700px;">
+            <div class="close-modal" onclick="document.getElementById('modal-all-winners').style.display='none'"><i class="fa-solid fa-times"></i></div>
+            <h3 style="color:var(--amarelo); margin-bottom: 20px; text-align: center;"><i class="fa-solid fa-trophy"></i> Hall da Fama Completo</h3>
+            <div id="grid-all-winners" class="dbv-grid"></div>
+        </div>
+    </div>
+
+    <main id="home-page" class="page active">
+        <div id="hero-top-container"></div>
+
+        <section id="home-hero-default" class="hero" style="display:none;">
+            <h1 id="home-title-display">Clube Desbravadores</h1>
+            <p id="home-subtitle-display" class="subtitle"></p>
+            <div id="timer-container">
+                <div id="timer-display" class="timer"></div>
+                <span id="event-date-display" class="event-date-txt"><i class="fa-regular fa-calendar-days"></i> </span>
+            </div>
+            <div id="timer-alt-display" class="timer-replacement" style="display:none"></div>
+        </section>
+
+        <section id="lideranca-section" class="showcase-section" style="display:none;">
+            <h2><i class="fa-solid fa-user-tie"></i> Nossa Liderança</h2>
+            <div class="carousel-wrap">
+                <button class="carousel-btn" onclick="prevLider()">&lt;</button>
+                <div id="lideranca-track" class="carousel-track"></div>
+                <button class="carousel-btn" onclick="nextLider()">&gt;</button>
+            </div>
+        </section>
+
+        <div id="notice-area"></div>
+
+        <div id="hero-mid-container"></div>
+        
+        <h2 id="gallery-title-main" style="margin-top: 40px; text-align: center; color: var(--amarelo);"><i class="fa-solid fa-images"></i> Galeria de Mídia</h2>
+        <div id="home-gallery-grid" class="home-gallery"></div>
+
+        <section id="ganhadores-section" class="showcase-section" style="display:none;">
+            <h2 id="ganhadores-title-display"><i class="fa-solid fa-trophy"></i> Desbravadores Destaque</h2>
+            <div class="carousel-wrap">
+                <button class="carousel-btn" onclick="prevGanhador()">&lt;</button>
+                <div id="ganhadores-track" class="carousel-track"></div>
+                <button class="carousel-btn" onclick="nextGanhador()">&gt;</button>
+            </div>
+            <button onclick="verTodosGanhadores()" class="btn-custom" style="display:inline-flex; margin-top:20px; background:var(--amarelo); color:black;"><i class="fa-solid fa-list-ul"></i> VER TODOS</button>
+        </section>
+
+        <section id="unidades-showcase-section" style="display:none;">
+            <h2 style="margin-top: 60px; text-align: center; color: var(--amarelo); font-size:2.5rem;"><i class="fa-solid fa-campground"></i> Nossas Unidades</h2>
+            <div id="unidades-home-container" class="units-home-wrap"></div>
+        </section>
+
+        <div id="hero-bottom-container"></div>
+    </main>
+
+    <footer id="main-footer">
+        <div id="footer-text">© 2026 Portal Desbravadores - Sistema de Gestão</div>
+    </footer>
+
+    <section id="custom-page" class="page">
+        <div style="max-width: 1200px; margin: auto;">
+            <h2 style="color:var(--amarelo); margin-bottom:30px; text-align: center; font-size: 2rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> Personalização da Home Page</h2>
+            
+            <div class="custom-grid">
+                <div class="form-box">
+                    <div class="config-sec">
+                        <h4><i class="fa-solid fa-heading"></i> Cabeçalho e Títulos</h4>
+                        <div class="input-group">
+                            <i class="fa-solid fa-image"></i>
+                            <input type="text" id="cfg-logo" placeholder="URL da Logo do Site (Vazio para padrão)">
+                        </div>
+                        <div class="input-group">
+                            <i class="fa-solid fa-pen"></i>
+                            <input type="text" id="cfg-title" placeholder="Título Principal (Hero)">
+                        </div>
+                        <div class="input-group">
+                            <i class="fa-solid fa-align-left"></i>
+                            <input type="text" id="cfg-subtitle" placeholder="Texto abaixo do título (Opcional)">
+                        </div>
+                    </div>
+
+                    <div class="config-sec">
+                        <h4><i class="fa-solid fa-shoe-prints"></i> Rodapé e Redes Sociais</h4>
+                        <div class="input-group"><i class="fa-solid fa-pen-nib"></i><input type="text" id="cfg-footer" placeholder="Texto do Rodapé (Ex: © Clube XYZ)"></div>
+                        <div class="input-group"><i class="fa-brands fa-facebook"></i><input type="text" id="cfg-footer-fb" placeholder="Link do Facebook (Deixe vazio para ocultar)"></div>
+                        <div class="input-group"><i class="fa-brands fa-instagram"></i><input type="text" id="cfg-footer-ig" placeholder="Link do Instagram (Deixe vazio para ocultar)"></div>
+                        <div class="input-group"><i class="fa-brands fa-youtube"></i><input type="text" id="cfg-footer-yt" placeholder="Link do YouTube (Deixe vazio para ocultar)"></div>
+                    </div>
+
+                    <div class="config-sec">
+                        <h4><i class="fa-solid fa-images"></i> Fundos Dinâmicos (Heroes)</h4>
+                        <label class="input-label">Adicione vários blocos de fotos (carrossel) e escolha onde aparecerão.</label>
+                        <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333; margin-bottom: 10px;">
+                            <textarea id="new-hero-imgs" rows="2" placeholder="URL(s) das Fotos separadas por vírgula"></textarea>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <select id="new-hero-loc"><option value="top">Topo (Início)</option><option value="mid">Meio da Página</option><option value="bottom">Fim da Página</option></select>
+                                <select id="new-hero-pos"><option value="center">Centralizado</option><option value="top">Alinhado no Topo</option><option value="bottom">Alinhado Embaixo</option></select>
+                                <select id="new-hero-size" style="grid-column: 1 / -1;"><option value="cover">Preencher a tela (Cover)</option><option value="contain">Caber na tela (Contain)</option></select>
+                            </div>
+                            <button onclick="addHeroConfig()" class="btn-save" style="font-size:11px; padding:10px; margin-top:10px;"><i class="fa-solid fa-plus"></i> ADICIONAR FUNDO (HERO)</button>
+                        </div>
+                        <label class="input-label">Fundos Adicionados:</label>
+                        <div id="admin-heroes-list" class="admin-list"></div>
+                    </div>
+
+                    <div class="config-sec">
+                        <h4><i class="fa-solid fa-stopwatch"></i> Cronômetro do Evento</h4>
+                        <label><input type="checkbox" id="cfg-timer-on" onchange="toggleTimerInputs()"> Ativar Contagem Regressiva no Fundo Topo</label>
+                        <div id="timer-settings">
+                            <label class="input-label">Data e Hora do Evento:</label>
+                            <input type="datetime-local" id="cfg-timer-date">
+                            <label><input type="checkbox" id="cfg-show-date"> Mostrar data escrita por extenso abaixo</label>
+                        </div>
+                        <div id="timer-off-settings" style="display:none">
+                            <div class="input-group">
+                                <i class="fa-solid fa-bullhorn"></i>
+                                <input type="text" id="cfg-timer-replace" placeholder="Texto que substitui o cronômetro (Ex: O evento começou!)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-box">
+                    <div class="config-sec">
+                        <h4><i class="fa-solid fa-eye"></i> Exibição de Seções (Home)</h4>
+                        <label><input type="checkbox" id="cfg-show-lideranca"> Mostrar Apresentação da Liderança</label>
+                        <label><input type="checkbox" id="cfg-show-unidades"> Mostrar Apresentação das Unidades Segregadas</label>
+                        <label><input type="checkbox" id="cfg-show-ganhadores"> Mostrar Hall da Fama (Ganhadores)</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-font"></i>
+                            <input type="text" id="cfg-title-ganhadores" placeholder="Título para os Ganhadores (Ex: Destaques)">
+                        </div>
+                    </div>
+
+                    <div class="config-sec">
+                        <h4><i class="fa-solid fa-palette"></i> Paleta de Cores e Unidades</h4>
+                        <div class="color-row"><span>Fundo Home:</span> <input type="color" id="clr-bg"></div>
+                        <div class="color-row"><span>Texto Home:</span> <input type="color" id="clr-txt"></div>
+                        <div class="color-row"><span>Fundo Header:</span> <input type="color" id="clr-h-bg"></div>
+                        <div class="color-row"><span>Texto Header:</span> <input type="color" id="clr-h-txt"></div>
+                        <div class="color-row"><span>Fundo Rodapé:</span> <input type="color" id="clr-f-bg"></div>
+                        <div class="color-row"><span>Texto Rodapé:</span> <input type="color" id="clr-f-txt"></div>
+                        <label style="margin-top:15px; display:flex; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333;"><input type="checkbox" id="cfg-glow"> Ativar Efeito de Brilho Dinâmico (Neon) nos Cards</label>
+                        
+                        <label class="input-label" style="margin-top:15px;">Cores das Unidades (Para Apresentação na Home):</label>
+                        <div id="unidades-cores-list"></div>
+                    </div>
+
+                    <div class="config-sec">
+                        <h4><i class="fa-solid fa-photo-film"></i> Gerenciar Galeria</h4>
+                        <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333; margin-bottom: 10px;">
+                            <input type="text" id="new-media-url" placeholder="URL da Foto/Vídeo">
+                            <input type="text" id="new-media-title" placeholder="Título (Opcional)">
+                            <textarea id="new-media-desc" placeholder="Texto / Descrição que fica embaixo (Opcional)" style="margin-bottom: 5px;"></textarea>
+                            <div style="display:flex; gap:10px;">
+                                <select id="new-media-type" style="flex:1;">
+                                    <option value="img">📷 Foto</option>
+                                    <option value="vid">🎥 Vídeo</option>
+                                    <option value="divider">➖ Título/Divisor de Seção</option>
+                                </select>
+                                <select id="new-media-layout" style="flex:1;">
+                                    <option value="grid">Lado a Lado (Grid)</option>
+                                    <option value="full">Grande e Centralizado</option>
+                                </select>
+                            </div>
+                            <button onclick="addMedia()" class="btn-save" style="font-size:11px; padding:10px; margin-top:10px;"><i class="fa-solid fa-plus"></i> ADICIONAR MÍDIA/DIVISOR</button>
+                        </div>
+                        <label class="input-label">Mídias Lançadas:</label>
+                        <div id="admin-gallery-list" class="admin-list"></div>
+                    </div>
+
+                    <button onclick="salvarConfigHome()" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> SALVAR TODAS AS ALTERAÇÕES</button>
+                    <button onclick="navegarPara('admin-page')" style="width:100%; background:none; color:#aaa; border:none; margin-top:20px; cursor:pointer; font-weight:bold; transition: 0.3s;"><i class="fa-solid fa-arrow-left"></i> Voltar ao Painel</button>
+                </div>
             </div>
         </div>
-        <div id="home-gallery-grid" class="home-gallery"></div>
     </section>
 
-    <!-- PÁGINAS SIMPLIFICADAS PARA O TESTE -->
-    <section id="custom-page" class="page">
-        <div style="text-align:center; padding: 50px;">
-            <h2>Painel de Customização</h2>
-            <p>Clique no botão abaixo para voltar.</p>
-            <button onclick="showPage('home-page')" class="btn-lideranca" style="margin: 20px auto;">Voltar para Home</button>
+    <section id="login-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
+        <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid var(--amarelo);text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
+            <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: var(--amarelo); margin-bottom: 15px;"></i>
+            <h2 style="color:var(--amarelo);margin-bottom:25px;letter-spacing: 1px;">ACESSO LIDERANÇA</h2>
+            <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-u" placeholder="Nome de Usuário"></div>
+            <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-p" placeholder="Senha"></div>
+            <button onclick="tentarLogin()" class="btn-save" style="margin-top:25px"><i class="fa-solid fa-right-to-bracket"></i> ENTRAR NO SISTEMA</button>
+            <p onclick="document.getElementById('login-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
         </div>
     </section>
 
     <section id="admin-page" class="page">
-        <div style="text-align:center; padding: 50px;">
-            <h2>Painel Administrativo</h2>
-            <p>Bem-vindo, <span id="user-name">Líder</span>!</p>
-            <button onclick="showPage('home-page')" class="btn-lideranca" style="margin: 20px auto;">Voltar para Home</button>
+        <div class="panel-layout">
+            
+            <aside class="sidebar">
+                <div class="sidebar-profile">
+                    <img id="my-profile-img" src="" class="profile-img" onerror="this.src='https://via.placeholder.com/150'">
+                    <h2 id="my-name-display">Líder</h2>
+                    <p id="my-unid-display" style="color:var(--amarelo);font-size:14px;margin-bottom:20px;font-weight:bold;"><i class="fa-solid fa-campground"></i> </p>
+                    <label class="input-label"><i class="fa-solid fa-camera-rotate"></i> Atualizar URL da sua Foto:</label>
+                    <div class="input-group"><i class="fa-solid fa-link"></i><input type="text" placeholder="Cole o link da imagem aqui" onchange="alterarMinhaFoto(this.value)"></div>
+                </div>
+                
+                <div id="box-gerenciamento-unid" class="form-box" style="display:none; background:#111; margin-top:20px;">
+                    <h4 id="titulo-edit-unid" style="color:var(--amarelo); font-size:14px; margin-bottom:15px;"><i class="fa-solid fa-pen-to-square"></i> Editar Unidade</h4>
+                    <div class="input-group" style="display:none;" id="container-edit-unid-sel"><i class="fa-solid fa-list"></i><select id="edit-unid-sel" onchange="carregarDadosUnidade()"></select></div>
+                    <label class="input-label">Nome da Unidade:</label>
+                    <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="edit-unid-nome" placeholder="Nome"></div>
+                    <label class="input-label">Logo da Unidade (URL):</label>
+                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="edit-unid-logo" placeholder="URL do Logo"></div>
+                    <button onclick="atualizarMinhaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px;"><i class="fa-solid fa-check"></i> SALVAR UNIDADE</button>
+                </div>
+                
+                <button onclick="resetSistema()" style="width:100%; background:rgba(230,57,70,0.1); color:var(--vermelho); border:1px solid var(--vermelho); border-radius:8px; padding:12px; cursor:pointer; font-weight:bold; margin-top:30px; transition:0.3s;"><i class="fa-solid fa-triangle-exclamation"></i> RESET TOTAL DO SISTEMA</button>
+            </aside>
+
+            <div class="main-content">
+                
+                <div id="admin-only-users" class="form-box" style="display:none; margin-bottom: 30px;">
+                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-user-gear"></i> Gerenciar Usuários/Líderes</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="input-group"><i class="fa-solid fa-user-plus"></i><input type="text" id="new-u" placeholder="Novo Login"></div>
+                        <div class="input-group"><i class="fa-solid fa-key"></i><input type="text" id="new-p" placeholder="Senha"></div>
+                    </div>
+                    <label class="input-label">Vincular a qual Unidade?</label>
+                    <div class="input-group"><i class="fa-solid fa-campground"></i><select id="new-unid-sel"></select></div>
+                    <label class="input-label">Permissões do Usuário:</label>
+                    <div class="perm-grid">
+                        <label><input type="checkbox" id="perm-h"> 🏠 Editar Home</label>
+                        <label><input type="checkbox" id="perm-u"> ⛺ Editar Unidade</label>
+                        <label><input type="checkbox" id="perm-m"> 👥 Gerir Membros</label>
+                        <label><input type="checkbox" id="perm-w"> 🏆 Gerir Ganhadores</label>
+                        <label><input type="checkbox" id="perm-t"> 🌟 Acesso Total</label>
+                    </div>
+                    <button onclick="criarUsuario()" class="btn-save"><i class="fa-solid fa-plus"></i> CRIAR ACESSO</button>
+                </div>
+
+                <div id="hall-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid var(--amarelo);">
+                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-ranking-star"></i> Registrar Ganhador (Semestre/Trimestre)</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="g-nome" placeholder="Nome do Desbravador"></div>
+                        <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="g-foto" placeholder="URL da Foto"></div>
+                    </div>
+                    <div class="input-group"><i class="fa-regular fa-calendar-check"></i><input type="text" id="g-edicao" placeholder="Edição (Ex: 01.2026, 1º Trimestre 2026)"></div>
+                    <button onclick="cadastrarGanhador()" class="btn-save" style="margin-bottom: 20px;"><i class="fa-solid fa-medal"></i> REGISTRAR NO HALL DA FAMA</button>
+                    
+                    <h4 style="margin-bottom: 10px; color:#aaa; font-size: 0.9rem;">Ganhadores Registrados (Mais recentes primeiro):</h4>
+                    <div id="admin-ganhadores-list" class="admin-list"></div>
+                </div>
+
+                <div id="delete-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border: 1px solid var(--vermelho);">
+                    <h3 style="color:var(--vermelho); margin-bottom: 15px;"><i class="fa-solid fa-trash-can"></i> Apagar Unidades</h3>
+                    <div class="input-group"><i class="fa-solid fa-campground"></i><select id="del-unid-sel"></select></div>
+                    <button onclick="apagarUnidade()" class="btn-save" style="background:var(--vermelho); color:white; box-shadow: 0 4px 15px rgba(230,57,70,0.4);"><i class="fa-solid fa-triangle-exclamation"></i> EXCLUIR UNIDADE</button>
+                </div>
+
+                <div id="memb-section" class="form-box" style="display:none">
+                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-users"></i> Gerenciar Membros (Desbravadores)</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="m-nome" placeholder="Nome do Membro"></div>
+                        <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="m-foto" placeholder="URL da Foto (Opcional)"></div>
+                    </div>
+                    <div class="input-group" id="container-m-unid-dest" style="display:none;"><i class="fa-solid fa-campground"></i><select id="m-unid-dest"></select></div>
+                    <button onclick="cadastrarMembro()" class="btn-save" style="margin-bottom: 30px;"><i class="fa-solid fa-user-plus"></i> ADICIONAR MEMBRO</button>
+                    <h4 style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom:10px;"><i class="fa-solid fa-address-book"></i> Lista de Membros</h4>
+                    <div id="meus-membros-grid" class="dbv-grid"></div>
+                </div>
+            </div>
+
+            <div class="ranking-column">
+                <div class="rank-box">
+                    <h3><i class="fa-solid fa-trophy" style="color:var(--amarelo);"></i> Ranking Unidades</h3>
+                    <div id="ranking-unidades-list"></div>
+                </div>
+                <div class="rank-box">
+                    <h3><i class="fa-solid fa-medal" style="color:#c0c0c0;"></i> Top 5 Desbravadores</h3>
+                    <div id="ranking-membros-list"></div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <p id="footer-text">© 2026 Portal Desbravadores - Mobile Optimized</p>
-    </footer>
-
+    
+    
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script>
-        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = { 
             apiKey: "AIzaSyBfmk3fKbRWy3HhcJ47qStH7VChI6U0tWM", 
             authDomain: "clube-guardioes.firebaseapp.com", 
@@ -170,82 +656,573 @@
             appId: "1:106491860016:web:bef77d52150c8e915d09f5" 
         };
         firebase.initializeApp(firebaseConfig);
-        const db_fs = firebase.firestore();
-        const DOC_REF = db_fs.collection("sistema").doc("dados");
-
-        let db_data = null;
-        let currentUser = null;
-
-        function toggleMenu() {
-            document.getElementById('nav-menu').classList.toggle('active');
-            const icon = document.querySelector('.mobile-menu-btn i');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-xmark');
+        const firestoreDb = firebase.firestore();
+        const DOC_REF = firestoreDb.collection("sistema").doc("dados");
+        const DB_PADRAO = { 
+            usuarios: [{u:"admin", p:"123", tipo:"geral", unid:"Administração", foto:"", perms:{h:true,u:true,m:true,w:true,t:true}}], 
+            unidades: [{nome:"Administração", logo:"", cor:"#333333"}, {nome:"Águia", logo:"", cor:"#e63946"}], 
+            membros: [], 
+            home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""}, timer: "2026-12-31T23:59", showTimer: true, timerReplace: "O evento começou!", showEventDate: true, heroesList: [], showLideranca: true, showUnidades: true, showGanhadores: true, ganhadoresTitulo: "Desbravadores Destaque", ganhadores: [], gallery: [], colors: { bg: "#121212", txt: "#ffffff", hBg: "transparent", hTxt: "#ffcc00", fBg: "#000000", fTxt: "#ffffff" }, glow: false, logoUrl: "" } 
+        };
+        
+        function toggleMobileMenu() {
+            const nav = document.getElementById('mobile-nav');
+            const btn = document.querySelector('.mobile-menu-btn i');
+            nav.classList.toggle('active');
+            if(nav.classList.contains('active')) {
+                btn.classList.replace('fa-bars', 'fa-xmark');
+            } else {
+                btn.classList.replace('fa-xmark', 'fa-bars');
+            }
         }
+        
+        // Fechar menu ao clicar em botões
+        document.addEventListener('click', (e) => {
+            const nav = document.getElementById('mobile-nav');
+            const btn = document.querySelector('.mobile-menu-btn');
+            if(!nav.contains(e.target) && !btn.contains(e.target) && nav.classList.contains('active')) {
+                toggleMobileMenu();
+            }
+        });
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('nav-menu').classList.remove('active');
-            window.scrollTo(0,0);
+        let db = null; let user = null; let slideIntervalIdMap = {}; let liderIdx = 0, ganhadorIdx = 0; let carrosselLiderId = null, carrosselGanhadorId = null;
+        async function save() { try { await DOC_REF.set(db); } catch(e) { console.error(e); alert("Erro ao salvar"); } render(); }
+        async function carregarDados() { 
+            try { 
+                const snap = await DOC_REF.get(); 
+                if (snap.exists) { 
+                    db = snap.data(); 
+                } else { 
+                    db = JSON.parse(JSON.stringify(DB_PADRAO)); 
+                    await DOC_REF.set(db); 
+                } 
+            } catch(e) { 
+                console.error(e); 
+                db = JSON.parse(JSON.stringify(DB_PADRAO)); 
+            }
+            document.getElementById("loading-overlay").style.display = "none"; 
+            render(); 
+            iniciarTimer(); 
+            toggleTimerInputs(); 
         }
+    </script>
 
-        async function carregarDados() {
-            try {
-                const snap = await DOC_REF.get();
-                if(snap.exists) {
-                    db_data = snap.data();
-                    renderSite();
-                }
-            } catch(e) { console.error(e); }
-            document.getElementById('loading-overlay').style.display = 'none';
-        }
-
-        function renderSite() {
-            if(!db_data) return;
-            document.getElementById('home-title-display').innerText = db_data.home.title;
-            document.getElementById('home-subtitle-display').innerText = db_data.home.subTitle;
-            document.getElementById('footer-text').innerText = db_data.home.footer || "© 2026 Portal Desbravadores";
+    <script>
+        
+        
+        
+        function navegarPara(id) { 
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+            document.getElementById(id).classList.add('active'); 
+            window.scrollTo(0, 0); 
             
-            // Renderizar Galeria Simples
-            document.getElementById('home-gallery-grid').innerHTML = db_data.home.gallery.map(m => `
-                <div class="gallery-card">
+            if (id === 'home-page') {
+                document.body.classList.add('is-home');
+                document.getElementById('main-header').classList.add('initial-splash'); 
+            } else {
+                document.body.classList.remove('is-home');
+                document.getElementById('main-header').classList.remove('initial-splash');
+            }
+            window.dispatchEvent(new Event('scroll')); 
+        }
+        
+        function abrirLogin() { if(user) location.reload(); else document.getElementById('login-modal').style.display = 'flex'; }
+        
+        function tentarLogin() {
+            const u = document.getElementById('login-u').value, p = document.getElementById('login-p').value;
+            const log = db.usuarios.find(x => x.u === u && x.p === p);
+            if(log) { user = log; document.getElementById('login-modal').style.display = 'none'; navegarPara('admin-page'); save(); iniciarTimer(); } 
+            else alert("Acesso Negado! Verifique usuário e senha.");
+        }
+
+        /* LÓGICA DE CUSTOMIZAÇÃO - MÍDIA */
+        function toggleTimerInputs() {
+            const on = document.getElementById('cfg-timer-on').checked;
+            document.getElementById('timer-settings').style.display = on ? 'block' : 'none';
+            document.getElementById('timer-off-settings').style.display = on ? 'none' : 'block';
+        }
+
+        function addMedia() {
+            const url = document.getElementById('new-media-url').value;
+            const type = document.getElementById('new-media-type').value;
+            const layout = document.getElementById('new-media-layout').value || 'grid';
+            const title = document.getElementById('new-media-title').value;
+            const desc = document.getElementById('new-media-desc').value;
+            
+            if(type !== 'divider' && !url) return alert("URL obrigatória para fotos e vídeos!");
+            
+            db.home.gallery.push({ url, type, layout, title, desc, id: Date.now() });
+            
+            document.getElementById('new-media-url').value = ""; document.getElementById('new-media-title').value = ""; document.getElementById('new-media-desc').value = "";
+            save();
+        }
+
+        function delMedia(id) { 
+            if(confirm("Apagar esta mídia?")) { db.home.gallery = db.home.gallery.filter(m => m.id !== id && db.home.gallery.indexOf(m) !== id /* fallback */); save(); }
+        }
+
+        /* LÓGICA DE CUSTOMIZAÇÃO - HEROES */
+        function addHeroConfig() {
+            const imgs = document.getElementById('new-hero-imgs').value;
+            const loc = document.getElementById('new-hero-loc').value;
+            const pos = document.getElementById('new-hero-pos').value;
+            const size = document.getElementById('new-hero-size').value;
+            if(!imgs) return alert("Coloque ao menos uma URL");
+            db.home.heroesList.push({ id: Date.now(), imgs, location: loc, pos, size });
+            document.getElementById('new-hero-imgs').value = "";
+            save();
+        }
+        function delHeroConfig(id) { if(confirm("Apagar fundo?")) { db.home.heroesList = db.home.heroesList.filter(h => h.id !== id); save(); } }
+
+        function atualizarCoresUnidades() {
+            db.unidades.forEach(u => {
+                const ipt = document.getElementById(`cor-unid-${u.nome.replace(/\s+/g,'-')}`);
+                if(ipt) u.cor = ipt.value;
+            });
+        }
+
+        function salvarConfigHome() {
+            db.home.logoUrl = document.getElementById('cfg-logo').value;
+            db.home.title = document.getElementById('cfg-title').value;
+            db.home.subTitle = document.getElementById('cfg-subtitle').value;
+            db.home.footer = document.getElementById('cfg-footer').value;
+            
+            if(!db.home.social) db.home.social = {};
+            db.home.social.fb = document.getElementById('cfg-footer-fb').value;
+            db.home.social.ig = document.getElementById('cfg-footer-ig').value;
+            db.home.social.yt = document.getElementById('cfg-footer-yt').value;
+
+            db.home.showTimer = document.getElementById('cfg-timer-on').checked;
+            db.home.timer = document.getElementById('cfg-timer-date').value;
+            db.home.showEventDate = document.getElementById('cfg-show-date').checked;
+            db.home.timerReplace = document.getElementById('cfg-timer-replace').value;
+            db.home.glow = document.getElementById('cfg-glow').checked;
+            
+            db.home.showLideranca = document.getElementById('cfg-show-lideranca').checked;
+            db.home.showUnidades = document.getElementById('cfg-show-unidades').checked;
+            db.home.showGanhadores = document.getElementById('cfg-show-ganhadores').checked;
+            db.home.ganhadoresTitulo = document.getElementById('cfg-title-ganhadores').value || "Desbravadores Destaque";
+
+            db.home.colors = { bg: document.getElementById('clr-bg').value, txt: document.getElementById('clr-txt').value, hBg: document.getElementById('clr-h-bg').value, hTxt: document.getElementById('clr-h-txt').value, fBg: document.getElementById('clr-f-bg').value, fTxt: document.getElementById('clr-f-txt').value };
+            
+            atualizarCoresUnidades();
+            save();
+            alert("Site Personalizado com Sucesso!");
+        }
+
+        /* SISTEMA DE HEROS RENDERIZAÇÃO */
+        function renderHeroes() {
+            const h = db.home;
+            const mapHtml = { 'top': '', 'mid': '', 'bottom': '' };
+            
+            // Limpar intervalos antigos
+            Object.values(slideIntervalIdMap).forEach(clearInterval);
+            slideIntervalIdMap = {};
+
+            h.heroesList.forEach((hero, idx) => {
+                const divId = `hero-dyn-${hero.id}`;
+                mapHtml[hero.location] += `<div id="${divId}" class="hero" style="display:block; background-position:${hero.pos}; background-size:${hero.size}; min-height:400px; margin-bottom:40px;"></div>`;
+                
+                // Agendar start slideshow após render do HTML
+                setTimeout(() => startSlideshow(divId, hero.imgs), 100);
+            });
+
+            document.getElementById('hero-top-container').innerHTML = mapHtml['top'];
+            document.getElementById('hero-mid-container').innerHTML = mapHtml['mid'];
+            document.getElementById('hero-bottom-container').innerHTML = mapHtml['bottom'];
+
+            // Hero Default logic (Se não houver hero no top, exibe timer solto, se não oculta)
+            const defaultHero = document.getElementById('home-hero-default');
+            if (mapHtml['top'] === '') {
+                defaultHero.style.display = 'block';
+                defaultHero.style.background = 'transparent';
+                defaultHero.style.boxShadow = 'none';
+                defaultHero.style.padding = '40px 20px';
+            } else {
+                // Move os textos e timer para dentro do PRIMEIRO hero do top
+                setTimeout(() => {
+                    const firstTopHero = document.getElementById('hero-top-container').firstElementChild;
+                    if(firstTopHero) {
+                        firstTopHero.innerHTML = defaultHero.innerHTML;
+                        defaultHero.innerHTML = '';
+                        defaultHero.style.display = 'none';
+                    }
+                }, 150);
+            }
+        }
+
+        function startSlideshow(divId, imgsStr) {
+            const div = document.getElementById(divId);
+            if(!div) return;
+            const images = imgsStr.split(',').map(s => s.trim()).filter(s => s !== "");
+            if(images.length === 0) return;
+            
+            div.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('${images[0]}')`;
+            
+            if (images.length > 1) {
+                let current = 0;
+                slideIntervalIdMap[divId] = setInterval(() => {
+                    current = (current + 1) % images.length;
+                    div.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('${images[current]}')`;
+                }, 4000);
+            }
+        }
+
+        /* RENDERIZAÇÃO DA PÁGINA HOME E ADMIN */
+        function render() {
+            const h = db.home;
+            const page = document.getElementById('home-page');
+            page.style.backgroundColor = h.colors.bg; page.style.color = h.colors.txt;
+            document.documentElement.style.setProperty('--home-bg', h.colors.bg);
+            
+            const head = document.getElementById('main-header');
+            head.style.backgroundColor = h.colors.hBg === 'transparent' ? '#000000' : h.colors.hBg; 
+            document.getElementById('status-txt').style.color = h.colors.hTxt;
+            
+            const mainLogo = document.getElementById('main-logo-img');
+            if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
+            
+            const foot = document.getElementById('main-footer');
+            foot.style.backgroundColor = h.colors.fBg; foot.style.color = h.colors.fTxt;
+            let footHtml = `<p>${h.footer || "© 2026 Portal Desbravadores - Sistema de Gestão"}</p>`;
+            if (h.social && (h.social.fb || h.social.ig || h.social.yt)) {
+                footHtml += `<div class="footer-social" style="margin-top: 15px; font-size: 1.8rem; display: flex; justify-content: center; gap: 25px;">`;
+                if(h.social.fb) footHtml += `<a href="${h.social.fb}" target="_blank" style="color: inherit; transition: 0.3s;"><i class="fa-brands fa-facebook"></i></a>`;
+                if(h.social.ig) footHtml += `<a href="${h.social.ig}" target="_blank" style="color: inherit; transition: 0.3s;"><i class="fa-brands fa-instagram"></i></a>`;
+                if(h.social.yt) footHtml += `<a href="${h.social.yt}" target="_blank" style="color: inherit; transition: 0.3s;"><i class="fa-brands fa-youtube"></i></a>`;
+                footHtml += `</div>`;
+            }
+            document.getElementById('footer-text').innerHTML = footHtml;
+
+            // Textos Home
+            if(document.getElementById('home-title-display')) document.getElementById('home-title-display').innerText = h.title;
+            if(document.getElementById('home-subtitle-display')) document.getElementById('home-subtitle-display').innerText = h.subTitle;
+
+            renderHeroes();
+
+            // Timer Logic
+            if(document.getElementById('timer-container')){
+                document.getElementById('timer-container').style.display = h.showTimer ? 'block' : 'none';
+                document.getElementById('timer-alt-display').style.display = h.showTimer ? 'none' : 'block';
+                document.getElementById('timer-alt-display').innerText = h.timerReplace;
+                if(h.showTimer && h.showEventDate) {
+                    const d = new Date(h.timer);
+                    document.getElementById('event-date-display').innerHTML = `<i class="fa-regular fa-calendar-days"></i> Data do Evento: ${d.toLocaleDateString()} às ${d.toLocaleTimeString()}`;
+                } else {
+                    document.getElementById('event-date-display').innerText = "";
+                }
+            }
+
+            // Galeria
+            document.getElementById('home-gallery-grid').innerHTML = h.gallery.map((m, i) => {
+                if(m.type === 'divider') {
+                    return `<div class="gallery-card layout-title"><h2>${m.title||''}</h2><p>${m.desc||''}</p></div>`;
+                }
+                const layoutClass = m.layout === 'full' ? 'layout-full' : 'layout-grid';
+                return `
+                <div class="gallery-card ${layoutClass}" style="${h.glow ? 'box-shadow: 0 0 20px var(--amarelo); border-color:var(--amarelo);' : ''}">
+                    ${m.title ? `<div class="gallery-text-box"><h3>${m.title}</h3></div>` : ''}
                     <div class="gallery-media-container">
-                        <img src="${m.url}" onerror="this.src='https://via.placeholder.com/300'">
+                        ${m.type === 'img' ? `<img src="${m.url}" onclick="openFS('${m.url}')" style="cursor:zoom-in;">` : `<video src="${m.url}" controls onmouseover="this.play()" onmouseout="this.pause()"></video>`}
                     </div>
-                    <div class="gallery-text-box"><h3>${m.title || ''}</h3></div>
+                    ${m.desc ? `<div class="gallery-text-box"><p>${m.desc}</p></div>` : ''}
+                </div>
+            `;
+            }).join('');
+
+            // Preencher Inputs Custom
+            if(document.getElementById('cfg-logo')) document.getElementById('cfg-logo').value = h.logoUrl || "";
+            document.getElementById('cfg-title').value = h.title;
+            document.getElementById('cfg-subtitle').value = h.subTitle;
+            document.getElementById('cfg-footer').value = h.footer || "";
+            if(h.social) { document.getElementById('cfg-footer-fb').value = h.social.fb; document.getElementById('cfg-footer-ig').value = h.social.ig; document.getElementById('cfg-footer-yt').value = h.social.yt; }
+            document.getElementById('cfg-timer-on').checked = h.showTimer; document.getElementById('cfg-timer-date').value = h.timer;
+            document.getElementById('cfg-show-date').checked = h.showEventDate; document.getElementById('cfg-timer-replace').value = h.timerReplace;
+            document.getElementById('cfg-glow').checked = h.glow;
+            document.getElementById('cfg-show-lideranca').checked = h.showLideranca;
+            document.getElementById('cfg-show-unidades').checked = h.showUnidades;
+            document.getElementById('cfg-show-ganhadores').checked = h.showGanhadores;
+            document.getElementById('cfg-title-ganhadores').value = h.ganhadoresTitulo;
+
+            document.getElementById('clr-bg').value = h.colors.bg; document.getElementById('clr-txt').value = h.colors.txt;
+            document.getElementById('clr-h-bg').value = h.colors.hBg === 'transparent' ? '#000000' : h.colors.hBg; 
+            document.getElementById('clr-h-txt').value = h.colors.hTxt; document.getElementById('clr-f-bg').value = h.colors.fBg; document.getElementById('clr-f-txt').value = h.colors.fTxt;
+
+            // Admin Listas Customização
+            document.getElementById('admin-heroes-list').innerHTML = h.heroesList.map(he => `<div class="admin-list-item"><span>${he.location.toUpperCase()} - ${he.imgs.substring(0,20)}...</span> <button onclick="delHeroConfig(${he.id})"><i class="fa-solid fa-trash"></i></button></div>`).join('');
+            document.getElementById('admin-gallery-list').innerHTML = h.gallery.map(m => `<div class="admin-list-item"><span>${m.type==='divider'?'DIVISOR':m.type.toUpperCase()} - ${m.title || m.url.substring(0,20)}</span> <button onclick="delMedia(${m.id || h.gallery.indexOf(m)})"><i class="fa-solid fa-trash"></i></button></div>`).join('');
+            
+            document.getElementById('unidades-cores-list').innerHTML = db.unidades.filter(u=>u.nome!=='Administração').map(u => `<div class="color-row"><span>${u.nome}:</span> <input type="color" id="cor-unid-${u.nome.replace(/\s+/g,'-')}" value="${u.cor}"></div>`).join('');
+
+            // Home - Renderizar Liderança, Unidades e Ganhadores
+            renderCarrosseisEUnidades();
+
+            // Painel
+            if(!user) return;
+            const isGeral = user.tipo === 'geral';
+            const canEditAll = isGeral || user.perms.t;
+            
+            document.getElementById('status-txt').innerHTML = `<i class="fa-solid fa-user-check"></i> ${user.unid}`;
+            document.getElementById('my-name-display').innerText = user.u;
+            document.getElementById('my-unid-display').innerHTML = `<i class="fa-solid fa-campground"></i> ${user.unid}`;
+            document.getElementById('my-profile-img').src = user.foto || 'https://via.placeholder.com/150';
+            
+            document.getElementById('nav-custom').style.display = user.perms.h ? 'flex' : 'none';
+            document.getElementById('admin-only-users').style.display = isGeral ? 'block' : 'none';
+            document.getElementById('delete-unid-section').style.display = isGeral ? 'block' : 'none';
+            document.getElementById('box-gerenciamento-unid').style.display = user.perms.u ? 'block' : 'none';
+            document.getElementById('memb-section').style.display = user.perms.m ? 'block' : 'none';
+            document.getElementById('hall-section').style.display = user.perms.w ? 'block' : 'none';
+
+            const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
+            document.getElementById('new-unid-sel').innerHTML = htmlUnid; document.getElementById('del-unid-sel').innerHTML = htmlUnid;
+            document.getElementById('m-unid-dest').innerHTML = htmlUnid; document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
+            
+            if(canEditAll) { document.getElementById('container-m-unid-dest').style.display = 'block'; document.getElementById('container-edit-unid-sel').style.display = 'block'; }
+
+            const meusM = db.membros.filter(m => canEditAll || m.unid === user.unid);
+            document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
+                <div class="dbv-card" style="${h.glow ? 'box-shadow: 0 0 15px var(--amarelo)' : ''}">
+                    <button class="btn-del" onclick="excluirMembro(${m.id})"><i class="fa-solid fa-times"></i></button>
+                    <img src="${m.foto || 'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--amarelo);object-fit:cover;">
+                    <div style="font-weight:bold; margin-top:10px; font-size:1.1rem;">${m.nome}</div>
+                    <div style="color:#aaa; font-size:0.8rem; margin-bottom:5px;"><i class="fa-solid fa-campground"></i> ${m.unid}</div>
+                    <div style="color:var(--amarelo); font-size:1.3rem; font-weight:bold; background:#111; padding:5px; border-radius:8px;">${m.pontos} <i class="fa-solid fa-star"></i></div>
+                    <div class="dbv-card-pts">
+                        <button onclick="abrirModalPontos(${m.id}, 10)"><i class="fa-solid fa-plus"></i> 10</button>
+                        <button onclick="abrirModalPontos(${m.id}, -10)"><i class="fa-solid fa-minus"></i> 10</button>
+                    </div>
+                    <button class="btn-hist" onclick="abrirHistorico(${m.id})"><i class="fa-solid fa-clock-rotate-left"></i> Ver Histórico</button>
+                </div>
+            `).join('');
+
+            document.getElementById('admin-ganhadores-list').innerHTML = [...db.home.ganhadores].reverse().map(g => `<div class="admin-list-item"><span>${g.edicao} - ${g.nome}</span> <button onclick="delGanhador(${g.id})"><i class="fa-solid fa-trash"></i></button></div>`).join('');
+
+            renderRankings();
+        }
+
+        /* LÓGICA DE CARROSSEIS E SHOWCASE (HOME) */
+        function renderCarrosseisEUnidades() {
+            const h = db.home;
+            
+            // LIDERANÇA
+            const secLid = document.getElementById('lideranca-section');
+            if(h.showLideranca) {
+                secLid.style.display = 'block';
+                const lideres = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral');
+                document.getElementById('lideranca-track').innerHTML = lideres.map((l, i) => `<div class="carousel-item" id="lid-item-${i}"><img src="${l.foto||'https://via.placeholder.com/150'}"><h3>${l.u}</h3><p>${l.unid}</p></div>`).join('');
+                liderIdx = 0; atualizarCarrossel('lid-item-', lideres.length, liderIdx);
+                if(carrosselLiderId) clearInterval(carrosselLiderId);
+                if(lideres.length > 1) carrosselLiderId = setInterval(nextLider, 3000);
+            } else secLid.style.display = 'none';
+
+            // GANHADORES
+            const secGanh = document.getElementById('ganhadores-section');
+            if(h.showGanhadores) {
+                secGanh.style.display = 'block';
+                document.getElementById('ganhadores-title-display').innerHTML = `<i class="fa-solid fa-trophy"></i> ${h.ganhadoresTitulo}`;
+                const g = db.home.ganhadores;
+                document.getElementById('ganhadores-track').innerHTML = g.map((x, i) => `<div class="carousel-item" id="gan-item-${i}"><img src="${x.foto||'https://via.placeholder.com/150'}"><h3>${x.nome}</h3><p>${x.edicao}</p></div>`).join('');
+                ganhadorIdx = 0; atualizarCarrossel('gan-item-', g.length, ganhadorIdx);
+                if(carrosselGanhadorId) clearInterval(carrosselGanhadorId);
+                if(g.length > 1) carrosselGanhadorId = setInterval(nextGanhador, 2000);
+            } else secGanh.style.display = 'none';
+
+            // UNIDADES
+            const secUnid = document.getElementById('unidades-showcase-section');
+            if(h.showUnidades) {
+                secUnid.style.display = 'block';
+                const uHtml = db.unidades.filter(u=>u.nome!=='Administração').map(u => {
+                    const mb = db.membros.filter(m => m.unid === u.nome);
+                    return `
+                    <div class="unit-home-box" style="border-top-color: ${u.cor}; box-shadow: 0 5px 30px ${u.cor}40;">
+                        <div class="unit-home-header">
+                            <img src="${u.logo||'https://via.placeholder.com/150'}" style="border-color:${u.cor};">
+                            <h2>${u.nome}</h2>
+                        </div>
+                        <div class="dbv-grid">
+                            ${mb.map(m => `<div class="dbv-card" style="border-bottom-color:${u.cor};"><img src="${m.foto||'https://via.placeholder.com/100'}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;"><div style="font-weight:bold;margin-top:10px;">${m.nome}</div><div style="color:var(--amarelo);font-weight:bold;">${m.pontos} pts</div></div>`).join('')}
+                        </div>
+                    </div>`;
+                }).join('');
+                document.getElementById('unidades-home-container').innerHTML = uHtml;
+            } else secUnid.style.display = 'none';
+        }
+
+        function atualizarCarrossel(prefix, total, activeIdx) {
+            for(let i=0; i<total; i++) {
+                const el = document.getElementById(prefix+i);
+                if(el) { if(i === activeIdx) el.classList.add('active'); else el.classList.remove('active'); }
+            }
+        }
+        function nextLider() { const t = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral').length; if(t===0)return; liderIdx = (liderIdx + 1) % t; atualizarCarrossel('lid-item-', t, liderIdx); }
+        function prevLider() { const t = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral').length; if(t===0)return; liderIdx = (liderIdx - 1 + t) % t; atualizarCarrossel('lid-item-', t, liderIdx); }
+        function nextGanhador() { const t = db.home.ganhadores.length; if(t===0)return; ganhadorIdx = (ganhadorIdx + 1) % t; atualizarCarrossel('gan-item-', t, ganhadorIdx); }
+        function prevGanhador() { const t = db.home.ganhadores.length; if(t===0)return; ganhadorIdx = (ganhadorIdx - 1 + t) % t; atualizarCarrossel('gan-item-', t, ganhadorIdx); }
+
+        function verTodosGanhadores() {
+            document.getElementById('modal-all-winners').style.display = 'flex';
+            document.getElementById('grid-all-winners').innerHTML = [...db.home.ganhadores].reverse().map(g => `
+                <div class="dbv-card"><img src="${g.foto||'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--amarelo);object-fit:cover;"><div style="font-weight:bold; margin-top:10px; font-size:1.1rem;">${g.nome}</div><div style="color:var(--amarelo); font-size:1rem; font-weight:bold; background:#111; padding:5px; border-radius:8px;">${g.edicao}</div></div>
+            `).join('');
+        }
+
+        /* SISTEMA DE PONTOS E HISTÓRICO */
+        function abrirModalPontos(id, val) {
+            const m = db.membros.find(x => x.id === id);
+            if(!m) return;
+            document.getElementById('hdn-membro-id').value = id;
+            document.getElementById('hdn-membro-valor').value = val;
+            document.getElementById('txt-acao-pontos').innerHTML = `Lançar <b style="color:${val>0?'#00ff00':'red'}">${val > 0 ? '+'+val : val} pontos</b> para ${m.nome}?`;
+            document.getElementById('input-just-pontos').value = "";
+            document.getElementById('modal-pontos').style.display = 'flex';
+        }
+
+        function confirmarPontos() {
+            const id = parseInt(document.getElementById('hdn-membro-id').value);
+            const val = parseInt(document.getElementById('hdn-membro-valor').value);
+            const just = document.getElementById('input-just-pontos').value || "Sem justificativa";
+            const m = db.membros.find(x => x.id === id);
+            if(m) {
+                m.pontos += val;
+                if(!m.historico) m.historico = [];
+                m.historico.push({ id: Date.now(), data: new Date().toLocaleString(), valor: val, just: just });
+                save();
+            }
+            document.getElementById('modal-pontos').style.display = 'none';
+        }
+
+        let currentHistId = null;
+        function abrirHistorico(id) {
+            currentHistId = id;
+            const m = db.membros.find(x => x.id === id);
+            if(!m) return;
+            document.getElementById('modal-historico').style.display = 'flex';
+            renderizarListaHistorico();
+        }
+
+        function renderizarListaHistorico() {
+            const m = db.membros.find(x => x.id === currentHistId);
+            if(!m || !m.historico || m.historico.length === 0) {
+                document.getElementById('lista-historico-membro').innerHTML = "<p style='text-align:center; color:#888;'>Nenhum registro encontrado.</p>";
+                return;
+            }
+            document.getElementById('lista-historico-membro').innerHTML = [...m.historico].reverse().map(h => `
+                <div class="admin-list-item" style="border-left-color:${h.valor>0?'#00ff00':'red'}; flex-direction:column; align-items:flex-start;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <span style="font-weight:bold; color:${h.valor>0?'#00ff00':'red'};">${h.valor>0?'+'+h.valor:h.valor} pts</span>
+                        <span style="color:#888; font-size:0.8rem;">${h.data}</span>
+                        <button onclick="apagarItemHistorico(${h.id})" style="background:transparent; color:var(--vermelho); padding:0;"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div style="color:#ccc; font-size:0.9rem; margin-top:5px;">${h.just}</div>
                 </div>
             `).join('');
         }
 
-        function abrirLogin() {
-            const u = prompt("Usuário:");
-            const p = prompt("Senha:");
-            const found = db_data.usuarios.find(x => x.u === u && x.p === p);
-            if(found) {
-                currentUser = found;
-                document.getElementById('status-txt').innerHTML = `<i class="fa-solid fa-user-check"></i> ${found.unid}`;
-                document.getElementById('nav-custom').style.display = found.perms.h ? 'flex' : 'none';
-                showPage('admin-page');
-            } else { alert("Erro!"); }
+        function apagarItemHistorico(hId) {
+            const m = db.membros.find(x => x.id === currentHistId);
+            if(m && confirm("Deseja apagar este registro do histórico? (Isso NÃO altera o total de pontos atual).")) {
+                m.historico = m.historico.filter(x => x.id !== hId);
+                save(); renderizarListaHistorico();
+            }
         }
 
-        // TIMER SIMPLES
-        setInterval(() => {
-            const diff = new Date("2026-12-31T23:59").getTime() - new Date().getTime();
-            if(diff < 0) return;
-            document.getElementById('t-d').innerText = Math.floor(diff / 86400000).toString().padStart(2,'0');
-            document.getElementById('t-h').innerText = Math.floor((diff % 86400000) / 3600000).toString().padStart(2,'0');
-            document.getElementById('t-m').innerText = Math.floor((diff % 3600000) / 60000).toString().padStart(2,'0');
-            document.getElementById('t-s').innerText = Math.floor((diff % 60000) / 1000).toString().padStart(2,'0');
-        }, 1000);
+        function limparHistoricoMembroAtual() {
+            const m = db.membros.find(x => x.id === currentHistId);
+            if(m && confirm("Apagar TODO o histórico deste membro? (Isso NÃO altera os pontos atuais).")) {
+                m.historico = [];
+                save(); renderizarListaHistorico();
+            }
+        }
 
-        window.addEventListener('scroll', () => {
-            if(window.scrollY > 50) document.getElementById('main-header').classList.add('scrolled');
-            else document.getElementById('main-header').classList.remove('scrolled');
+        /* GERENCIAR GANHADORES (HALL) */
+        function cadastrarGanhador() {
+            const n = document.getElementById('g-nome').value, f = document.getElementById('g-foto').value, e = document.getElementById('g-edicao').value;
+            if(!n || !e) return alert("Nome e Edição são obrigatórios!");
+            db.home.ganhadores.push({ id: Date.now(), nome: n, foto: f, edicao: e });
+            save(); document.getElementById('g-nome').value=""; document.getElementById('g-foto').value=""; document.getElementById('g-edicao').value="";
+        }
+        function delGanhador(id) { if(confirm("Remover este ganhador do Hall da Fama?")) { db.home.ganhadores = db.home.ganhadores.filter(g => g.id !== id); save(); } }
+
+        /* RANKINGS */
+        function renderRankings() {
+            const topM = [...db.membros].sort((a,b) => b.pontos - a.pontos).slice(0,5);
+            let medalhas = ['🥇', '🥈', '🥉', '🏅', '🏅'];
+            document.getElementById('ranking-membros-list').innerHTML = topM.map((m, i) => `
+                <div class="rank-item"><b>${medalhas[i]}</b> <img src="${m.foto || 'https://via.placeholder.com/50'}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;"> <span style="flex:1;">${m.nome}</span> <span style="color:var(--amarelo); font-weight:bold;">${m.pontos} pts</span></div>
+            `).join('');
+            
+            const rankU = db.unidades.filter(u => u.nome !== 'Administração').map(u => {
+                const soma = db.membros.filter(m => m.unid === u.nome).reduce((acc, cur) => acc + cur.pontos, 0);
+                return { ...u, total: soma };
+            }).sort((a,b) => b.total - a.total);
+            
+            document.getElementById('ranking-unidades-list').innerHTML = rankU.map((u, i) => `
+                <div class="rank-item"><b>${i+1}º</b> <img src="${u.logo || 'https://via.placeholder.com/50'}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;"> <span style="flex:1;">${u.nome}</span> <span style="color:var(--amarelo); font-weight:bold;">${u.total} pts</span></div>
+            `).join('');
+        }
+
+        function iniciarTimer() {
+            setInterval(() => {
+                if(!db.home.showTimer) return;
+                const alvo = new Date(db.home.timer).getTime(); const dist = alvo - new Date().getTime();
+                if(dist < 0) { 
+                    if(document.getElementById('timer-display')) document.getElementById('timer-display').innerHTML = `<h2 style="color:var(--amarelo); text-shadow: 0 0 10px #000;">${db.home.timerReplace}</h2>`; return; 
+                }
+                const d = Math.floor(dist / (86400000)), h = Math.floor((dist % 86400000) / 3600000), m = Math.floor((dist % 3600000) / 60000), s = Math.floor((dist % 60000) / 1000);
+                if(document.getElementById('timer-display')) document.getElementById('timer-display').innerHTML = `<div class="unit-timer"><b>${d}</b><span>Dias</span></div><div class="unit-timer"><b>${h}</b><span>Hrs</span></div><div class="unit-timer"><b>${m}</b><span>Min</span></div><div class="unit-timer"><b>${s}</b><span>Seg</span></div>`;
+            }, 1000);
+        }
+
+        /* FUNÇÕES DE APOIO ORIGINAIS */
+        function criarUsuario() {
+            const u = document.getElementById('new-u').value, p = document.getElementById('new-p').value, unid = document.getElementById('new-unid-sel').value;
+            if(!u || !p) return alert("Preencha usuário e senha!");
+            db.usuarios.push({u, p, tipo:'lider', unid, foto:'', perms:{h:document.getElementById('perm-h').checked, u:document.getElementById('perm-u').checked, m:document.getElementById('perm-m').checked, w:document.getElementById('perm-w').checked, t:document.getElementById('perm-t').checked}});
+            save(); alert("Usuário criado com sucesso!"); document.getElementById('new-u').value = ""; document.getElementById('new-p').value = "";
+        }
+        function cadastrarMembro() {
+            const n = document.getElementById('m-nome').value, f = document.getElementById('m-foto').value;
+            if(!n) return alert("O nome do membro é obrigatório!");
+            const canEditAll = user.tipo === 'geral' || user.perms.t; const uDest = canEditAll ? document.getElementById('m-unid-dest').value : user.unid;
+            db.membros.push({ id: Date.now(), nome: n, foto: f, unid: uDest, pontos: 0, historico: [] });
+            save(); document.getElementById('m-nome').value = ""; document.getElementById('m-foto').value = "";
+        }
+        function excluirMembro(id) { if(confirm("Deseja realmente excluir este membro?")) { db.membros = db.membros.filter(x => x.id !== id); save(); } }
+        function carregarDadosUnidade() { const alvo = (user.tipo === 'geral' || user.perms.t) ? document.getElementById('edit-unid-sel').value : user.unid; const u = db.unidades.find(x => x.nome === alvo); if(u) { document.getElementById('edit-unid-nome').value = u.nome; document.getElementById('edit-unid-logo').value = u.logo; } }
+        function atualizarMinhaUnidade() {
+            const alvo = (user.tipo === 'geral' || user.perms.t) ? document.getElementById('edit-unid-sel').value : user.unid;
+            const uIdx = db.unidades.findIndex(x => x.nome === alvo);
+            if(uIdx !== -1) {
+                const novoN = document.getElementById('edit-unid-nome').value;
+                if(!novoN) return alert("A unidade precisa de um nome!");
+                db.unidades[uIdx].nome = novoN; db.unidades[uIdx].logo = document.getElementById('edit-unid-logo').value;
+                db.usuarios.forEach(us => { if(us.unid === alvo) us.unid = novoN; });
+                db.membros.forEach(mb => { if(mb.unid === alvo) mb.unid = novoN; });
+                if(user.unid === alvo) user.unid = novoN;
+                save(); alert("Unidade atualizada!");
+            }
+        }
+        function apagarUnidade() {
+            const u = document.getElementById('del-unid-sel').value;
+            if(u === 'Administração') return alert("Operação Negada: A Administração não pode ser apagada.");
+            if(confirm(`Tem certeza que deseja apagar a unidade ${u} e todos os seus membros?`)) { db.unidades = db.unidades.filter(x => x.nome !== u); db.usuarios = db.usuarios.filter(x => x.unid !== u); db.membros = db.membros.filter(x => x.unid !== u); save(); }
+        }
+        function alterarMinhaFoto(url) { user.foto = url; save(); }
+        async function resetSistema() { if(confirm("CUIDADO: Isso apagará TODOS os dados, membros e configurações do sistema. Deseja continuar?")) { db = JSON.parse(JSON.stringify(DB_PADRAO)); await DOC_REF.set(db); location.reload(); } }
+        function openFS(url) { document.getElementById('fs-img').src = url; document.getElementById('fullscreen-modal').style.display = 'flex'; }
+
+        /* SCROLL HEADER */
+        window.addEventListener("scroll", () => {
+            const header = document.getElementById("main-header");
+            if (window.scrollY > 50) { header.classList.add("scrolled"); header.classList.remove("initial-splash"); } 
+            else { header.classList.remove("scrolled"); }
         });
 
+        // INICIALIZAÇÃO
+        document.body.classList.add('is-home');
         carregarDados();
+    
     </script>
 </body>
 </html>
