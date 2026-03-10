@@ -688,6 +688,7 @@
                     <label class="input-label">Logo da Unidade (URL):</label>
                     <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="edit-unid-logo" placeholder="URL do Logo"></div>
                     <button onclick="atualizarMinhaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px;"><i class="fa-solid fa-check"></i> SALVAR UNIDADE</button>
+                    <button onclick="criarNovaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px; background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white;"><i class="fa-solid fa-plus"></i> CRIAR NOVA UNIDADE</button>
                 </div>
                 
                 <button onclick="resetSistema()" style="width:100%; background:rgba(230,57,70,0.1); color:var(--vermelho); border:1px solid var(--vermelho); border-radius:8px; padding:12px; cursor:pointer; font-weight:bold; margin-top:30px; transition:0.3s;"><i class="fa-solid fa-triangle-exclamation"></i> RESET TOTAL DO SISTEMA</button>
@@ -1149,7 +1150,7 @@
                             <h2>${u.nome}</h2>
                         </div>
                         <div class="dbv-grid">
-                            ${mb.map(m => `<div class="dbv-card" style="border-bottom-color:${u.cor};"><img src="${m.foto||'https://via.placeholder.com/100'}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;"><div style="font-weight:bold;margin-top:10px;">${m.nome}</div><div style="color:var(--amarelo);font-weight:bold;">${m.pontos} pts</div></div>`).join('')}
+                            ${mb.map(m => `<div class="dbv-card" style="border-bottom-color:${u.cor};"><img src="${m.foto||'https://via.placeholder.com/100'}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;"><div style="font-weight:bold;margin-top:10px;">${m.nome}</div></div>`).join('')}
                         </div>
                     </div>`;
                 }).join('');
@@ -1526,23 +1527,25 @@
         }
 
         // Sobrescrevendo a função de cadastrar membro para incluir Login e Senha
-        function cadastrarMembro() {
-            const n = document.getElementById('m-nome').value, f = document.getElementById('m-foto').value;
-            const log = document.getElementById('m-login').value, sen = document.getElementById('m-senha').value;
+        function criarNovaUnidade() {
+            const novoN = prompt("Digite o nome da NOVA Unidade:");
+            if(!novoN) return; // Se cancelar ou deixar em branco, não faz nada
             
-            if(!n || !log || !sen) return alert("Nome, Login e Senha são obrigatórios!");
-            if(db.membros.find(x => x.login === log)) return alert("Este login já está sendo usado por outro Desbravador!");
-
-            const canEditAll = user.tipo === 'geral' || user.perms.t; 
-            const uDest = canEditAll ? document.getElementById('m-unid-dest').value : user.unid;
+            // Verifica se a unidade já existe
+            if(db.unidades.find(u => u.nome.toLowerCase() === novoN.toLowerCase())) {
+                return alert("Já existe uma unidade com este nome!");
+            }
             
-            db.membros.push({ id: Date.now(), nome: n, foto: f, unid: uDest, pontos: 0, historico: [], login: log, senha: sen });
-            save(); 
+            const novaLogo = prompt("URL da logo da Unidade (Opcional - pode deixar em branco e adicionar depois):") || "";
             
-            // Limpa os campos
-            document.getElementById('m-nome').value = ""; document.getElementById('m-foto').value = "";
-            document.getElementById('m-login').value = ""; document.getElementById('m-senha').value = "";
+            // Adiciona a nova unidade no banco de dados com uma cor amarela padrão
+            db.unidades.push({ nome: novoN, logo: novaLogo, cor: "#ffcc00" });
+            save();
+            
+            alert("Unidade '" + novoN + "' criada com sucesso!");
+            location.reload(); // Recarrega a página para atualizar as listas
         }
+        
 
         // Funções para Editar o Acesso do Membro
         function abrirEdicaoMembro(id) {
