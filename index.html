@@ -355,68 +355,53 @@
         }
          /* Chave de segurança */
 
-        /* --- ESCALA VISUAL GIGANTE --- */
+ /* Chave de segurança para fechar blocos anteriores */
 
-        /* 1. BOTÕES GLOBAIS (Home e Liderança) */
-        .btn-lideranca, .btn-desbravador, .btn-save, .btn-custom, .user-status, .btn-add {
-            padding: 20px 35px !important;
-            font-size: 1.3rem !important;
-            font-weight: 800 !important;
-            border-radius: 15px !important;
-            text-transform: uppercase !important;
-            min-height: 60px !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-
-        /* 2. HOME PAGE (Hero e Cronômetro) */
-        .hero h1 { font-size: 4rem !important; margin-bottom: 20px !important; }
-        .hero p.subtitle { font-size: 1.6rem !important; }
-        
-        .unit-timer { 
-            min-width: 120px !important; 
-            padding: 25px 15px !important; 
-            border: 3px solid var(--amarelo) !important;
-        }
-        .unit-timer b { font-size: 3.5rem !important; }
-        .unit-timer span { font-size: 1.1rem !important; }
-
-        /* 3. ÁREA DE LIDERANÇA (Painéis e Cards) */
-        .sidebar { width: 350px !important; padding: 30px !important; }
-        .sidebar h2 { font-size: 2rem !important; margin-bottom: 20px !important; }
-        
-        /* Inputs e Selects maiores na liderança */
-        .sidebar input, .sidebar select, .main-content input {
-            height: 55px !important;
-            font-size: 1.2rem !important;
-            padding: 10px !important;
-        }
-
-        /* Cards de Membros e Unidades */
-        .dbv-card, .unid-card {
-            padding: 30px !important;
-            border-width: 3px !important;
-        }
-        .dbv-card img { width: 120px !important; height: 120px !important; }
-        .dbv-card div { font-size: 1.5rem !important; font-weight: bold !important; }
-
-        /* 4. AJUSTE PARA CELULAR (TUDO EM UMA COLUNA E GRANDE) */
-        @media (max-width: 850px) {
-            header#main-header { padding: 50px 20px !important; }
-            body { padding-top: 280px !important; }
-
-            .hero h1 { font-size: 2.8rem !important; }
-            .dbv-grid { 
-                grid-template-columns: 1fr !important; /* Um membro por linha */
-                gap: 25px !important; 
+        /* --- AJUSTES MOBILE REFINADOS (NÃO AFETA O PC) --- */
+        @media (max-width: 768px) {
+            /* 1. Cabeçalho robusto mas equilibrado */
+            header#main-header {
+                padding: 25px 15px !important;
+                min-height: auto !important;
+                border-bottom: 3px solid var(--amarelo) !important;
             }
+            .header-logo { height: 70px !important; }
+            body { padding-top: 170px !important; }
+
+            /* 2. Botões no Celular: Tamanho confortável, não gigante */
+            .user-info-header { gap: 10px !important; }
+            .btn-lideranca, .btn-desbravador, .user-status {
+                padding: 12px 18px !important;
+                font-size: 1rem !important;
+                font-weight: 700 !important;
+                width: 100% !important;
+                max-width: 280px !important;
+            }
+
+            /* 3. Home Page (Hero e Timer) sem exagero */
+            .hero h1 { font-size: 2.8rem !important; }
+            .unit-timer { min-width: 85px !important; padding: 15px 5px !important; }
+            .unit-timer b { font-size: 2.2rem !important; }
             
-            .user-info-header { width: 100% !important; gap: 20px !important; }
-            .btn-lideranca, .btn-desbravador { width: 100% !important; }
-            
-            /* Ranking e Tabelas */
-            .ranking-item { padding: 20px !important; font-size: 1.2rem !important; }
+            /* 4. Cards de Membros (Dois por linha para ficar bonito) */
+            .dbv-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+            .dbv-card { padding: 15px !important; }
+            .dbv-card img { width: 70px !important; height: 70px !important; }
+            .dbv-card div { font-size: 1rem !important; }
+        }
+
+        /* --- CORREÇÃO DOS BOTÕES INTRUSOS --- */
+        
+        /* Esconde o botão de customizar na Home e na Área do Desbravador */
+        body.is-home .btn-custom,
+        #dbv-area-page .btn-custom,
+        #login-dbv-modal .btn-custom {
+            display: none !important;
+        }
+
+        /* Garante que o botão de customizar SÓ apareça dentro da Liderança */
+        #admin-page .btn-custom {
+            display: inline-flex !important;
         }
     </style>
 </head>
