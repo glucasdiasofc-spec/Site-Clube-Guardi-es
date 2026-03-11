@@ -263,70 +263,84 @@
         .close-modal:hover { color: white; }
     
     
-       /* RESPONSIVIDADE MOBILE HARMÔNICA OTIMIZADA */
+       /* RESPONSIVIDADE MOBILE OTIMIZADA - CABEÇALHO ROBUSTO */
         @media (max-width: 768px) {
-            body { padding-top: 160px !important; } /* Mais espaço para o cabeçalho respirar */
-            header { height: auto !important; padding: 20px 15px !important; }
+            /* Aumenta o recuo do corpo para não cobrir o conteúdo sob o novo cabeçalho maior */
+            body { padding-top: 190px !important; } 
+
+            header { 
+                height: auto !important; 
+                padding: 30px 20px !important; /* Mais preenchimento interno */
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                border-bottom: 3px solid var(--amarelo) !important; /* Linha de destaque mais grossa */
+            }
             
-            /* Logo maior e centralizada com respiro */
+            /* Logo com tamanho imponente */
             .logo-container { 
-                position: relative !important; top: 0 !important; left: 0 !important; 
-                transform: none !important; margin: 0 auto 20px !important; 
+                position: relative !important; 
+                top: 0 !important; 
+                left: 0 !important; 
+                transform: none !important; 
+                margin-bottom: 25px !important; 
             }
-            .header-logo { height: 65px !important; } 
+            .header-logo { height: 85px !important; } /* Logo bem visível */
             
-            /* Organização dos botões no cabeçalho */
+            /* Área de botões mais espaçada */
             .user-info-header { 
-                position: relative !important; right: 0 !important; top: 0 !important; 
-                transform: none !important; flex-wrap: wrap !important; 
-                justify-content: center !important; gap: 12px !important; width: 100% !important;
+                position: relative !important; 
+                right: 0 !important; 
+                top: 0 !important; 
+                transform: none !important; 
+                display: flex !important;
+                flex-direction: column !important; /* Botões um sobre o outro para ganhar volume */
+                gap: 15px !important; 
+                width: 100% !important;
+                max-width: 300px;
             }
             
-            /* Botões otimizados para toque (Touch Targets maiores e fontes legíveis) */
+            /* Botões Grandes e Robustos */
             .user-status, .btn-lideranca, .btn-custom, .btn-desbravador { 
-                padding: 12px 16px !important; font-size: 0.95rem !important; 
-                flex: 1 1 auto !important; min-width: 150px !important;
-                justify-content: center !important; box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+                padding: 15px 20px !important; 
+                font-size: 1.1rem !important; /* Texto maior */
+                width: 100% !important;
+                text-align: center !important;
+                border-radius: 12px !important;
+                border-width: 2px !important;
             }
 
-            /* Área Inicial (Hero) mais imponente, mas sem exageros */
-            .hero { padding: 60px 20px !important; border-radius: 15px !important; }
-            .hero h1 { font-size: 2.6rem !important; margin-bottom: 15px !important; line-height: 1.1; }
-            .hero p.subtitle { font-size: 1.2rem !important; margin-bottom: 25px !important; }
+            /* Seção Hero (Boas-vindas) ampliada */
+            .hero { padding: 80px 25px !important; }
+            .hero h1 { font-size: 3rem !important; line-height: 1.2; }
+            .hero p.subtitle { font-size: 1.4rem !important; margin-bottom: 30px !important; }
             
-            /* Cronômetro equilibrado e legível */
-            .timer { gap: 10px !important; }
-            .unit-timer { min-width: 80px !important; padding: 15px 10px !important; border-radius: 12px !important; }
-            .unit-timer b { font-size: 2.2rem !important; }
-            .unit-timer span { font-size: 0.85rem !important; }
+            /* Cronômetro com números gigantes */
+            .timer { gap: 12px !important; }
+            .unit-timer { 
+                min-width: 90px !important; 
+                padding: 20px 10px !important; 
+                background: rgba(0,0,0,0.6) !important;
+                border: 2px solid var(--amarelo) !important;
+            }
+            .unit-timer b { font-size: 2.8rem !important; } /* Números bem grandes */
+            .unit-timer span { font-size: 1rem !important; font-weight: bold; }
             
-            /* Galeria com imagens um pouco mais altas */
-            .home-gallery { grid-template-columns: 1fr !important; gap: 25px !important; }
-            .gallery-card.layout-grid { height: auto !important; min-height: 280px !important; }
+            /* Cards de Unidade e Desbravadores */
+            .unid-card { padding: 25px !important; }
+            .unid-card h2 { font-size: 2.2rem !important; }
             
-            /* Painel Administrativo com respiro nas margens */
-            .panel-layout { display: flex !important; flex-direction: column !important; gap: 25px !important; }
-            .sidebar, .main-content, .ranking-column { width: 100% !important; position: static !important; padding: 20px !important; }
-            
-            /* Grade de Desbravadores ajustada */
-            .dbv-grid { grid-template-columns: 1fr 1fr !important; gap: 15px !important; }
+            .dbv-grid { grid-template-columns: 1fr !important; gap: 20px !important; } /* Um por linha para foco total */
+            .dbv-card { padding: 25px !important; }
+            .dbv-card img { width: 100px !important; height: 100px !important; }
+            .dbv-card div { font-size: 1.3rem !important; }
         }
 
-        /* AJUSTES FINOS PARA ECRÃS AINDA MAIS PEQUENOS (SMARTPHONES ESTREITOS) */
-        @media (max-width: 600px) {
-            .dbv-profile-header { flex-direction: column; text-align: center; }
-            .dbv-pts-display .pts-num { font-size: 3.5rem !important; } /* Pontos bem visíveis */
-            
-            .user-mgmt-card { flex-wrap: wrap; }
-            .user-mgmt-actions { width: 100%; justify-content: flex-end; margin-top: 10px; }
-            
-            .custom-grid, .perm-grid { grid-template-columns: 1fr !important; }
-            
-            .hero h1 { font-size: 2.2rem !important; }
-            .dbv-area-hero h1 { font-size: 2.3rem !important; }
-            
-            /* Carrossel otimizado para não cortar nas laterais */
-            .carousel-track { width: 280px !important; height: 320px !important; } 
+        /* AJUSTE PARA TELAS MÍNIMAS */
+        @media (max-width: 400px) {
+            .hero h1 { font-size: 2.5rem !important; }
+            .unit-timer { min-width: 75px !important; }
+            .unit-timer b { font-size: 2.2rem !important; }
         }
     </style>
 </head>
