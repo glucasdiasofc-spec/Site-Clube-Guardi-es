@@ -351,6 +351,57 @@
             .hero h1 { font-size: 1.6rem !important; }
             .dbv-area-hero h1 { font-size: 2rem; }
             .carousel-track { width: 250px !important; }
+            /* AUMENTO DA LOGO - GERAL E SPLASH */
+.header-logo { 
+    height: 80px !important; /* Aumenta a logo no topo */
+}
+
+body.is-home header.initial-splash .logo-container {
+    transform: translate(-50%, -50%) scale(3.5) !important; /* Aumenta a logo na animação de entrada */
+}
+/* REFORÇO DE TAMANHO PARA MOBILE */
+@media (max-width: 768px) {
+    /* Deixa o cabeçalho mais alto e imponente */
+    header {
+        padding: 25px 15px !important; 
+        border-bottom: 4px solid var(--amarelo) !important;
+        background: rgba(0,0,0,0.95) !important; /* Deixa o fundo mais sólido */
+    }
+
+    /* Aumenta o espaço que o cabeçalho ocupa no topo para não tapar o conteúdo */
+    body { padding-top: 180px !important; }
+
+    /* Logo no celular ainda maior */
+    .header-logo { height: 75px !important; }
+
+    /* Botões da Liderança e Desbravador mais fáceis de clicar */
+    .user-info-header {
+        gap: 12px !important;
+    }
+
+    .btn-lideranca, .btn-desbravador, .user-status {
+        padding: 12px 20px !important;
+        font-size: 1.1rem !important; /* Letras maiores nos botões */
+        font-weight: bold !important;
+        border-radius: 10px !important;
+    }
+
+    /* Aumenta o título principal (Hero) */
+    .hero h1 {
+        font-size: 3rem !important;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    }
+
+    /* Aumenta o Timer (Cronômetro) para ficar bem visível */
+    .unit-timer b {
+        font-size: 2.5rem !important;
+    }
+    
+    .unit-timer span {
+        font-size: 0.9rem !important;
+        text-transform: uppercase;
+    }
+}
         }
     </style>
 </head>
