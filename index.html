@@ -463,15 +463,13 @@
             <p>Consulte seus pontos e histórico de conquistas</p>
         </div>
 
-        <div id="dbv-search-container" class="dbv-search-box" style="display:none;"></div>
-            <h3><i class="fa-solid fa-magnifying-glass"></i> Encontre seu Perfil</h3>
-            <div class="input-group">
-                <i class="fa-solid fa-user"></i>
-                <input type="text" id="dbv-search-input" placeholder="Digite seu nome..." oninput="buscarDesbravador(this.value)">
-            </div>
-            <div id="dbv-search-results" style="margin-top: 15px;"></div>
-        </div>
-
+        <div id="dbv-search-container" class="dbv-search-box">
+    <div class="input-group">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" id="dbv-search-input" placeholder="Procure pelo seu nome..." oninput="filtrarBuscaDbv()">
+    </div>
+    <div id="dbv-search-results" class="search-results-list"></div>
+</div>
         <div id="dbv-profile-container" style="display:none;"></div>
 
         <div style="text-align:center; margin-top: 30px;">
