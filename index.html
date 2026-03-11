@@ -263,84 +263,94 @@
         .close-modal:hover { color: white; }
     
     
-       /* RESPONSIVIDADE MOBILE OTIMIZADA - CABEÇALHO ROBUSTO */
+        /* RESPONSIVIDADE MOBILE HARMÔNICA (SEM HAMBÚRGUER) */
         @media (max-width: 768px) {
-            /* Aumenta o recuo do corpo para não cobrir o conteúdo sob o novo cabeçalho maior */
-            body { padding-top: 190px !important; } 
-
-            header { 
-                height: auto !important; 
-                padding: 30px 20px !important; /* Mais preenchimento interno */
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                border-bottom: 3px solid var(--amarelo) !important; /* Linha de destaque mais grossa */
-            }
+            body { padding-top: 140px !important; }
+            header { height: auto !important; padding: 15px 10px !important; }
             
-            /* Logo com tamanho imponente */
             .logo-container { 
-                position: relative !important; 
-                top: 0 !important; 
-                left: 0 !important; 
-                transform: none !important; 
-                margin-bottom: 25px !important; 
+                position: relative !important; top: 0 !important; left: 0 !important; 
+                transform: none !important; margin: 0 auto 15px !important; 
             }
-            .header-logo { height: 85px !important; } /* Logo bem visível */
+            .header-logo { height: 40px !important; }
             
-            /* Área de botões mais espaçada */
             .user-info-header { 
-                position: relative !important; 
-                right: 0 !important; 
-                top: 0 !important; 
-                transform: none !important; 
-                display: flex !important;
-                flex-direction: column !important; /* Botões um sobre o outro para ganhar volume */
-                gap: 15px !important; 
-                width: 100% !important;
-                max-width: 300px;
+                position: relative !important; right: 0 !important; top: 0 !important; 
+                transform: none !important; flex-wrap: wrap !important; 
+                justify-content: center !important; gap: 8px !important; width: 100% !important;
             }
             
-            /* Botões Grandes e Robustos */
-            .user-status, .btn-lideranca, .btn-custom, .btn-desbravador { 
-                padding: 15px 20px !important; 
-                font-size: 1.1rem !important; /* Texto maior */
-                width: 100% !important;
-                text-align: center !important;
-                border-radius: 12px !important;
-                border-width: 2px !important;
+            .user-status, .btn-lideranca, .btn-custom { 
+                padding: 8px 12px !important; font-size: 0.8rem !important; 
+                flex: 1 1 auto !important; min-width: 140px !important;
+                justify-content: center !important; box-shadow: none !important;
             }
 
-            /* Seção Hero (Boas-vindas) ampliada */
-            .hero { padding: 80px 25px !important; }
-            .hero h1 { font-size: 3rem !important; line-height: 1.2; }
-            .hero p.subtitle { font-size: 1.4rem !important; margin-bottom: 30px !important; }
+            .hero { padding: 40px 15px !important; }
+            .hero h1 { font-size: 2rem !important; }
+            .hero p.subtitle { font-size: 1rem !important; }
             
-            /* Cronômetro com números gigantes */
-            .timer { gap: 12px !important; }
-            .unit-timer { 
-                min-width: 90px !important; 
-                padding: 20px 10px !important; 
-                background: rgba(0,0,0,0.6) !important;
-                border: 2px solid var(--amarelo) !important;
-            }
-            .unit-timer b { font-size: 2.8rem !important; } /* Números bem grandes */
-            .unit-timer span { font-size: 1rem !important; font-weight: bold; }
+            .unit-timer { min-width: 70px !important; padding: 10px !important; }
+            .unit-timer b { font-size: 1.8rem !important; }
             
-            /* Cards de Unidade e Desbravadores */
-            .unid-card { padding: 25px !important; }
-            .unid-card h2 { font-size: 2.2rem !important; }
+            .home-gallery { grid-template-columns: 1fr !important; gap: 20px !important; }
+            .gallery-card.layout-grid { height: auto !important; min-height: 250px !important; }
             
-            .dbv-grid { grid-template-columns: 1fr !important; gap: 20px !important; } /* Um por linha para foco total */
-            .dbv-card { padding: 25px !important; }
-            .dbv-card img { width: 100px !important; height: 100px !important; }
-            .dbv-card div { font-size: 1.3rem !important; }
+            .panel-layout { display: flex !important; flex-direction: column !important; }
+            .sidebar, .main-content, .ranking-column { width: 100% !important; position: static !important; }
+            .dbv-grid { grid-template-columns: 1fr 1fr !important; }
         }
 
-        /* AJUSTE PARA TELAS MÍNIMAS */
-        @media (max-width: 400px) {
-            .hero h1 { font-size: 2.5rem !important; }
-            .unit-timer { min-width: 75px !important; }
-            .unit-timer b { font-size: 2.2rem !important; }
+        /* ÁREA DO DESBRAVADOR */
+        .dbv-area-hero { text-align: center; padding: 60px 20px 40px; }
+        .dbv-area-hero h1 { font-size: 3rem; color: var(--amarelo); margin-bottom: 10px; }
+        .dbv-area-hero p { color: #aaa; font-size: 1.1rem; }
+        .dbv-search-box { max-width: 600px; margin: 30px auto; background: var(--cinza-card); border-radius: 20px; padding: 30px; border: 1px solid var(--borda-suave); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .dbv-search-box h3 { color: var(--amarelo); margin-bottom: 20px; text-align: center; }
+        .dbv-profile-card { max-width: 700px; margin: 30px auto; background: var(--cinza-card); border-radius: 20px; padding: 30px; border: 2px solid var(--amarelo); box-shadow: 0 10px 40px rgba(255,204,0,0.15); }
+        .dbv-profile-header { display: flex; align-items: center; gap: 25px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #333; }
+        .dbv-profile-header img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--amarelo); box-shadow: 0 0 20px rgba(255,204,0,0.3); }
+        .dbv-profile-info h2 { font-size: 1.8rem; margin-bottom: 5px; }
+        .dbv-profile-info .unid-badge { background: var(--amarelo); color: black; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; display: inline-block; }
+        .dbv-pts-display { text-align: center; background: #111; border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; }
+        .dbv-pts-display .pts-num { font-size: 4rem; font-weight: 900; color: var(--amarelo); line-height: 1; }
+        .dbv-pts-display .pts-label { color: #aaa; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+        .dbv-hist-item { background: #111; border-radius: 10px; padding: 12px 15px; margin-bottom: 8px; border-left: 4px solid #444; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .dbv-hist-item.positivo { border-left-color: #00cc66; }
+        .dbv-hist-item.negativo { border-left-color: var(--vermelho); }
+        .dbv-hist-valor { font-weight: bold; font-size: 1.1rem; }
+        .dbv-hist-just { color: #ccc; font-size: 0.9rem; flex: 1; }
+        .dbv-hist-data { color: #666; font-size: 0.75rem; white-space: nowrap; }
+
+        /* GESTÃO DE USUÁRIOS */
+        .user-mgmt-card { background: #111; border-radius: 12px; padding: 15px; margin-bottom: 10px; border: 1px solid #333; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
+        .user-mgmt-card:hover { border-color: var(--amarelo); background: #1a1a1a; }
+        .user-mgmt-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #444; }
+        .user-mgmt-info { flex: 1; }
+        .user-mgmt-info strong { display: block; font-size: 1rem; }
+        .user-mgmt-info span { color: #888; font-size: 0.85rem; }
+        .user-mgmt-actions { display: flex; gap: 8px; }
+        .btn-edit-user { background: rgba(255,204,0,0.15); color: var(--amarelo); border: 1px solid var(--amarelo); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .btn-edit-user:hover { background: var(--amarelo); color: black; }
+        .btn-del-user { background: rgba(230,57,70,0.15); color: var(--vermelho); border: 1px solid var(--vermelho); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .btn-del-user:hover { background: var(--vermelho); color: white; }
+
+        /* BOTÃO ÁREA DO DESBRAVADOR NO HEADER */
+        .btn-desbravador { background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #0a3520; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+        .btn-desbravador:hover { background: #22854a; transform: translateY(-2px); box-shadow: 0 6px 0 #0a3520; }
+        .btn-desbravador:active { transform: translateY(2px); box-shadow: 0 0 0 #0a3520; }
+
+        /* MELHORIAS MOBILE ADICIONAIS */
+        @media (max-width: 600px) {
+            .dbv-profile-header { flex-direction: column; text-align: center; }
+            .dbv-pts-display .pts-num { font-size: 3rem; }
+            .user-mgmt-card { flex-wrap: wrap; }
+            .user-mgmt-actions { width: 100%; justify-content: flex-end; }
+            .custom-grid { grid-template-columns: 1fr !important; }
+            .perm-grid { grid-template-columns: 1fr !important; }
+            .hero h1 { font-size: 1.6rem !important; }
+            .dbv-area-hero h1 { font-size: 2rem; }
+            .carousel-track { width: 250px !important; }
         }
     </style>
 </head>
