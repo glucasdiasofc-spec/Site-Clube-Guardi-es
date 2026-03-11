@@ -353,55 +353,70 @@
             .carousel-track { width: 250px !important; }
             
         }
-         /* Chave de segurança para fechar blocos anteriores abertos */
+         /* Chave de segurança */
 
-        /* --- REFORÇO VISUAL EXTREMO (AUMENTO TOTAL) --- */
-        
-        /* 1. LOGO E SPLASH */
-        .header-logo { 
-            height: 100px !important; /* Logo bem grande no topo */
-            max-height: 100px !important;
-        }
+        /* --- ESCALA VISUAL GIGANTE --- */
 
-        body.is-home header.initial-splash .logo-container {
-            transform: translate(-50%, -50%) scale(4) !important; /* Logo gigante na entrada */
-        }
-
-        /* 2. CABEÇALHO ROBUSTO (MOBILE E PC) */
-        header#main-header {
-            padding: 40px 20px !important; /* Engrossa muito o cabeçalho */
-            min-height: 200px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: center !important;
+        /* 1. BOTÕES GLOBAIS (Home e Liderança) */
+        .btn-lideranca, .btn-desbravador, .btn-save, .btn-custom, .user-status, .btn-add {
+            padding: 20px 35px !important;
+            font-size: 1.3rem !important;
+            font-weight: 800 !important;
+            border-radius: 15px !important;
+            text-transform: uppercase !important;
+            min-height: 60px !important;
+            display: inline-flex !important;
             align-items: center !important;
-            background: rgba(0,0,0,0.98) !important;
-            border-bottom: 5px solid var(--amarelo) !important;
+            justify-content: center !important;
         }
 
-        /* Ajuste do corpo para o novo tamanho do header */
-        body { padding-top: 250px !important; }
+        /* 2. HOME PAGE (Hero e Cronômetro) */
+        .hero h1 { font-size: 4rem !important; margin-bottom: 20px !important; }
+        .hero p.subtitle { font-size: 1.6rem !important; }
+        
+        .unit-timer { 
+            min-width: 120px !important; 
+            padding: 25px 15px !important; 
+            border: 3px solid var(--amarelo) !important;
+        }
+        .unit-timer b { font-size: 3.5rem !important; }
+        .unit-timer span { font-size: 1.1rem !important; }
 
-        /* 3. BOTÕES E TEXTOS AMPLIADOS (MOBILE) */
+        /* 3. ÁREA DE LIDERANÇA (Painéis e Cards) */
+        .sidebar { width: 350px !important; padding: 30px !important; }
+        .sidebar h2 { font-size: 2rem !important; margin-bottom: 20px !important; }
+        
+        /* Inputs e Selects maiores na liderança */
+        .sidebar input, .sidebar select, .main-content input {
+            height: 55px !important;
+            font-size: 1.2rem !important;
+            padding: 10px !important;
+        }
+
+        /* Cards de Membros e Unidades */
+        .dbv-card, .unid-card {
+            padding: 30px !important;
+            border-width: 3px !important;
+        }
+        .dbv-card img { width: 120px !important; height: 120px !important; }
+        .dbv-card div { font-size: 1.5rem !important; font-weight: bold !important; }
+
+        /* 4. AJUSTE PARA CELULAR (TUDO EM UMA COLUNA E GRANDE) */
         @media (max-width: 850px) {
-            .user-info-header {
-                flex-direction: column !important;
-                gap: 20px !important;
-                width: 100% !important;
-            }
+            header#main-header { padding: 50px 20px !important; }
+            body { padding-top: 280px !important; }
 
-            .btn-lideranca, .btn-desbravador, .user-status, .btn-custom {
-                padding: 20px 30px !important; /* Botões bem grossos */
-                font-size: 1.3rem !important; /* Texto grande */
-                width: 100% !important;
-                max-width: 350px !important;
-                border-radius: 15px !important;
-                text-transform: uppercase !important;
-                letter-spacing: 1px !important;
+            .hero h1 { font-size: 2.8rem !important; }
+            .dbv-grid { 
+                grid-template-columns: 1fr !important; /* Um membro por linha */
+                gap: 25px !important; 
             }
-
-            .hero h1 { font-size: 3.5rem !important; } /* Título gigante */
-            .unit-timer b { font-size: 3.5rem !important; } /* Timer gigante */
+            
+            .user-info-header { width: 100% !important; gap: 20px !important; }
+            .btn-lideranca, .btn-desbravador { width: 100% !important; }
+            
+            /* Ranking e Tabelas */
+            .ranking-item { padding: 20px !important; font-size: 1.2rem !important; }
         }
     </style>
 </head>
