@@ -351,58 +351,58 @@
             .hero h1 { font-size: 1.6rem !important; }
             .dbv-area-hero h1 { font-size: 2rem; }
             .carousel-track { width: 250px !important; }
-            /* AUMENTO DA LOGO - GERAL E SPLASH */
-.header-logo { 
-    height: 80px !important; /* Aumenta a logo no topo */
-}
+            
+        }
+         /* Chave de segurança para fechar blocos anteriores abertos */
 
-body.is-home header.initial-splash .logo-container {
-    transform: translate(-50%, -50%) scale(3.5) !important; /* Aumenta a logo na animação de entrada */
-}
-/* REFORÇO DE TAMANHO PARA MOBILE */
-@media (max-width: 768px) {
-    /* Deixa o cabeçalho mais alto e imponente */
-    header {
-        padding: 25px 15px !important; 
-        border-bottom: 4px solid var(--amarelo) !important;
-        background: rgba(0,0,0,0.95) !important; /* Deixa o fundo mais sólido */
-    }
-
-    /* Aumenta o espaço que o cabeçalho ocupa no topo para não tapar o conteúdo */
-    body { padding-top: 180px !important; }
-
-    /* Logo no celular ainda maior */
-    .header-logo { height: 75px !important; }
-
-    /* Botões da Liderança e Desbravador mais fáceis de clicar */
-    .user-info-header {
-        gap: 12px !important;
-    }
-
-    .btn-lideranca, .btn-desbravador, .user-status {
-        padding: 12px 20px !important;
-        font-size: 1.1rem !important; /* Letras maiores nos botões */
-        font-weight: bold !important;
-        border-radius: 10px !important;
-    }
-
-    /* Aumenta o título principal (Hero) */
-    .hero h1 {
-        font-size: 3rem !important;
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-    }
-
-    /* Aumenta o Timer (Cronômetro) para ficar bem visível */
-    .unit-timer b {
-        font-size: 2.5rem !important;
-    }
-    
-    .unit-timer span {
-        font-size: 0.9rem !important;
-        text-transform: uppercase;
-    }
-
+        /* --- REFORÇO VISUAL EXTREMO (AUMENTO TOTAL) --- */
         
+        /* 1. LOGO E SPLASH */
+        .header-logo { 
+            height: 100px !important; /* Logo bem grande no topo */
+            max-height: 100px !important;
+        }
+
+        body.is-home header.initial-splash .logo-container {
+            transform: translate(-50%, -50%) scale(4) !important; /* Logo gigante na entrada */
+        }
+
+        /* 2. CABEÇALHO ROBUSTO (MOBILE E PC) */
+        header#main-header {
+            padding: 40px 20px !important; /* Engrossa muito o cabeçalho */
+            min-height: 200px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            background: rgba(0,0,0,0.98) !important;
+            border-bottom: 5px solid var(--amarelo) !important;
+        }
+
+        /* Ajuste do corpo para o novo tamanho do header */
+        body { padding-top: 250px !important; }
+
+        /* 3. BOTÕES E TEXTOS AMPLIADOS (MOBILE) */
+        @media (max-width: 850px) {
+            .user-info-header {
+                flex-direction: column !important;
+                gap: 20px !important;
+                width: 100% !important;
+            }
+
+            .btn-lideranca, .btn-desbravador, .user-status, .btn-custom {
+                padding: 20px 30px !important; /* Botões bem grossos */
+                font-size: 1.3rem !important; /* Texto grande */
+                width: 100% !important;
+                max-width: 350px !important;
+                border-radius: 15px !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+            }
+
+            .hero h1 { font-size: 3.5rem !important; } /* Título gigante */
+            .unit-timer b { font-size: 3.5rem !important; } /* Timer gigante */
+        }
     </style>
 </head>
 <body>
