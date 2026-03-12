@@ -799,6 +799,11 @@
             </aside>
 
             <div class="main-content">
+                <div id="aprovacoes-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid #00cc66;">
+                    <h3 style="color:#00cc66; margin-bottom: 15px;"><i class="fa-solid fa-medal"></i> Especialidades para Avaliação</h3>
+                    <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">Avalie os desbravadores que concluíram os requisitos.</p>
+                    <div id="lista-aprovacoes-esp" style="display:flex; flex-direction:column; gap:10px;"></div>
+                </div>                                      
                 
                 <div id="admin-only-users" class="form-box" style="display:none; margin-bottom: 30px;">
                     <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-user-gear"></i> Gerenciar Usuários/Líderes</h3>
@@ -908,6 +913,87 @@
             render(); 
             iniciarTimer(); 
             toggleTimerInputs(); 
+        }
+        // =======================================================
+        // LIDERANÇA: APROVAÇÃO DE ESPECIALIDADES
+        // =======================================================
+
+        function renderAprovacoesEsp() {
+            const container = document.getElementById('lista-aprovacoes-esp');
+            if(!container) return;
+
+            let html = '';
+            let pendentes = 0;
+
+            db.membros.forEach(m => {
+                // Se o líder não for geral/admin, só vê os membros da sua própria unidade
+                if(user.tipo !== 'geral' && !user.perms.t && m.unid !== user.unid) return;
+
+                if(m.especialidades) {
+                    m.especialidades.forEach(esp => {
+                        if(esp.status === 'aguardando') {
+                            pendentes++;
+                            const espData = db.especialidades_catalogo.find(c => c.id === esp.idEsp);
+                            if(espData) {
+                                html += `
+                                <div class="admin-list-item" style="border-left-color: #00cc66; flex-wrap:wrap; gap:10px; background:#111;">
+                                    <div style="display:flex; align-items:center; gap:15px; flex:1; min-width:200px;">
+                                        <img src="${espData.logo}" style="width:50px; height:50px; object-fit:contain; border-radius:5px; border:1px solid #333;">
+                                        <div>
+                                            <strong style="display:block; font-size:1.1rem; color:white;">${m.nome}</strong>
+                                            <span style="color:var(--amarelo); font-size:0.85rem;"><i class="fa-solid fa-star"></i> ${espData.nome}</span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:10px; width:100%; justify-content:flex-end;">
+                                        <button onclick="recusarEspecialidade(${m.id}, ${espData.id})" class="btn-custom" style="display:inline-flex; padding:8px 15px; font-size:0.85rem; background:#444;"><i class="fa-solid fa-rotate-left"></i> DEVOLVER</button>
+                                        <button onclick="aprovarEspecialidade(${m.id}, ${espData.id})" class="btn-save" style="width:auto; padding:8px 15px; font-size:0.85rem; background:#00cc66; color:white;"><i class="fa-solid fa-check"></i> APROVAR</button>
+                                    </div>
+                                </div>
+                                `;
+                            }
+                        }
+                    });
+                }
+            });
+
+            if(pendentes === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:20px; background:#111; border-radius:10px; border:1px solid #333;"><i class="fa-solid fa-mug-hot" style="font-size:2rem; color:#444; margin-bottom:10px;"></i><p style="color:#888;">Tudo tranquilo! Nenhuma avaliação pendente.</p></div>';
+            } else {
+                container.innerHTML = html;
+            }
+        }
+
+        function aprovarEspecialidade(idMembro, idEsp) {
+            const m = db.membros.find(x => x.id === idMembro);
+            const espAndamento = m.especialidades.find(e => e.idEsp === idEsp);
+            const espData = db.especialidades_catalogo.find(c => c.id === idEsp);
+
+            if(confirm(`Deseja APROVAR a especialidade "${espData.nome}" para ${m.nome}?`)) {
+                espAndamento.status = 'concluida';
+                espAndamento.dataConclusao = new Date().toLocaleDateString();
+
+                // Pergunta se o líder quer dar pontos pela conquista
+                if(confirm("Deseja recompensar o desbravador com 50 pontos por esta especialidade?")) {
+                    m.pontos += 50;
+                    if(!m.historico) m.historico = [];
+                    m.historico.push({ id: Date.now(), data: new Date().toLocaleString(), valor: 50, just: `Conquista: Especialidade ${espData.nome}` });
+                }
+
+                save();
+                renderAprovacoesEsp(); // Atualiza a lista
+                alert("Especialidade aprovada com sucesso!");
+            }
+        }
+
+        function recusarEspecialidade(idMembro, idEsp) {
+            const m = db.membros.find(x => x.id === idMembro);
+            const espAndamento = m.especialidades.find(e => e.idEsp === idEsp);
+            
+            if(confirm("Deseja devolver a especialidade para 'Em andamento'? O desbravador terá que revisar os requisitos e enviar novamente.")) {
+                espAndamento.status = 'andamento';
+                save();
+                renderAprovacoesEsp();
+            }
         }
     </script>
 
@@ -1221,6 +1307,9 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             document.getElementById('box-gerenciamento-unid').style.display = user.perms.u ? 'block' : 'none';
             document.getElementById('memb-section').style.display = user.perms.m ? 'block' : 'none';
             document.getElementById('hall-section').style.display = user.perms.w ? 'block' : 'none';
+            // Mostra o painel de aprovações para quem tem permissão de gerir membros
+            document.getElementById('aprovacoes-section').style.display = user.perms.m ? 'block' : 'none';
+            renderAprovacoesEsp(); // Carrega a lista de quem está aguardando
 
             const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
             document.getElementById('new-unid-sel').innerHTML = htmlUnid; document.getElementById('del-unid-sel').innerHTML = htmlUnid;
@@ -1455,70 +1544,93 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
         let dbvLogadoAtualId = null;
 
         // NOVA VERSÃO DO PERFIL (Com botão de Checklist Funcional)
-        function exibirPerfilDbv(id) {
-            dbvLogadoAtualId = id; 
-            const m = db.membros.find(x => x.id === id);
-            if (!m) return;
-            const unidObj = db.unidades.find(u => u.nome === m.unid);
-            const cor = unidObj ? unidObj.cor : 'var(--amarelo)';
-            
-            document.getElementById('dbv-search-container').style.display = 'none';
-            
-            const hist = (m.historico || []).slice().reverse();
-            const histHtml = hist.length === 0 ? '<p style="color:#888; text-align:center; padding:20px;">Nenhum registro no histórico.</p>' : hist.map(h => `<div class="dbv-hist-item ${h.valor > 0 ? 'positivo' : 'negativo'}"><span class="dbv-hist-valor" style="color:${h.valor > 0 ? '#00cc66' : 'var(--vermelho)'};">${h.valor > 0 ? '+' + h.valor : h.valor} pts</span><span class="dbv-hist-just">${h.just}</span><span class="dbv-hist-data">${h.data}</span></div>`).join('');
+     function exibirPerfilDbv(id) {
+    dbvLogadoAtualId = id; 
+    const m = db.membros.find(x => x.id === id);
+    if (!m) return;
+    
+    console.log("Exibindo perfil de:", m.nome);
+    console.log("Especialidades do membro:", m.especialidades);
 
-            // RENDERIZA AS ESPECIALIDADES
-            let espEmAndamentoHtml = '<p style="color:#888; text-align:center; padding:10px;">Nenhuma especialidade iniciada.</p>';
-            if (m.especialidades && m.especialidades.length > 0) {
-                espEmAndamentoHtml = m.especialidades.map(me => {
-                    const espData = db.especialidades_catalogo.find(c => c.id === me.idEsp);
-                    if(!espData) return '';
-                    
-                    // Define a cor dependendo do status
-                    let statusCor = me.status === 'aguardando' ? '#00cc66' : 'var(--amarelo)';
-                    let statusTexto = me.status === 'aguardando' ? '<i class="fa-solid fa-hourglass-half"></i> Aguardando Avaliação' : 'Em andamento...';
-                    
-                    return `
-                    <div style="background:#111; border:1px solid #333; padding:15px; border-radius:10px; display:flex; align-items:center; gap:15px; margin-bottom:10px; flex-wrap:wrap;">
-                        <img src="${espData.logo}" style="width:50px; height:50px; object-fit:contain; border-radius:5px;">
-                        <div style="flex:1; min-width:150px;">
-                            <strong style="display:block; font-size:1.1rem;">${espData.nome}</strong>
-                            <span style="color:${statusCor}; font-size:0.85rem; font-weight:bold;">${statusTexto}</span>
-                        </div>
-                        <button onclick="abrirChecklistEsp(${espData.id})" style="background:#222; color:white; border:1px solid #444; padding:10px 15px; border-radius:8px; cursor:pointer; font-weight:bold; transition:0.3s;" onmouseover="this.style.background='var(--amarelo)'; this.style.color='black';"><i class="fa-solid fa-list-check"></i> VER CHECKLIST</button>
-                    </div>`;
-                }).join('');
+    const unidObj = db.unidades.find(u => u.nome === m.unid);
+    const cor = unidObj ? unidObj.cor : 'var(--amarelo)';
+    
+    document.getElementById('dbv-search-container').style.display = 'none';
+    
+    // Histórico
+    const hist = (m.historico || []).slice().reverse();
+    const histHtml = hist.length === 0 ? '<p style="color:#888; text-align:center; padding:20px;">Nenhum registro.</p>' : hist.map(h => `<div class="dbv-hist-item ${h.valor > 0 ? 'positivo' : 'negativo'}"><span class="dbv-hist-valor" style="color:${h.valor > 0 ? '#00cc66' : 'var(--vermelho)'};">${h.valor > 0 ? '+' + h.valor : h.valor} pts</span><span class="dbv-hist-just">${h.just}</span><span class="dbv-hist-data">${h.data}</span></div>`).join('');
+
+    // Especialidades
+    let espEmAndamentoHtml = '';
+    let espConcluidasHtml = '';
+
+    if (m.especialidades && m.especialidades.length > 0) {
+        m.especialidades.forEach(me => {
+            const espData = db.especialidades_catalogo.find(c => c.id === me.idEsp);
+            
+            if(!espData) {
+                console.warn("Especialidade ID " + me.idEsp + " não encontrada no catálogo!");
+                return;
             }
-
-            document.getElementById('dbv-profile-container').style.display = 'block';
-            document.getElementById('dbv-profile-container').innerHTML = `
-                <div class="dbv-profile-card">
-                    <div class="dbv-profile-header">
-                        <img src="${m.foto || 'https://via.placeholder.com/100'}">
-                        <div class="dbv-profile-info">
-                            <h2>${m.nome}</h2>
-                            <span class="unid-badge" style="background:${cor}; color:${cor === '#ffcc00' || cor === '#ffffff' ? 'black' : 'white'};">${m.unid}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="dbv-pts-display">
-                        <div class="pts-num">${m.pontos}</div>
-                        <div class="pts-label">pontos acumulados</div>
-                    </div>
-
-                    <div style="background:#1a1a1a; padding:20px; border-radius:15px; margin-bottom:20px; border:1px solid #333;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-                            <h4 style="color:white; margin:0; font-size:1.2rem;"><i class="fa-solid fa-medal"></i> Minhas Especialidades</h4>
-                            <button onclick="abrirCatalogoEspecialidades()" class="btn-save" style="width:auto; padding:10px 20px; font-size:0.9rem;"><i class="fa-solid fa-plus"></i> NOVA ESPECIALIDADE</button>
-                        </div>
-                        <div id="lista-minhas-esp">${espEmAndamentoHtml}</div>
-                    </div>
-
-                    <h4 style="color:var(--amarelo); margin-bottom:12px;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pontos</h4>
-                    <div style="max-height: 250px; overflow-y: auto;">${histHtml}</div>
+            
+            if (me.status === 'concluida') {
+                espConcluidasHtml += `
+                <div style="background:#111; border:1px solid var(--amarelo); padding:10px; border-radius:10px; display:inline-flex; flex-direction:column; align-items:center; width:100px; text-align:center; margin:5px;">
+                    <img src="${espData.logo}" style="width:50px; height:50px; object-fit:contain;">
+                    <strong style="font-size:0.7rem; color:white; display:block; margin-top:5px;">${espData.nome}</strong>
                 </div>`;
-        }
+            } else {
+                let statusCor = me.status === 'aguardando' ? '#00cc66' : 'var(--amarelo)';
+                let statusTexto = me.status === 'aguardando' ? 'Aguardando Avaliação' : 'Em andamento...';
+                
+                espEmAndamentoHtml += `
+                <div style="background:#222; border:1px solid #444; padding:12px; border-radius:10px; display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <img src="${espData.logo}" style="width:40px; height:40px; object-fit:contain;">
+                    <div style="flex:1; text-align:left;">
+                        <strong style="display:block; font-size:1rem; color:white;">${espData.nome}</strong>
+                        <span style="color:${statusCor}; font-size:0.8rem; font-weight:bold;">${statusTexto}</span>
+                    </div>
+                    <button onclick="abrirChecklistEsp(${espData.id})" class="btn-save" style="padding:8px 12px; font-size:0.7rem; width:auto; height:auto; background:var(--amarelo); color:black;">
+                        <i class="fa-solid fa-list-check"></i> CHECKLIST
+                    </button>
+                </div>`;
+            }
+        });
+    }
 
+    document.getElementById('dbv-profile-container').style.display = 'block';
+    document.getElementById('dbv-profile-container').innerHTML = `
+        <div class="dbv-profile-card">
+            <div class="dbv-profile-header">
+                <img src="${m.foto || 'https://via.placeholder.com/100'}">
+                <div class="dbv-profile-info" style="text-align:left;">
+                    <h2 style="color:white; margin:0;">${m.nome}</h2>
+                    <span class="unid-badge" style="background:${cor}; padding:2px 10px; border-radius:10px; font-size:0.8rem;">${m.unid}</span>
+                </div>
+            </div>
+            
+            <div class="dbv-pts-display" style="margin:20px 0; background:#111; padding:15px; border-radius:15px; border:1px solid #333;">
+                <div style="font-size:2.5rem; font-weight:bold; color:var(--amarelo);">${m.pontos}</div>
+                <div style="text-transform:uppercase; font-size:0.7rem; color:#888;">pontos acumulados</div>
+            </div>
+
+            <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #333; text-align:left;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="color:white; margin:0;"><i class="fa-solid fa-medal"></i> Especialidades</h4>
+                    <button onclick="abrirCatalogoEspecialidades()" class="btn-save" style="width:auto; padding:5px 10px; font-size:0.7rem;">+ ADICIONAR</button>
+                </div>
+
+                <p style="color:var(--amarelo); font-size:0.7rem; font-weight:bold; margin-bottom:10px; text-transform:uppercase;">Concluídas</p>
+                <div style="display:flex; flex-wrap:wrap; margin-bottom:20px;">${espConcluidasHtml || '<p style="color:#444; font-size:0.8rem;">Nenhuma.</p>'}</div>
+                
+                <p style="color:#888; font-size:0.7rem; font-weight:bold; margin-bottom:10px; text-transform:uppercase;">Em Andamento</p>
+                <div id="lista-minhas-esp">${espEmAndamentoHtml || '<p style="color:#444; font-size:0.8rem;">Nenhuma em andamento.</p>'}</div>
+            </div>
+
+            <button onclick="document.getElementById('dbv-profile-container').style.display='none'; document.getElementById('dbv-search-container').style.display='block';" class="btn-custom" style="display:block; width:100%; background:#333;">VOLTAR</button>
+        </div>`;
+}
         // =======================================================
         // SISTEMA DE ESPECIALIDADES (CATÁLOGO E LÓGICA)
         // =======================================================
