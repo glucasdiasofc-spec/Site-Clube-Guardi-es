@@ -353,56 +353,53 @@
             .carousel-track { width: 250px !important; }
             
         }
-         /* Chave de segurança */
+     /* --- INTEGRAÇÃO COM PAINEL DE TAMANHOS DINÂMICOS --- */
 
- /* Chave de segurança para fechar blocos anteriores */
+        /* PC: Tamanhos controlados pelo painel */
+        .gallery-card.layout-grid { height: var(--size-pc-galeria, 320px) !important; }
+        .hero h1 { font-size: var(--size-pc-hero-txt, 4rem) !important; }
 
-        /* --- AJUSTES MOBILE REFINADOS (NÃO AFETA O PC) --- */
+        /* Ajustes Mobile controlados pelo painel */
         @media (max-width: 768px) {
-            /* 1. Cabeçalho robusto mas equilibrado */
             header#main-header {
-                padding: 25px 15px !important;
+                padding: var(--size-mob-header-pad, 25px) 15px !important;
                 min-height: auto !important;
                 border-bottom: 3px solid var(--amarelo) !important;
             }
-            .header-logo { height: 70px !important; }
-            body { padding-top: 170px !important; }
-
-            /* 2. Botões no Celular: Tamanho confortável, não gigante */
-            .user-info-header { gap: 10px !important; }
-            .btn-lideranca, .btn-desbravador, .user-status {
-                padding: 12px 18px !important;
-                font-size: 1rem !important;
-                font-weight: 700 !important;
-                width: 100% !important;
-                max-width: 280px !important;
-            }
-
-            /* 3. Home Page (Hero e Timer) sem exagero */
-            .hero h1 { font-size: 2.8rem !important; }
-            .unit-timer { min-width: 85px !important; padding: 15px 5px !important; }
-            .unit-timer b { font-size: 2.2rem !important; }
+            .header-logo { height: var(--size-mob-logo, 70px) !important; }
+            body { padding-top: calc(var(--size-mob-header-pad, 25px) * 2 + 100px) !important; }
             
-            /* 4. Cards de Membros (Dois por linha para ficar bonito) */
-            .dbv-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-            .dbv-card { padding: 15px !important; }
-            .dbv-card img { width: 70px !important; height: 70px !important; }
-            .dbv-card div { font-size: 1rem !important; }
+            /* Correção da Galeria no celular para não ficar gigante */
+            .gallery-card.layout-grid { height: auto !important; min-height: 250px !important; }
+            .hero h1 { font-size: calc(var(--size-pc-hero-txt, 4rem) * 0.7) !important; }
         }
 
-        /* --- CORREÇÃO DOS BOTÕES INTRUSOS --- */
+        /* --- LIMPEZA DE BUGS (BOTÕES INTRUSOS E MÁ PROPORÇÃO) --- */
         
-        /* Esconde o botão de customizar na Home e na Área do Desbravador */
+        /* Esconde o botão Customizar fora da área administrativa */
         body.is-home .btn-custom,
         #dbv-area-page .btn-custom,
         #login-dbv-modal .btn-custom {
             display: none !important;
         }
+        #admin-page .btn-custom { display: inline-flex !important; }
+        /* --- NOVAS REGRAS DE CUSTOMIZAÇÃO DINÂMICA --- */
 
-        /* Garante que o botão de customizar SÓ apareça dentro da Liderança */
-        #admin-page .btn-custom {
-            display: inline-flex !important;
-        }
+/* Aplica na Galeria "Grande e Centralizada" e no Subtítulo (PC) */
+.gallery-card.layout-full { min-height: var(--size-pc-gal-full, 400px) !important; height: auto !important; }
+.hero p.subtitle { font-size: var(--size-pc-sub-txt, 1.5rem) !important; }
+
+/* Aplica nos Botões e Cards do Celular */
+@media (max-width: 768px) {
+    .btn-lideranca, .btn-desbravador, .user-status {
+        padding-top: var(--size-mob-btn-pad, 12px) !important;
+        padding-bottom: var(--size-mob-btn-pad, 12px) !important;
+    }
+    .dbv-card div { font-size: var(--size-mob-card-txt, 1rem) !important; }
+    
+    /* E se a galeria grande ficar imensa no celular, isso aqui segura ela: */
+    .gallery-card.layout-full { min-height: 250px !important; }
+}
     </style>
 </head>
 <body>
@@ -623,6 +620,22 @@
                         
                         <label class="input-label" style="margin-top:15px;">Cores das Unidades (Para Apresentação na Home):</label>
                         <div id="unidades-cores-list"></div>
+                    </div>
+                    <div class="config-sec">
+                        <h4><i class="fa-solid fa-expand"></i> Tamanhos e Proporções</h4>
+                    
+                        <div class="color-row"><span>Altura da Galeria Grande (Full):</span> <div><input type="number" id="cfg-sz-gal-full" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> px</div></div>
+<div class="color-row"><span>Tamanho do Subtítulo da Home:</span> <div><input type="number" step="0.1" id="cfg-sz-sub-pc" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> rem</div></div>
+
+<div class="color-row"><span>Altura dos Botões (Celular):</span> <div><input type="number" id="cfg-sz-btn-mob" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> px</div></div>
+<div class="color-row"><span>Texto do Card do Membro:</span> <div><input type="number" step="0.1" id="cfg-sz-card-mob" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> rem</div></div>
+                        <label class="input-label" style="color:var(--amarelo); margin-top:10px;"><i class="fa-solid fa-desktop"></i> Para Computador (PC)</label>
+                        <div class="color-row"><span>Altura da Galeria (Padrão 320):</span> <div><input type="number" id="cfg-sz-galeria" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> px</div></div>
+                        <div class="color-row"><span>Título Principal da Home:</span> <div><input type="number" step="0.1" id="cfg-sz-hero-pc" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> rem</div></div>
+
+                        <label class="input-label" style="color:var(--amarelo); margin-top:15px;"><i class="fa-solid fa-mobile-screen"></i> Para Celular (Mobile)</label>
+                        <div class="color-row"><span>Espessura do Cabeçalho:</span> <div><input type="number" id="cfg-sz-head-mob" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> px</div></div>
+                        <div class="color-row"><span>Tamanho da Logo:</span> <div><input type="number" id="cfg-sz-logo-mob" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> px</div></div>
                     </div>
 
                     <div class="config-sec">
@@ -955,6 +968,17 @@
             db.home.colors = { bg: document.getElementById('clr-bg').value, txt: document.getElementById('clr-txt').value, hBg: document.getElementById('clr-h-bg').value, hTxt: document.getElementById('clr-h-txt').value, fBg: document.getElementById('clr-f-bg').value, fTxt: document.getElementById('clr-f-txt').value };
             
             atualizarCoresUnidades();
+            // Salvar Tamanhos Dinâmicos
+            if(!db.home.sizes) db.home.sizes = {};
+            db.home.sizes.pcGaleria = document.getElementById('cfg-sz-galeria').value || 320;
+            db.home.sizes.pcHero = document.getElementById('cfg-sz-hero-pc').value || 4.0;
+            db.home.sizes.mobHead = document.getElementById('cfg-sz-head-mob').value || 25;
+            db.home.sizes.mobLogo = document.getElementById('cfg-sz-logo-mob').value || 70;
+            // Adicione APENAS estas 4 linhas abaixo das que você já colocou antes
+db.home.sizes.pcGalFull = document.getElementById('cfg-sz-gal-full').value || 400;
+db.home.sizes.pcSub = document.getElementById('cfg-sz-sub-pc').value || 1.5;
+db.home.sizes.mobBtn = document.getElementById('cfg-sz-btn-mob').value || 12;
+db.home.sizes.mobCard = document.getElementById('cfg-sz-card-mob').value || 1.0;
             save();
             alert("Site Personalizado com Sucesso!");
         }
@@ -1033,6 +1057,33 @@
             const head = document.getElementById('main-header');
             head.style.backgroundColor = h.colors.hBg === 'transparent' ? '#000000' : h.colors.hBg; 
             document.getElementById('status-txt').style.color = h.colors.hTxt;
+
+            // Aplicar Tamanhos Dinâmicos no Painel
+            if(!h.sizes) h.sizes = { pcGaleria: 320, pcHero: 4.0, mobHead: 25, mobLogo: 70 };
+            
+            if(document.getElementById('cfg-sz-galeria')) {
+                document.getElementById('cfg-sz-galeria').value = h.sizes.pcGaleria;
+                document.getElementById('cfg-sz-hero-pc').value = h.sizes.pcHero;
+                document.getElementById('cfg-sz-head-mob').value = h.sizes.mobHead;
+                document.getElementById('cfg-sz-logo-mob').value = h.sizes.mobLogo;
+                // 1. Cole isto DENTRO do if(document.getElementById('cfg-sz-galeria')) { ... }
+document.getElementById('cfg-sz-gal-full').value = h.sizes.pcGalFull || 400;
+document.getElementById('cfg-sz-sub-pc').value = h.sizes.pcSub || 1.5;
+document.getElementById('cfg-sz-btn-mob').value = h.sizes.mobBtn || 12;
+document.getElementById('cfg-sz-card-mob').value = h.sizes.mobCard || 1.0;
+
+// 2. Cole isto LOGO ABAIXO das variáveis CSS (document.documentElement.style...) que você já tinha colocado
+document.documentElement.style.setProperty('--size-pc-gal-full', (h.sizes.pcGalFull || 400) + 'px');
+document.documentElement.style.setProperty('--size-pc-sub-txt', (h.sizes.pcSub || 1.5) + 'rem');
+document.documentElement.style.setProperty('--size-mob-btn-pad', (h.sizes.mobBtn || 12) + 'px');
+document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCard || 1.0) + 'rem');
+            }
+
+            // Injetar os tamanhos como variáveis CSS no site inteiro
+            document.documentElement.style.setProperty('--size-pc-galeria', h.sizes.pcGaleria + 'px');
+            document.documentElement.style.setProperty('--size-pc-hero-txt', h.sizes.pcHero + 'rem');
+            document.documentElement.style.setProperty('--size-mob-header-pad', h.sizes.mobHead + 'px');
+            document.documentElement.style.setProperty('--size-mob-logo', h.sizes.mobLogo + 'px');
             
             const mainLogo = document.getElementById('main-logo-img');
             if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
