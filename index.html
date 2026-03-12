@@ -400,6 +400,18 @@
     /* E se a galeria grande ficar imensa no celular, isso aqui segura ela: */
     .gallery-card.layout-full { min-height: 250px !important; }
 }
+/* ESTILOS DAS ESPECIALIDADES */
+        .esp-card {
+            background: #111; border: 1px solid #333; border-radius: 12px; padding: 15px; text-align: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .esp-card:hover { border-color: var(--amarelo); transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255,204,0,0.2); }
+        .esp-card img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
+        .esp-badge { background: #222; color: #aaa; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; display: inline-block; margin-top:5px;}
+        
+        .req-list { margin-top: 15px; text-align: left; background: #1a1a1a; padding: 15px; border-radius: 10px; max-height: 300px; overflow-y: auto;}
+        .req-item { margin-bottom: 10px; font-size: 0.95rem; color: #ddd; padding-bottom:10px; border-bottom:1px solid #333;}
+        
     </style>
 </head>
 <body>
@@ -728,6 +740,30 @@
             <label class="input-label">Nova Senha (deixe em branco para manter a atual):</label>
             <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="edit-m-senha" placeholder="Senha"></div>
             <button onclick="salvarEdicaoMembro()" class="btn-save" style="margin-top: 20px;"><i class="fa-solid fa-floppy-disk"></i> SALVAR ALTERAÇÕES</button>
+        </div>
+    </div>
+    <div id="modal-catalogo-esp" class="modal-overlay">
+        <div class="modal-box" style="max-width: 800px; width: 95%;">
+            <div class="close-modal" onclick="document.getElementById('modal-catalogo-esp').style.display='none'"><i class="fa-solid fa-times"></i></div>
+            <h3 style="color:var(--amarelo); margin-bottom: 20px; text-align:center;"><i class="fa-solid fa-layer-group"></i> Catálogo de Especialidades</h3>
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <input type="text" id="busca-esp-input" placeholder="Buscar especialidade..." oninput="renderizarCatalogo()" style="flex:1;">
+                <select id="filtro-area-esp" onchange="renderizarCatalogo()" style="width:auto; padding:10px; border-radius:10px; background:#111; color:white; border:1px solid #444;">
+                    <option value="todas">Todas as Áreas</option>
+                    <option value="Natureza">Natureza</option>
+                    <option value="Habilidades">Habilidades</option>
+                    <option value="Atividades Recreativas">Atividades Recreativas</option>
+                </select>
+            </div>
+            <div id="grid-catalogo-esp" class="dbv-grid" style="max-height: 50vh; overflow-y: auto; padding-right:10px;"></div>
+            
+        </div>
+    </div>
+
+    <div id="modal-detalhe-esp" class="modal-overlay" style="z-index: 9005;">
+        <div class="modal-box" style="max-width: 600px;">
+            <div class="close-modal" onclick="document.getElementById('modal-detalhe-esp').style.display='none'"><i class="fa-solid fa-arrow-left"></i> Voltar</div>
+            <div id="conteudo-detalhe-esp" style="margin-top:20px;"></div>
         </div>
     </div>
     <section id="admin-page" class="page">
@@ -1409,7 +1445,12 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             }).join('');
         }
 
+        // ID do Desbravador logado atualmente
+        let dbvLogadoAtualId = null;
+
+        // NOVA VERSÃO DO PERFIL (Com botão de Checklist Funcional)
         function exibirPerfilDbv(id) {
+            dbvLogadoAtualId = id; 
             const m = db.membros.find(x => x.id === id);
             if (!m) return;
             const unidObj = db.unidades.find(u => u.nome === m.unid);
@@ -1418,42 +1459,243 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             document.getElementById('dbv-search-container').style.display = 'none';
             
             const hist = (m.historico || []).slice().reverse();
-            const histHtml = hist.length === 0
-                ? '<p style="color:#888; text-align:center; padding:20px;">Nenhum registro no histórico.</p>'
-                : hist.map(h => `
-                    <div class="dbv-hist-item ${h.valor > 0 ? 'positivo' : 'negativo'}">
-                        <span class="dbv-hist-valor" style="color:${h.valor > 0 ? '#00cc66' : 'var(--vermelho)'};">${h.valor > 0 ? '+' + h.valor : h.valor} pts</span>
-                        <span class="dbv-hist-just">${h.just}</span>
-                        <span class="dbv-hist-data">${h.data}</span>
-                    </div>`).join('');
+            const histHtml = hist.length === 0 ? '<p style="color:#888; text-align:center; padding:20px;">Nenhum registro no histórico.</p>' : hist.map(h => `<div class="dbv-hist-item ${h.valor > 0 ? 'positivo' : 'negativo'}"><span class="dbv-hist-valor" style="color:${h.valor > 0 ? '#00cc66' : 'var(--vermelho)'};">${h.valor > 0 ? '+' + h.valor : h.valor} pts</span><span class="dbv-hist-just">${h.just}</span><span class="dbv-hist-data">${h.data}</span></div>`).join('');
 
-            const rankGeral = [...db.membros].sort((a,b) => b.pontos - a.pontos).findIndex(x => x.id === id) + 1;
-            const membrosUnid = db.membros.filter(x => x.unid === m.unid).sort((a,b) => b.pontos - a.pontos);
-            const rankUnid = membrosUnid.findIndex(x => x.id === id) + 1;
+            // RENDERIZA AS ESPECIALIDADES
+            let espEmAndamentoHtml = '<p style="color:#888; text-align:center; padding:10px;">Nenhuma especialidade iniciada.</p>';
+            if (m.especialidades && m.especialidades.length > 0) {
+                espEmAndamentoHtml = m.especialidades.map(me => {
+                    const espData = db.especialidades_catalogo.find(c => c.id === me.idEsp);
+                    if(!espData) return '';
+                    
+                    // Define a cor dependendo do status
+                    let statusCor = me.status === 'aguardando' ? '#00cc66' : 'var(--amarelo)';
+                    let statusTexto = me.status === 'aguardando' ? '<i class="fa-solid fa-hourglass-half"></i> Aguardando Avaliação' : 'Em andamento...';
+                    
+                    return `
+                    <div style="background:#111; border:1px solid #333; padding:15px; border-radius:10px; display:flex; align-items:center; gap:15px; margin-bottom:10px; flex-wrap:wrap;">
+                        <img src="${espData.logo}" style="width:50px; height:50px; object-fit:contain; border-radius:5px;">
+                        <div style="flex:1; min-width:150px;">
+                            <strong style="display:block; font-size:1.1rem;">${espData.nome}</strong>
+                            <span style="color:${statusCor}; font-size:0.85rem; font-weight:bold;">${statusTexto}</span>
+                        </div>
+                        <button onclick="abrirChecklistEsp(${espData.id})" style="background:#222; color:white; border:1px solid #444; padding:10px 15px; border-radius:8px; cursor:pointer; font-weight:bold; transition:0.3s;" onmouseover="this.style.background='var(--amarelo)'; this.style.color='black';"><i class="fa-solid fa-list-check"></i> VER CHECKLIST</button>
+                    </div>`;
+                }).join('');
+            }
 
             document.getElementById('dbv-profile-container').style.display = 'block';
             document.getElementById('dbv-profile-container').innerHTML = `
                 <div class="dbv-profile-card">
                     <div class="dbv-profile-header">
-                        <img src="${m.foto || 'https://via.placeholder.com/100'}" alt="${m.nome}">
+                        <img src="${m.foto || 'https://via.placeholder.com/100'}">
                         <div class="dbv-profile-info">
                             <h2>${m.nome}</h2>
                             <span class="unid-badge" style="background:${cor}; color:${cor === '#ffcc00' || cor === '#ffffff' ? 'black' : 'white'};">${m.unid}</span>
-                            <div style="margin-top:10px; display:flex; gap:15px; flex-wrap:wrap;">
-                                <span style="color:#aaa; font-size:0.9rem;"><i class="fa-solid fa-ranking-star" style="color:var(--amarelo);"></i> #${rankGeral}º Geral</span>
-                                <span style="color:#aaa; font-size:0.9rem;"><i class="fa-solid fa-campground" style="color:${cor};"></i> #${rankUnid}º na Unidade</span>
-                            </div>
                         </div>
                     </div>
+                    
                     <div class="dbv-pts-display">
                         <div class="pts-num">${m.pontos}</div>
                         <div class="pts-label">pontos acumulados</div>
                     </div>
-                    <h4 style="color:var(--amarelo); margin-bottom:12px; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pontos</h4>
-                    <div style="max-height: 350px; overflow-y: auto;">${histHtml}</div>
+
+                    <div style="background:#1a1a1a; padding:20px; border-radius:15px; margin-bottom:20px; border:1px solid #333;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+                            <h4 style="color:white; margin:0; font-size:1.2rem;"><i class="fa-solid fa-medal"></i> Minhas Especialidades</h4>
+                            <button onclick="abrirCatalogoEspecialidades()" class="btn-save" style="width:auto; padding:10px 20px; font-size:0.9rem;"><i class="fa-solid fa-plus"></i> NOVA ESPECIALIDADE</button>
+                        </div>
+                        <div id="lista-minhas-esp">${espEmAndamentoHtml}</div>
+                    </div>
+
+                    <h4 style="color:var(--amarelo); margin-bottom:12px;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pontos</h4>
+                    <div style="max-height: 250px; overflow-y: auto;">${histHtml}</div>
                 </div>`;
         }
 
+        // =======================================================
+        // SISTEMA DE ESPECIALIDADES (CATÁLOGO E LÓGICA)
+        // =======================================================
+
+        function injetarCatalogoPadrao() {
+            // Cria o catálogo se não existir no banco
+            if (!db.especialidades_catalogo) {
+                db.especialidades_catalogo = [
+                    { id: 1, nome: "Acampamento I", area: "Atividades Recreativas", logo: "https://mda.wiki.br/wp-content/uploads/Acampamento-I.jpg", reqs: ["Entender e praticar a boa educação no campo.", "Saber oito coisas que devem ser feitas quando se está perdido.", "Estar familiarizado com vários tipos de equipamentos de acampamento."] },
+                    { id: 2, nome: "Cães", area: "Natureza", logo: "https://mda.wiki.br/wp-content/uploads/Caes.jpg", reqs: ["Mencionar 5 características do cão doméstico.", "Identificar, a partir de fotografias, 5 raças de cães.", "Saber como cuidar de um filhote de cachorro."] },
+                    { id: 3, nome: "Arte de Trançar", area: "Habilidades", logo: "https://mda.wiki.br/wp-content/uploads/Arte-de-Trancar.jpg", reqs: ["Fazer uma trança simples com 3 fios.", "Fazer um chaveiro usando a técnica de trançado.", "Saber como finalizar as pontas para não desfiar."] }
+                ];
+                save();
+            }
+        }
+
+        function abrirCatalogoEspecialidades() {
+            injetarCatalogoPadrao(); // Garante que o catálogo existe
+            document.getElementById('modal-catalogo-esp').style.display = 'flex';
+            renderizarCatalogo();
+        }
+
+        function renderizarCatalogo() {
+            const termo = document.getElementById('busca-esp-input').value.toLowerCase();
+            const area = document.getElementById('filtro-area-esp').value;
+            
+            let filtradas = db.especialidades_catalogo.filter(e => {
+                const bateNome = e.nome.toLowerCase().includes(termo);
+                const bateArea = area === 'todas' || e.area === area;
+                return bateNome && bateArea;
+            });
+
+            document.getElementById('grid-catalogo-esp').innerHTML = filtradas.map(e => `
+                <div class="esp-card" onclick="verDetalhesEsp(${e.id})">
+                    <img src="${e.logo}" onerror="this.src='https://via.placeholder.com/80?text=Especialidade'">
+                    <h4 style="color:white; font-size:1rem; margin-bottom:5px;">${e.nome}</h4>
+                    <span class="esp-badge">${e.area}</span>
+                </div>
+            `).join('');
+        }
+
+        function verDetalhesEsp(idEsp) {
+            const esp = db.especialidades_catalogo.find(e => e.id === idEsp);
+            if(!esp) return;
+
+            // Gera a lista de requisitos
+            let reqsHtml = esp.reqs.map((r, i) => `<div class="req-item"><b>${i+1}.</b> ${r}</div>`).join('');
+
+            document.getElementById('conteudo-detalhe-esp').innerHTML = `
+                <div style="text-align:center;">
+                    <img src="${esp.logo}" style="width:120px; height:120px; object-fit:contain; margin-bottom:15px;">
+                    <h2 style="color:var(--amarelo);">${esp.nome}</h2>
+                    <span class="esp-badge" style="margin-bottom:20px;">${esp.area}</span>
+                </div>
+                <h4 style="color:white; margin-bottom:10px;"><i class="fa-solid fa-list-check"></i> Requisitos Oficiais:</h4>
+                <div class="req-list">${reqsHtml}</div>
+                <button onclick="iniciarEspecialidade(${esp.id})" class="btn-save" style="margin-top:20px;"><i class="fa-solid fa-play"></i> INICIAR ESTA ESPECIALIDADE</button>
+            `;
+            
+            document.getElementById('modal-detalhe-esp').style.display = 'flex';
+        }
+
+        function iniciarEspecialidade(idEsp) {
+            if(!dbvLogadoAtualId) return alert("Erro: Desbravador não identificado.");
+            
+            const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+            if(!membro) return;
+
+            // Cria o array de especialidades se o membro ainda não tiver
+            if(!membro.especialidades) membro.especialidades = [];
+
+            // Verifica se já iniciou
+            if(membro.especialidades.find(e => e.idEsp === idEsp)) {
+                return alert("Você já iniciou ou concluiu esta especialidade!");
+            }
+
+            // Adiciona a especialidade ao perfil do desbravador
+            membro.especialidades.push({
+                idEsp: idEsp,
+                status: 'andamento',
+                reqsConcluidos: [] // Futuramente usaremos isso na checklist
+            });
+
+            save(); // Salva no Firebase
+            
+            alert("Especialidade adicionada com sucesso!");
+            document.getElementById('modal-detalhe-esp').style.display = 'none';
+            document.getElementById('modal-catalogo-esp').style.display = 'none';
+            
+            // Atualiza a tela para mostrar a nova especialidade na lista
+            exibirPerfilDbv(dbvLogadoAtualId); 
+        }
+        
+// =======================================================
+        // LÓGICA DA CHECKLIST E APROVAÇÃO
+        // =======================================================
+
+        function abrirChecklistEsp(idEsp) {
+            const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+            if(!membro) return;
+
+            const espAndamento = membro.especialidades.find(e => e.idEsp === idEsp);
+            const espCat = db.especialidades_catalogo.find(c => c.id === idEsp);
+            if(!espAndamento || !espCat) return;
+
+            if(!espAndamento.reqsConcluidos) espAndamento.reqsConcluidos = [];
+
+            const totalReqs = espCat.reqs.length;
+            const concluidos = espAndamento.reqsConcluidos.length;
+            const progresso = Math.round((concluidos / totalReqs) * 100);
+
+            // Monta o cabeçalho e a barra de progresso
+            let html = `
+                <div style="text-align:center; margin-bottom: 20px;">
+                    <img src="${espCat.logo}" style="width:80px; height:80px; object-fit:contain;">
+                    <h3 style="color:var(--amarelo); margin-top:10px;">${espCat.nome}</h3>
+                    <p style="color:#aaa; font-size:0.9rem; margin-top:5px;">Progresso: ${progresso}% (${concluidos} de ${totalReqs})</p>
+                    <div style="width:100%; background:#222; height:12px; border-radius:6px; margin-top:8px; overflow:hidden; border:1px solid #444;">
+                        <div style="width:${progresso}%; background:linear-gradient(90deg, var(--amarelo), #00cc66); height:100%; transition:width 0.4s ease;"></div>
+                    </div>
+                </div>
+                <div style="max-height: 40vh; overflow-y: auto; padding-right: 10px; display:flex; flex-direction:column; gap:8px;">
+            `;
+
+            // Monta a lista de checkboxes
+            espCat.reqs.forEach((req, index) => {
+                const isChecked = espAndamento.reqsConcluidos.includes(index) ? 'checked' : '';
+                const corTexto = isChecked ? '#666' : '#ddd';
+                const textoRiscado = isChecked ? 'line-through' : 'none';
+                // Trava o clique se já estiver aguardando avaliação
+                const disableClick = espAndamento.status === 'aguardando' ? 'disabled' : '';
+
+                html += `
+                    <label style="display:flex; align-items:flex-start; gap:12px; background:#111; padding:15px; border-radius:10px; border:1px solid ${isChecked ? '#00cc66' : '#333'}; cursor:${disableClick ? 'not-allowed' : 'pointer'}; transition:0.2s;">
+                        <input type="checkbox" ${isChecked} ${disableClick} onchange="toggleRequisito(${idEsp}, ${index})" style="width:22px; height:22px; margin-top:2px; flex-shrink:0; accent-color:#00cc66;">
+                        <span style="color:${corTexto}; text-decoration:${textoRiscado}; font-size:0.95rem; line-height:1.4;"><b>${index + 1}.</b> ${req}</span>
+                    </label>
+                `;
+            });
+
+            html += `</div>`;
+
+            // Monta o Botão de Solicitar Aprovação
+            if (concluidos === totalReqs && espAndamento.status === 'andamento') {
+                html += `<button onclick="solicitarAprovacaoEsp(${idEsp})" class="btn-save" style="margin-top:20px; background:linear-gradient(135deg, #00cc66, #00994c); color:white; width:100%;"><i class="fa-solid fa-paper-plane"></i> ENVIAR PARA AVALIAÇÃO DO LÍDER</button>`;
+            } else if (espAndamento.status === 'aguardando') {
+                html += `<div style="margin-top:20px; text-align:center; padding:15px; background:rgba(0, 204, 102, 0.1); border:1px solid #00cc66; border-radius:10px; color:#00cc66; font-weight:bold;"><i class="fa-solid fa-clock"></i> Especialidade enviada! Aguarde a avaliação do líder.</div>`;
+            }
+
+            document.getElementById('conteudo-checklist-esp').innerHTML = html;
+            document.getElementById('modal-checklist-esp').style.display = 'flex';
+        }
+
+        function toggleRequisito(idEsp, reqIndex) {
+            const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+            const espAndamento = membro.especialidades.find(e => e.idEsp === idEsp);
+            
+            if(!espAndamento.reqsConcluidos) espAndamento.reqsConcluidos = [];
+
+            const pos = espAndamento.reqsConcluidos.indexOf(reqIndex);
+            if(pos === -1) {
+                espAndamento.reqsConcluidos.push(reqIndex); // Marca
+            } else {
+                espAndamento.reqsConcluidos.splice(pos, 1); // Desmarca
+            }
+
+            save(); 
+            abrirChecklistEsp(idEsp); // Atualiza a barra de progresso e as cores ao vivo
+        }
+
+        function solicitarAprovacaoEsp(idEsp) {
+            if(confirm("Tem certeza que concluiu todos os requisitos? O seu líder será notificado para avaliar.")) {
+                const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+                const espAndamento = membro.especialidades.find(e => e.idEsp === idEsp);
+                
+                espAndamento.status = 'aguardando'; // Muda o status
+                save();
+                
+                alert("Enviado com sucesso!");
+                abrirChecklistEsp(idEsp); // Atualiza o modal
+                exibirPerfilDbv(dbvLogadoAtualId); // Atualiza a tela de fundo
+            }
+        }
         function voltarBuscaDbv() {
             document.getElementById('dbv-search-container').style.display = 'block';
             document.getElementById('dbv-profile-container').style.display = 'none';
