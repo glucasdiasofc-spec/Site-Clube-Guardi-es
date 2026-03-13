@@ -783,6 +783,17 @@
         <div class="panel-layout">
             
             <aside class="sidebar">
+                <button onclick="abrirMinhasEspecialidadesLider()" class="btn-save" style="margin-top: 20px; background: var(--amarelo); color: black;">
+                    <i class="fa-solid fa-star"></i> MINHAS ESPECIALIDADES
+                </button>
+
+                <button onclick="abrirMinhasClassesLider()" class="btn-save" style="margin-top: 10px; background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white;">
+                    <i class="fa-solid fa-book-open"></i> MINHAS CLASSES
+                </button>
+                <button onclick="abrirAprovacoesClasses()" class="btn-save" style="margin-top: 10px; background: #333; color: white;">
+                    <i class="fa-solid fa-check-double"></i> APROVAR CLASSES
+                </button>
+
                 <div class="sidebar-profile">
                     <img id="my-profile-img" src="" class="profile-img" onerror="this.src='https://via.placeholder.com/150'">
                     <h2 id="my-name-display">Líder</h2>
@@ -806,6 +817,26 @@
             </aside>
 
             <div class="main-content">
+                <div id="minhas-classes-lider-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid #1a6b3c;">
+                    <h3 style="color:#1a6b3c; margin-bottom: 15px;"><i class="fa-solid fa-book-open"></i> Minhas Classes (Agrupadas / Liderança)</h3>
+                    <button onclick="abrirCatalogoClasses()" class="btn-save" style="margin-bottom: 20px; width: auto; padding: 10px 20px; font-size: 0.8rem;"><i class="fa-solid fa-plus"></i> INICIAR CLASSE</button>
+                    <div id="lista-classes-lider" style="display:flex; flex-direction:column; gap:10px;"></div>
+                </div>
+
+                <div id="aprovacoes-classes-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid #ff9900;">
+                    <h3 style="color:#ff9900; margin-bottom: 15px;"><i class="fa-solid fa-clipboard-check"></i> Gerenciar Classes dos Desbravadores</h3>
+                    <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">Aqui você aprova os cadernos terminados (liberando para investidura) e, após a cerimônia, confirma a investidura.</p>
+                    <div id="lista-aprovacoes-classes" style="display:flex; flex-direction:column; gap:10px;"></div>
+                </div>
+                <div id="minhas-esp-lider-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid var(--amarelo);">
+                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-medal"></i> Minhas Especialidades (Líder)</h3>
+                    <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">Solicite e gerencie suas especialidades aqui. Elas requerem aprovação do Admin Geral, mas não somam pontos no ranking do Clube.</p>
+                    
+                    <button onclick="abrirCatalogoEspecialidades()" class="btn-save" style="margin-bottom: 20px; width: auto; padding: 10px 20px; font-size: 0.8rem;"><i class="fa-solid fa-plus"></i> ADICIONAR NOVA</button>
+                    
+                    <h4 style="color:white; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">Especialidades em Andamento / Concluídas:</h4>
+                    <div id="lista-esp-lider" style="display:flex; flex-direction:column; gap:10px;"></div>
+                </div>
                 <div id="aprovacoes-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid #00cc66;">
                     <h3 style="color:#00cc66; margin-bottom: 15px;"><i class="fa-solid fa-medal"></i> Especialidades para Avaliação</h3>
                     <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">Avalie os desbravadores que concluíram os requisitos.</p>
@@ -902,6 +933,37 @@
             home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""}, timer: "2026-12-31T23:59", showTimer: true, timerReplace: "O evento começou!", showEventDate: true, heroesList: [], showLideranca: true, showUnidades: true, showGanhadores: true, ganhadoresTitulo: "Desbravadores Destaque", ganhadores: [], gallery: [], colors: { bg: "#121212", txt: "#ffffff", hBg: "transparent", hTxt: "#ffcc00", fBg: "#000000", fTxt: "#ffffff" }, glow: false, logoUrl: "" } 
         };
         let db = null; let user = null; let slideIntervalIdMap = {}; let liderIdx = 0, ganhadorIdx = 0; let carrosselLiderId = null, carrosselGanhadorId = null;
+        const CATALOGO_CLASSES = [
+    { id: 101, nome: "Amigo", tipo: "regular", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482106940065579260/1.png?ex=69b5bf26&is=69b46da6&hm=31bba2922a99cfc96bab6f18c55dcd35d555c388e5b9e5a6bff2dcf4f4bda554&" },
+    { id: 102, nome: "Amigo da Natureza", tipo: "avancada", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482115001576718416/2.png?ex=69b5c6a8&is=69b47528&hm=6b5838e575863d1f99e9b89fe2f5ad6c42ac8ad076653e2963dddc83818fcbce&" },
+    { id: 103, nome: "Companheiro", tipo: "regular", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482106941248639166/2.png?ex=69b5bf27&is=69b46da7&hm=37ff0d89dc6dd29b928300711615c72de4d07d7ea6c21d01b7d93a72c5f89aff&" },
+    { id: 104, nome: "Companheiro de Excursionismo", tipo: "avancada", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482115002218451075/3.png?ex=69b5c6a8&is=69b47528&hm=091d637759d333394f38266d4cf294d71f55729a1572b7a41322dc13b2f10ad7&" },
+    { id: 105, nome: "Pesquisador", tipo: "regular", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482106942460661821/3.png?ex=69b5bf27&is=69b46da7&hm=840f11dda9fd9b49659ce5b31e758e1c7913d3e4335e5f39f0589706341f95ea&" },
+    { id: 106, nome: "Pesquisador de Campo e Bosque", tipo: "avancada", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482115002801328312/4.png?ex=69b5c6a9&is=69b47529&hm=50b6bc942f8deca453739c160065cb26f285010975c874a5e09c0992b15ae178&" },
+    { id: 107, nome: "Pioneiro", tipo: "regular", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482106943651971283/4.png?ex=69b5bf27&is=69b46da7&hm=20a3aed02056be32c88572a83636e94a6129e12f545938237738da955ba330c1&" },
+    { id: 108, nome: "Pioneiro de Novas Fronteiras", tipo: "avancada", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482115003430469642/5.png?ex=69b5c6a9&is=69b47529&hm=ec1fd903e4fb0bfed592ef93029b88503e5381f9e37e3acb5c5f960372c2b86e&" },
+    { id: 109, nome: "Excursionista", tipo: "regular", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482106944725586081/5.png?ex=69b5bf27&is=69b46da7&hm=5314c004de5eea0d81b684179248fc1321b1755ca083ba077cd428b277a3a32d&" },
+    { id: 110, nome: "Excursionista na Mata", tipo: "avancada", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482115004143767703/6.png?ex=69b5c6a9&is=69b47529&hm=5aeef44eebbc93bed63a3a26aefb00bff8ebf2d63c48b334509c06214ff1def1&" },
+    { id: 111, nome: "Guia", tipo: "regular", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482106945853980683/6.png?ex=69b5bf28&is=69b46da8&hm=919624e5c122c489194f7164a14b2426cde7b487050655c2048cb97f39260ff5&" },
+    { id: 112, nome: "Guia de Exploração", tipo: "avancada", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482115004672114859/7.png?ex=69b5c6a9&is=69b47529&hm=b41bfb4238e07f085618c8e640b552e5aa8e1afb91cc36cac470414871520f0c&" },
+    { 
+        id: 200, 
+        nome: "Classes Agrupadas (Líder)", 
+        tipo: "agrupada", 
+        logo: "https://mda.wiki.br/site/@imgs_wiki/imagem@cl013.png",
+        reqs: [
+            "I. Gerais - Completar os requisitos de Amigo a Guia",
+            "II. Descoberta Espiritual - Memorizar e explicar os textos base",
+            "III. Servindo aos Outros - Projetos comunitários e missionários",
+            "IV. Desenvolvimento da Amizade - Debates e palestras",
+            "V. Saúde e Aptidão Física - Especialidades e princípios de saúde",
+            "VI. Organização e Liderança - Planejamento e execução de eventos",
+            "VII. Estudo da Natureza - Especialidades de natureza e biologia",
+            "VIII. Arte de Acampar - Pioneirias, fogueiras e pernoites",
+            "IX. Estilo de Vida - Especialidades profissionais/artes"
+        ]
+    }
+];
         async function save() { try { await DOC_REF.set(db); } catch(e) { console.error(e); alert("Erro ao salvar"); } render(); }
         async function carregarDados() { 
             try { 
@@ -1002,6 +1064,68 @@
                 renderAprovacoesEsp();
             }
         }
+
+function abrirMinhasEspecialidadesLider() {
+            // Esconde todas as outras seções
+            document.getElementById('aprovacoes-section').style.display = 'none';
+            if(document.getElementById('admin-only-users')) document.getElementById('admin-only-users').style.display = 'none';
+            if(document.getElementById('hall-section')) document.getElementById('hall-section').style.display = 'none';
+            if(document.getElementById('delete-unid-section')) document.getElementById('delete-unid-section').style.display = 'none';
+            if(document.getElementById('memb-section')) document.getElementById('memb-section').style.display = 'none';
+            if(document.getElementById('box-gerenciamento-unid')) document.getElementById('box-gerenciamento-unid').style.display = 'none';
+            
+            // Mostra a seção de especialidades do líder
+            document.getElementById('minhas-esp-lider-section').style.display = 'block';
+            
+            // Cria um "perfil" oculto para o líder guardar as especialidades (se ele ainda não tiver)
+            let membroLider = db.membros.find(m => m.nome === user.u && m.isLider === true);
+            if (!membroLider) {
+                membroLider = { id: Date.now(), nome: user.u, foto: user.foto, unid: user.unid, pontos: 0, historico: [], especialidades: [], isLider: true, login: user.u, senha: user.p };
+                db.membros.push(membroLider);
+                save();
+            }
+            
+            // Define o usuário atual como o líder
+            dbvLogadoAtualId = membroLider.id;
+            
+            renderizarMinhasEspecialidadesLider();
+        }
+
+        function renderizarMinhasEspecialidadesLider() {
+            const membroLider = db.membros.find(m => m.id === dbvLogadoAtualId);
+            const container = document.getElementById('lista-esp-lider');
+
+            if (!membroLider || !membroLider.especialidades || membroLider.especialidades.length === 0) {
+                container.innerHTML = '<p style="color:#666; font-size:0.85rem; padding: 10px; background: #111; border-radius: 8px;">Você ainda não solicitou nenhuma especialidade.</p>';
+                return;
+            }
+
+            let html = '';
+            membroLider.especialidades.forEach(me => {
+                const espData = db.especialidades_catalogo.find(c => c.id === me.idEsp);
+                if (!espData) return;
+
+                let statusCor = me.status === 'concluida' ? '#00cc66' : (me.status === 'aguardando' ? '#ffcc00' : '#aaa');
+                let statusTexto = me.status === 'concluida' ? 'Concluída' : (me.status === 'aguardando' ? 'Aguardando Avaliação' : 'Em andamento...');
+                
+                // Visual de Mestrado se for mestrado concluído
+                const ehMestrado = espData.mestrado && me.status === 'concluida';
+                const borda = ehMestrado ? 'border-color: var(--amarelo); background: rgba(255,204,0,0.1);' : '';
+
+                html += `
+                <div style="background:#111; border:1px solid #333; ${borda} padding:15px; border-radius:8px; display:flex; align-items:center; gap:15px;">
+                    <img src="${espData.logo}" style="width:45px; height:45px; object-fit:contain;">
+                    <div style="flex:1;">
+                        <strong style="display:block; color:white; font-size:1rem;">${ehMestrado ? '<i class="fa-solid fa-crown" style="color:var(--amarelo);"></i> ' : ''}${espData.nome}</strong>
+                        <span style="color:${statusCor}; font-size:0.8rem; font-weight:bold;">${statusTexto}</span>
+                    </div>
+                    ${me.status === 'andamento' ? `<button onclick="abrirChecklistEsp(${espData.id})" class="btn-save" style="padding:8px 12px; font-size:0.75rem; width:auto; background:var(--amarelo); color:black;"><i class="fa-solid fa-list-check"></i> CHECKLIST</button>` : ''}
+                </div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+
     </script>
 
     <script>
@@ -1635,9 +1759,21 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
                 <div id="lista-minhas-esp">${espEmAndamentoHtml || '<p style="color:#444; font-size:0.8rem;">Nenhuma em andamento.</p>'}</div>
             </div>
 
+<div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #333; text-align:left;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="color:white; margin:0;"><i class="fa-solid fa-book-open"></i> Classes</h4>
+                    <button onclick="abrirCatalogoClasses()" class="btn-save" style="width:auto; padding:5px 10px; font-size:0.7rem;">+ ADICIONAR</button>
+                </div>
+                <div id="lista-minhas-classes" style="display:flex; flex-direction:column; gap:10px;">
+                    </div>
+            </div>
+            
             <button onclick="document.getElementById('dbv-profile-container').style.display='none'; document.getElementById('dbv-search-container').style.display='block';" class="btn-custom" style="display:block; width:100%; background:#333;">VOLTAR</button>
         </div>`;
+
+        renderizarMinhasClassesDbv(m.id);
 }
+
         // =======================================================
         // SISTEMA DE ESPECIALIDADES (CATÁLOGO E LÓGICA)
         // =======================================================
@@ -5643,26 +5779,22 @@ const lote_oficial = [
             renderizarCatalogo();
         }
 
-        function renderizarCatalogo() {
+         function renderizarCatalogo() {
             const termo = document.getElementById('busca-esp-input').value.toLowerCase();
             const area = document.getElementById('filtro-area-esp').value;
-            
+
+            // Filtra normalmente sem mudar a ordem
             let filtradas = db.especialidades_catalogo.filter(e => {
                 const bateNome = e.nome.toLowerCase().includes(termo);
                 const bateArea = area === 'todas' || e.area === area;
                 return bateNome && bateArea;
             });
-            // CÓDIGO NOVO: Joga os mestrados para o topo e ordena o resto em ordem alfabética
-            filtradas.sort((a, b) => {
-                if (a.mestrado && !b.mestrado) return -1;
-                if (!a.mestrado && b.mestrado) return 1;
-                return a.nome.localeCompare(b.nome);
-            });
 
+            // Renderiza os cards com visual padrão para todos no catálogo
             document.getElementById('grid-catalogo-esp').innerHTML = filtradas.map(e => `
                 <div class="esp-card" onclick="verDetalhesEsp(${e.id})">
                     <img src="${e.logo}" onerror="this.src='https://via.placeholder.com/80?text=Especialidade'">
-                    <h4 style="color:white; font-size:1rem; margin-bottom:5px;">${e.mestrado ? '<i class="fa-solid fa-star" style="color:var(--amarelo);"></i> ' : ''}${e.nome}</h4>
+                    <h4 style="color:white; font-size:1rem; margin-bottom:5px;">${e.nome}</h4>
                     <span class="esp-badge">${e.area}</span>
                 </div>
             `).join('');
@@ -5689,7 +5821,9 @@ const lote_oficial = [
             document.getElementById('modal-detalhe-esp').style.display = 'flex';
         }
 
-        function iniciarEspecialidade(idEsp) {
+        function iniciarEspecialidade(idEsp) 
+        
+        {
             if(!dbvLogadoAtualId) return alert("Erro: Desbravador não identificado.");
             
             const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
@@ -5716,9 +5850,12 @@ const lote_oficial = [
             document.getElementById('modal-detalhe-esp').style.display = 'none';
             document.getElementById('modal-catalogo-esp').style.display = 'none';
             
-            // Atualiza a tela para mostrar a nova especialidade na lista
-            exibirPerfilDbv(dbvLogadoAtualId); 
-        }
+            // SE FOR LÍDER, ATUALIZA A TELA DO LÍDER. SE NÃO, TELA DO DBV.
+            if (membro.isLider) {
+                renderizarMinhasEspecialidadesLider();
+            } else {
+                exibirPerfilDbv(dbvLogadoAtualId); 
+            }
         
 // =======================================================
         // LÓGICA DA CHECKLIST E APROVAÇÃO
@@ -5798,17 +5935,24 @@ const lote_oficial = [
         }
 
         function solicitarAprovacaoEsp(idEsp) {
-            if(confirm("Tem certeza que concluiu todos os requisitos? O seu líder será notificado para avaliar.")) {
-                const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
-                const espAndamento = membro.especialidades.find(e => e.idEsp === idEsp);
-                
-                espAndamento.status = 'aguardando'; // Muda o status
-                save();
-                
-                alert("Enviado com sucesso!");
-                abrirChecklistEsp(idEsp); // Atualiza o modal
-                exibirPerfilDbv(dbvLogadoAtualId); // Atualiza a tela de fundo
-            }
+    const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+    if (!membro) return;
+
+    const esp = membro.especialidades.find(e => e.idEsp === idEsp);
+    if (esp) {
+        esp.status = 'aguardando';
+        save();
+        alert("Solicitação enviada ao Admin Geral!");
+        
+        // Se for líder, atualiza a tela do líder
+        if (membro.isLider) {
+            renderizarMinhasEspecialidadesLider();
+        } else {
+            abrirChecklistEsp(idEsp); 
+        }
+    }
+} // <--- CERTIFIQUE-SE DE QUE ESTA CHAVE TAMBÉM EXISTE
+            
         }
         function voltarBuscaDbv() {
             document.getElementById('dbv-search-container').style.display = 'block';
@@ -6035,6 +6179,288 @@ const lote_oficial = [
             save();
             alert("Desbravador atualizado com sucesso!");
         }
+
+        // =======================================================
+// SISTEMA DE CLASSES (DBV E LÍDER)
+// =======================================================
+
+function abrirCatalogoClasses() {
+    let html = `<div class="close-modal" onclick="document.getElementById('modal-catalogo-classes').style.display='none'"><i class="fa-solid fa-times"></i></div>
+                <h3 style="color:var(--amarelo); margin-bottom: 20px; text-align:center;"><i class="fa-solid fa-book"></i> Catálogo de Classes</h3>
+                <div class="dbv-grid" style="max-height: 60vh; overflow-y: auto;">`;
+    
+    CATALOGO_CLASSES.forEach(c => {
+        const membroLogado = db.membros.find(m => m.id === dbvLogadoAtualId);
+        if(!membroLogado.isLider && c.tipo === 'agrupada') return;
+
+        html += `
+            <div class="esp-card" onclick="iniciarClasse(${c.id})">
+                <img src="${c.logo}" onerror="this.src='https://via.placeholder.com/80?text=Classe'">
+                <h4 style="color:white; font-size:0.9rem;">${c.nome}</h4>
+                <span class="esp-badge">${c.tipo.toUpperCase()}</span>
+            </div>`;
+    });
+    
+    html += `</div>`;
+    
+    let modal = document.getElementById('modal-catalogo-classes');
+    if(!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modal-catalogo-classes';
+        modal.className = 'modal-overlay';
+        modal.style.zIndex = "9010";
+        modal.innerHTML = `<div class="modal-box" style="max-width: 700px;" id="conteudo-catalogo-classes"></div>`;
+        document.body.appendChild(modal);
+    }
+    document.getElementById('conteudo-catalogo-classes').innerHTML = html;
+    modal.style.display = 'flex';
+}
+
+function iniciarClasse(idClasse) {
+    const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+    if(!membro.classes) membro.classes = [];
+
+    if(membro.classes.find(c => c.idClasse === idClasse)) {
+        return alert("Você já possui esta classe em seu perfil!");
+    }
+
+    membro.classes.push({
+        idClasse: idClasse,
+        status: 'andamento', 
+        reqsConcluidos: [] 
+    });
+
+    save();
+    alert("Classe iniciada!");
+    document.getElementById('modal-catalogo-classes').style.display = 'none';
+    
+    if(membro.isLider) renderizarMinhasClassesLider();
+    else renderizarMinhasClassesDbv(membro.id);
+}
+
+function renderizarMinhasClassesDbv(idMembro) {
+    const membro = db.membros.find(m => m.id === idMembro);
+    const container = document.getElementById('lista-minhas-classes');
+    if(!container) return;
+
+    if(!membro.classes || membro.classes.length === 0) {
+        container.innerHTML = '<p style="color:#888; font-size:0.8rem;">Nenhuma classe iniciada.</p>';
+        return;
+    }
+
+    let html = '';
+    membro.classes.forEach(mc => {
+        const cData = CATALOGO_CLASSES.find(c => c.id === mc.idClasse);
+        if(!cData) return;
+
+        let statusCor = '#aaa'; let statusTxt = 'Em Andamento'; let acao = '';
+        
+        if(mc.status === 'andamento') {
+            statusCor = 'var(--amarelo)'; statusTxt = 'Em Andamento';
+            acao = `<button onclick="enviarClasseParaAvaliacao(${idMembro}, ${cData.id})" class="btn-custom" style="display:inline-flex; font-size:0.7rem; padding:5px 10px;"><i class="fa-solid fa-paper-plane"></i> ENVIAR CADERNO</button>`;
+        } else if (mc.status === 'aguardando_lider') {
+            statusCor = '#ff9900'; statusTxt = 'Avaliando Caderno...';
+        } else if (mc.status === 'aguardando_investidura') {
+            statusCor = '#00cc66'; statusTxt = 'Aprovado! Aguardando Investidura';
+        } else if (mc.status === 'concluida') {
+            statusCor = '#00cc66'; statusTxt = 'Concluída / Investido';
+        }
+
+        html += `
+        <div style="background:#222; border:1px solid #444; padding:10px; border-radius:10px; display:flex; align-items:center; gap:15px;">
+            <img src="${cData.logo}" style="width:50px; height:50px; object-fit:contain;">
+            <div style="flex:1;">
+                <strong style="color:white; font-size:1rem;">${cData.nome}</strong>
+                <span style="display:block; color:${statusCor}; font-size:0.8rem; font-weight:bold;">${statusTxt}</span>
+            </div>
+            ${acao}
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function enviarClasseParaAvaliacao(idMembro, idClasse) {
+    const membro = db.membros.find(m => m.id === idMembro);
+    const c = membro.classes.find(x => x.idClasse === idClasse);
+    
+    if(confirm("Você terminou seu caderno e quer enviá-lo para avaliação da liderança?")) {
+        c.status = 'aguardando_lider';
+        save();
+        alert("Enviado com sucesso! Avise seu instrutor.");
+        if(membro.isLider) renderizarMinhasClassesLider();
+        else renderizarMinhasClassesDbv(idMembro);
+    }
+}
+
+function abrirMinhasClassesLider() {
+    document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
+    document.getElementById('minhas-classes-lider-section').style.display = 'block';
+    
+    let membroLider = db.membros.find(m => m.nome === user.u && m.isLider === true);
+    if (!membroLider) {
+        membroLider = { id: Date.now(), nome: user.u, foto: user.foto, unid: user.unid, pontos: 0, historico: [], especialidades: [], classes: [], isLider: true, login: user.u, senha: user.p };
+        db.membros.push(membroLider);
+        save();
+    }
+    dbvLogadoAtualId = membroLider.id;
+    renderizarMinhasClassesLider();
+}
+
+function renderizarMinhasClassesLider() {
+    const membroLider = db.membros.find(m => m.id === dbvLogadoAtualId);
+    const container = document.getElementById('lista-classes-lider');
+    
+    if (!membroLider.classes || membroLider.classes.length === 0) {
+        container.innerHTML = '<p style="color:#666;">Você não iniciou nenhuma classe.</p>';
+        return;
+    }
+
+    let html = '';
+    membroLider.classes.forEach(mc => {
+        const cData = CATALOGO_CLASSES.find(c => c.id === mc.idClasse);
+        
+        let acoesHtml = '';
+        if (cData.tipo === 'agrupada' && mc.status === 'andamento') {
+            acoesHtml = `<button onclick="abrirChecklistClasseLider(${cData.id})" class="btn-save" style="padding:8px; font-size:0.75rem; width:auto;"><i class="fa-solid fa-list-check"></i> CHECKLIST E EVOLUÇÃO</button>`;
+        } else if (mc.status === 'andamento') {
+            acoesHtml = `<button onclick="enviarClasseParaAvaliacao(${membroLider.id}, ${cData.id})" class="btn-save" style="padding:8px; font-size:0.75rem; width:auto;"><i class="fa-solid fa-paper-plane"></i> ENVIAR PARA ADMIN</button>`;
+        } else if (mc.status === 'aguardando_lider') {
+            acoesHtml = `<span style="color:#ff9900; font-size:0.8rem;">Aguardando Admin Geral aprovar caderno</span>`;
+        } else if (mc.status === 'aguardando_investidura') {
+            acoesHtml = `<span style="color:#00cc66; font-size:0.8rem;">Aguardando Cerimônia de Investidura</span>`;
+        } else if (mc.status === 'concluida') {
+            acoesHtml = `<span style="color:#00cc66; font-size:0.8rem;"><i class="fa-solid fa-medal"></i> Investido</span>`;
+        }
+
+        html += `
+        <div style="background:#111; border:1px solid #333; padding:15px; border-radius:8px; display:flex; align-items:center; gap:15px;">
+            <img src="${cData.logo}" style="width:45px; height:45px; object-fit:contain;">
+            <div style="flex:1;">
+                <strong style="display:block; color:white;">${cData.nome}</strong>
+            </div>
+            ${acoesHtml}
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function abrirChecklistClasseLider(idClasse) {
+    const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+    const classeAndamento = membro.classes.find(c => c.idClasse === idClasse);
+    const cData = CATALOGO_CLASSES.find(c => c.id === idClasse);
+    
+    if(!classeAndamento.reqsConcluidos) classeAndamento.reqsConcluidos = [];
+    
+    const total = cData.reqs.length;
+    const concluidos = classeAndamento.reqsConcluidos.length;
+    const progresso = Math.round((concluidos / total) * 100);
+
+    let html = `
+        <div style="text-align:center; margin-bottom: 20px;">
+            <img src="${cData.logo}" style="width:80px;">
+            <h3 style="color:var(--amarelo); margin-top:10px;">${cData.nome}</h3>
+            <p style="color:#aaa;">Progresso: ${progresso}%</p>
+            <div style="width:100%; background:#222; height:10px; border-radius:5px; margin-top:5px; overflow:hidden;"><div style="width:${progresso}%; background:#00cc66; height:100%;"></div></div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+    `;
+
+    cData.reqs.forEach((req, idx) => {
+        const isChecked = classeAndamento.reqsConcluidos.includes(idx) ? 'checked' : '';
+        html += `
+        <label style="background:#111; padding:10px; border-radius:8px; border:1px solid ${isChecked ? '#00cc66' : '#333'}; display:flex; gap:10px; cursor:pointer;">
+            <input type="checkbox" ${isChecked} onchange="toggleReqClasseLider(${idClasse}, ${idx})" style="accent-color:#00cc66; width:20px; height:20px; margin-top:2px;">
+            <span style="color:${isChecked ? '#888' : 'white'}; text-decoration:${isChecked ? 'line-through' : 'none'};">${req}</span>
+        </label>`;
+    });
+    html += `</div>`;
+
+    if(concluidos === total) {
+        html += `<button onclick="enviarClasseParaAvaliacao(${membro.id}, ${idClasse}); document.getElementById('modal-checklist-esp').style.display='none';" class="btn-save" style="margin-top:20px;"><i class="fa-solid fa-paper-plane"></i> ENVIAR PASTA PARA ADMIN GERAL</button>`;
+    }
+
+    document.getElementById('conteudo-checklist-esp').innerHTML = html;
+    document.getElementById('modal-checklist-esp').style.display = 'flex';
+}
+
+function toggleReqClasseLider(idClasse, idxReq) {
+    const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+    const classeAndamento = membro.classes.find(c => c.idClasse === idClasse);
+    const pos = classeAndamento.reqsConcluidos.indexOf(idxReq);
+    
+    if(pos === -1) classeAndamento.reqsConcluidos.push(idxReq);
+    else classeAndamento.reqsConcluidos.splice(pos, 1);
+    
+    save();
+    abrirChecklistClasseLider(idClasse); 
+}
+
+function abrirAprovacoesClasses() {
+    document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
+    document.getElementById('aprovacoes-classes-section').style.display = 'block';
+    renderAprovacoesClasses();
+}
+
+function renderAprovacoesClasses() {
+    const container = document.getElementById('lista-aprovacoes-classes');
+    let html = '';
+    let pendentes = 0;
+
+    db.membros.forEach(m => {
+        if(user.tipo !== 'geral' && !user.perms.t && m.unid !== user.unid) return;
+        
+        if(m.classes) {
+            m.classes.forEach(c => {
+                const cData = CATALOGO_CLASSES.find(cat => cat.id === c.idClasse);
+                if(cData.tipo === 'agrupada' && user.tipo !== 'geral') return; 
+
+                if(c.status === 'aguardando_lider') {
+                    pendentes++;
+                    html += `<div class="admin-list-item" style="border-left-color:#ff9900; flex-wrap:wrap; background:#111;">
+                        <div style="flex:1;"><strong style="color:white;">${m.nome}</strong> enviou o caderno de <span style="color:#ff9900;">${cData.nome}</span></div>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'andamento')" class="btn-custom" style="display:inline-flex; background:#444; font-size:0.75rem;">REPROVAR</button>
+                            <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'aguardando_investidura')" class="btn-save" style="width:auto; font-size:0.75rem;">APROVAR CADERNO</button>
+                        </div>
+                    </div>`;
+                } else if (c.status === 'aguardando_investidura') {
+                    pendentes++;
+                    html += `<div class="admin-list-item" style="border-left-color:#00cc66; flex-wrap:wrap; background:#111;">
+                        <div style="flex:1;"><strong style="color:white;">${m.nome}</strong> está aguardando Investidura em <span style="color:#00cc66;">${cData.nome}</span></div>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'concluida')" class="btn-save" style="width:auto; background:#00cc66; font-size:0.75rem;"><i class="fa-solid fa-medal"></i> CONFIRMAR INVESTIDURA</button>
+                        </div>
+                    </div>`;
+                }
+            });
+        }
+    });
+
+    if(pendentes === 0) container.innerHTML = '<p style="color:#888; padding: 20px; text-align: center; background: #111; border-radius: 10px;">Nenhuma avaliação ou investidura pendente.</p>';
+    else container.innerHTML = html;
+}
+
+function mudarStatusClasse(idMembro, idClasse, novoStatus) {
+    const m = db.membros.find(x => x.id === idMembro);
+    const c = m.classes.find(x => x.idClasse === idClasse);
+    
+    if(novoStatus === 'aguardando_investidura') {
+        if(!confirm(`Aprovar o caderno de ${m.nome}? Ele ficará pronto para investidura.`)) return;
+    } else if(novoStatus === 'concluida') {
+        if(!confirm(`Confirmar que ${m.nome} FOI INVESTIDO nesta classe?`)) return;
+        
+        if(confirm(`Deseja dar 200 pontos para ${m.nome} pela investidura?`)) {
+            m.pontos += 200;
+            if(!m.historico) m.historico = [];
+            m.historico.push({ id: Date.now(), data: new Date().toLocaleString(), valor: 200, just: `Conclusão da Classe: ${CATALOGO_CLASSES.find(x=>x.id===idClasse).nome}` });
+        }
+    }
+
+    c.status = novoStatus;
+    save();
+    renderAprovacoesClasses();
+}
+
     </script>
 </body>
 </html>
