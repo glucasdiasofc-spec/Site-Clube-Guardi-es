@@ -950,7 +950,7 @@
         id: 200, 
         nome: "Classes Agrupadas (Líder)", 
         tipo: "agrupada", 
-        logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482117826721353920/logos_classes_avancadas.png?ex=69b5c94a&is=69b477ca&hm=3b1dfccb043af44e4b13422a4330a2b98a5fa1e2c63d77ad687c6d8ef2621987&",
+        logo: "https://mda.wiki.br/site/@imgs_wiki/imagem@cl013.png",
         reqs: [
             "I. Gerais - Completar os requisitos de Amigo a Guia",
             "II. Descoberta Espiritual - Memorizar e explicar os textos base",
@@ -5821,9 +5821,7 @@ const lote_oficial = [
             document.getElementById('modal-detalhe-esp').style.display = 'flex';
         }
 
-        function iniciarEspecialidade(idEsp) 
-        
-        {
+        function iniciarEspecialidade(idEsp) {
             if(!dbvLogadoAtualId) return alert("Erro: Desbravador não identificado.");
             
             const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
@@ -5856,8 +5854,9 @@ const lote_oficial = [
             } else {
                 exibirPerfilDbv(dbvLogadoAtualId); 
             }
-        
-// =======================================================
+        }
+
+        // =======================================================
         // LÓGICA DA CHECKLIST E APROVAÇÃO
         // =======================================================
 
@@ -5935,25 +5934,27 @@ const lote_oficial = [
         }
 
         function solicitarAprovacaoEsp(idEsp) {
-    const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
-    if (!membro) return;
+            const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+            if (!membro) return;
 
-    const esp = membro.especialidades.find(e => e.idEsp === idEsp);
-    if (esp) {
-        esp.status = 'aguardando';
-        save();
-        alert("Solicitação enviada ao Admin Geral!");
+            const esp = membro.especialidades.find(e => e.idEsp === idEsp);
+            if (esp) {
+                esp.status = 'aguardando';
+                save();
+                alert("Solicitação enviada ao Admin Geral!");
+                
+                // Se for líder, atualiza a tela do líder
+                if (membro.isLider) {
+                    renderizarMinhasEspecialidadesLider();
+                } else {
+                    exibirPerfilDbv(dbvLogadoAtualId); 
+                }
+                
+                // Fecha o modal
+                document.getElementById('modal-checklist-esp').style.display = 'none';
+            }
+        }
         
-        // Se for líder, atualiza a tela do líder
-        if (membro.isLider) {
-            renderizarMinhasEspecialidadesLider();
-        } else {
-            abrirChecklistEsp(idEsp); 
-        }
-    }
-} // <--- CERTIFIQUE-SE DE QUE ESTA CHAVE TAMBÉM EXISTE
-            
-        }
         function voltarBuscaDbv() {
             document.getElementById('dbv-search-container').style.display = 'block';
             document.getElementById('dbv-profile-container').style.display = 'none';
