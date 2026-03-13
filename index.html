@@ -1634,18 +1634,198 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
         // =======================================================
         // SISTEMA DE ESPECIALIDADES (CATÁLOGO E LÓGICA)
         // =======================================================
+function injetarCatalogoPadrao() {
+            // LOTE 1: 10 Especialidades - Links de Imagem via GitHub (Estáveis) e Requisitos DSA Integrais
+            const lote1 = [
+                { 
+                    id: 1, 
+                    nome: "Acampamento I", 
+                    area: "Atividades Recreativas", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD001.png", 
+                    reqs: [
+                        "1. Entender e praticar a boa educação no campo, em relação à preservação da natureza.",
+                        "2. Saber oito coisas que devem ser feitas quando se está perdido.",
+                        "3. Estar familiarizado com vários tipos de equipamentos para dormir, adequados a vários climas e épocas do ano.",
+                        "4. Relacionar objetos pessoais necessários para um acampamento de fim de semana.",
+                        "5. Planejar e participar de um acampamento de fim de semana, com no mínimo 2 pernoites.",
+                        "6. Saber montar uma barraca. Observar regras de prevenção contra incêndios depois que a barraca estiver montada.",
+                        "7. Conhecer e praticar os princípios de higiene de um acampamento, seja em local com estrutura ou um acampamento rústico.",
+                        "8. Usar corretamente o canivete e a machadinha. Conhecer 10 regras de segurança no uso destas ferramentas.",
+                        "9. Fogueiras: a) Demonstrar habilidade para escolher o local e preparar uma fogueira; b) Conhecer as regras de segurança; c) Saber usar fósforos; d) Fazer fogueira usando apenas 1 fósforo e materiais da natureza; e) Proteger a lenha da chuva.",
+                        "10. Fazer e comer pão no espeto, em uma das refeições do acampamento.",
+                        "11. Descrever o procedimento adequado para lavar e manter os utensílios de cozinha limpos.",
+                        "12. Descrever a roupa apropriada para dormir e como manter-se aquecido durante a noite.",
+                        "13. Retirar uma lição espiritual prática da natureza durante seu acampamento.",
+                        "14. Explicar e praticar o lema: 'Não levar nada além de fotos, não deixar nada além de pegadas, não matar nada além do tempo'."
+                    ] 
+                },
+                { 
+                    id: 2, 
+                    nome: "Cães", 
+                    area: "Natureza", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/EN011.png", 
+                    reqs: [
+                        "1. Dar o nome científico do cão doméstico.",
+                        "2. Citar 5 características peculiares da família Canidae.",
+                        "3. Identificar, a partir de fotografias/figuras, ou observação natural, 5 membros selvagens da família dos cães.",
+                        "4. Identificar, a partir de fotografias/figuras, ou observação natural, 15 diferentes raças de cães.",
+                        "5. Mencionar 5 contribuições da família dos cães ao homem.",
+                        "6. Escrever ou descrever oralmente a importância para o homem de cães-guia, farejadores, pastores, companheiros e guardas.",
+                        "7. Dar o nome da menor e da maior raça de cães.",
+                        "8. Identificar, pessoalmente ou por fotografias/figuras, 5 cães que são classificados como 'toy' (anões).",
+                        "9. Qual é o único cão que tem a língua inteiramente azul ou preta?",
+                        "10. Qual o cão mais rápido?",
+                        "11. Escrever ou contar uma história sobre um cão.",
+                        "12. Que cuidados deve-se tomar com os cães para que tenham uma vida saudável?",
+                        "13. Ajudar a cuidar de um cão por, pelo menos, 1 mês."
+                    ] 
+                },
+                { 
+                    id: 3, 
+                    nome: "Arte de Trançar", 
+                    area: "Artes e Habilidades Manuais", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AM001.png", 
+                    reqs: [
+                        "1. Fazer uma trança de cabelo, dividindo-o em três partes.",
+                        "2. Fazer um puxador de zíper ou um chaveiro usando o trançado redondo ou quadrado de 4 cordões.",
+                        "3. Fazer um projeto usando o trançado redondo de 4 cordões, usando fio de nylon ou barbante.",
+                        "4. Fazer uma passadeira com renda de plástico.",
+                        "5. Saber como começar e finalizar cada projeto acima para que não desfie."
+                    ] 
+                },
+                { 
+                    id: 4, 
+                    nome: "Primeiros Socorros - Básico", 
+                    area: "Saúde e Ciência", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/CS001.png", 
+                    reqs: [
+                        "1. Conhecer as causas do choque e demonstrar o seu tratamento adequado.",
+                        "2. Conhecer os passos adequados para a respiração de resgate.",
+                        "3. Conhecer os procedimentos adequados para o tratamento de uma vítima de asfixia.",
+                        "4. Conhecer os procedimentos adequados para o tratamento de uma vítima de hemorragia.",
+                        "5. Conhecer os pontos de pressão e como aplicar pressão nesses pontos.",
+                        "6. Conhecer o procedimento adequado para tratar envenenamento e como contatar o centro de controle.",
+                        "7. Demonstrar o procedimento adequado no uso de talas para diversas fraturas.",
+                        "8. Conhecer o procedimento adequado para tratar queimaduras de 1º, 2º e 3º graus e químicas.",
+                        "9. Saber que situações podem levar à intoxicação por monóxido de carbono e o seu tratamento.",
+                        "10. Conhecer o procedimento adequado para o tratamento de ferimentos na cabeça e internos.",
+                        "11. Saber a diferença entre ataque cardíaco, derrame, epilepsia e desmaio simples e o tratamento para cada um.",
+                        "12. Saber como prevenir infecções.",
+                        "13. Qual é o tratamento adequado para mordidas de cobra, animais e picadas de insetos/aranhas?",
+                        "14. Qual é a diferença entre exaustão pelo calor e insolação e o tratamento para cada?",
+                        "15. O que fazer se suas roupas pegarem fogo? Conhecer princípios de prevenção de incêndio na sua casa.",
+                        "16. Quais são os princípios básicos de segurança na água e eletricidade?",
+                        "17. Quais são as maneiras de salvar a vida de alguém se afogando sem nadar?",
+                        "18. Como prevenir a intoxicação alimentar?"
+                    ] 
+                },
+                { 
+                    id: 5, 
+                    nome: "Nós e Amarras", 
+                    area: "Atividades Recreativas", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD011.png", 
+                    reqs: [
+                        "1. Definir os seguintes termos: Seio, Ponta corredia, Ponta fixa, Nó superior, Laçada, Volta, Curva, Amarra, Emenda, Chicote.",
+                        "2. Conhecer os cuidados para conservação das cordas.",
+                        "3. Descrever as diferenças entre corda estática e dinâmica, listar 3 usos para cada.",
+                        "4. Identificar os tipos de cordas: Manila, Sisal, Nylon, Polipropileno. Vantagens e desvantagens da corda sintética.",
+                        "5. Fazer o seguinte em uma corda: Falcaça, Remate, Nó de Oito (como remate).",
+                        "6. Fazer de memória os nós: Cego, Direito, Cirurgião, Lais de guia, Lais de guia duplo, Escota, Escota duplo, Pescador, Pescador duplo, Volta do fiel, Nó de porco, Catau, Borboleta, Nó de cinto, Nó de correr, Cadeira de bombeiro, Fiel duplo, Nó volta da ribeira.",
+                        "7. Fazer de memória as seguintes amarras: Quadrada, Diagonal, Paralela/Redonda, Contínua simples e dupla.",
+                        "8. Fazer um quadro com, pelo menos, 25 nós e amarras ensinados."
+                    ] 
+                },
+                { 
+                    id: 6, 
+                    nome: "Fogueiras e Cozinha ao Ar Livre", 
+                    area: "Atividades Recreativas", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD004.png", 
+                    reqs: [
+                        "1. Preparar cinco tipos diferentes de fogueiras e descrever os usos de cada uma.",
+                        "2. Fazer uma fogueira de forma segura e com os cuidados de conservação do meio ambiente.",
+                        "3. Mostrar como iniciar o fogo e como mantê-lo com apenas um fósforo e usando materiais naturais.",
+                        "4. Demonstrar como proteger a lenha que será usada em fogueiras, em dias de chuva.",
+                        "5. Demonstrar como limpar adequadamente uma área de fogueira sem deixar rastros.",
+                        "6. Saber usar adequadamente uma machadinha, como cortar lenha e os cuidados de segurança.",
+                        "7. Identificar madeiras que fazem boa lenha e as que não são boas.",
+                        "8. Cozinhar sobre o fogo (sem panela): pão no espeto e maçã assada.",
+                        "9. Cozinhar um prato cozido (sopa/feijão) e um prato frito, usando recipientes adequados.",
+                        "10. Fazer um menu completo e equilibrado para as refeições de um acampamento de 3 dias.",
+                        "11. Conhecer e praticar as regras de segurança ao lidar com o fogo e o preparo de alimentos."
+                    ] 
+                },
+                { 
+                    id: 7, 
+                    nome: "Natação Principiante I", 
+                    area: "Atividades Recreativas", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD010.png", 
+                    reqs: [
+                        "1. Recuperar um objeto no fundo da piscina, em águas rasas.",
+                        "2. Respirar ritmicamente (fazer 'bolinhas'): 15 vezes.",
+                        "3. Deslizar de frente (parafuso) por 2 corpos de distância.",
+                        "4. Deslizar de costas por 2 corpos de distância.",
+                        "5. Mudar de direção no nado crawl e de costas.",
+                        "6. Bater pernas em estilo livre (crawl) e de costas por 15 metros.",
+                        "7. Nadar em estilo crawl por 15 metros.",
+                        "8. Nadar de costas por 15 metros.",
+                        "9. Demonstrar a técnica de flutuação de segurança por 30 segundos."
+                    ] 
+                },
+                { 
+                    id: 8, 
+                    nome: "Astronomia", 
+                    area: "Natureza", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/EN001.png", 
+                    reqs: [
+                        "1. Responder: O que é o Sistema Solar e qual corpo celeste é o seu centro? O que é um planeta? O que é uma estrela? O que é uma constelação?",
+                        "2. Fazer um diagrama do Sistema Solar apontando a posição dos planetas a partir do Sol.",
+                        "3. Diferenciar meteoros, meteoritos e meteoroides.",
+                        "4. Identificar no céu 5 constelações, incluindo o Cruzeiro do Sul.",
+                        "5. O que é a Via Láctea? Observá-la no céu noturno.",
+                        "6. Qual é a diferença entre eclipse solar e lunar?",
+                        "7. O que é a Estrela D'Alva (Vênus)?",
+                        "8. Explicar como o Cruzeiro do Sul pode ajudar na orientação geográfica.",
+                        "9. Citar e explicar duas passagens bíblicas que mencionam as constelações (ex: Jó 9:9)."
+                    ] 
+                },
+                { 
+                    id: 9, 
+                    nome: "Sementes", 
+                    area: "Natureza", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/EN045.png", 
+                    reqs: [
+                        "1. Qual é o principal propósito de uma semente?",
+                        "2. Quais os alimentos que o homem consome que são puramente sementes?",
+                        "3. Explicar como as sementes se espalham (dispersão) por: a) Vento, b) Animais, c) Água.",
+                        "4. Fazer uma coleção de 30 tipos diferentes de sementes, contendo nome e data da coleta.",
+                        "5. Explicar as condições químicas e físicas necessárias para uma semente germinar.",
+                        "6. Germinar uma semente de feijão em um algodão úmido e acompanhar seu crescimento relatando os dias."
+                    ] 
+                },
+                { 
+                    id: 10, 
+                    nome: "Mapa e Bússola", 
+                    area: "Atividades Recreativas", 
+                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD007.png", 
+                    reqs: [
+                        "1. Explicar o que é um mapa topográfico e suas características principais (curvas de nível).",
+                        "2. Conhecer e identificar 20 símbolos convencionais usados em mapas.",
+                        "3. Explicar o que é declinação magnética.",
+                        "4. Quais são as três maneiras de determinar o norte sem o uso de uma bússola?",
+                        "5. Identificar os 8 pontos principais e colaterais da Rosa dos Ventos.",
+                        "6. Conhecer todas as partes físicas de uma bússola.",
+                        "7. Demonstrar como orientar um mapa usando a bússola.",
+                        "8. Encontrar o azimute de três pontos diferentes ao ar livre.",
+                        "9. Navegar em um percurso de 2 quilômetros usando apenas a bússola e as coordenadas dadas por um instrutor."
+                    ] 
+                }
+            ];
 
-        function injetarCatalogoPadrao() {
-            // Cria o catálogo se não existir no banco
-            if (!db.especialidades_catalogo) {
-                db.especialidades_catalogo = [
-                    { id: 1, nome: "Acampamento I", area: "Atividades Recreativas", logo: "https://mda.wiki.br/wp-content/uploads/Acampamento-I.jpg", reqs: ["Entender e praticar a boa educação no campo.", "Saber oito coisas que devem ser feitas quando se está perdido.", "Estar familiarizado com vários tipos de equipamentos de acampamento."] },
-                    { id: 2, nome: "Cães", area: "Natureza", logo: "https://mda.wiki.br/wp-content/uploads/Caes.jpg", reqs: ["Mencionar 5 características do cão doméstico.", "Identificar, a partir de fotografias, 5 raças de cães.", "Saber como cuidar de um filhote de cachorro."] },
-                    { id: 3, nome: "Arte de Trançar", area: "Habilidades", logo: "https://mda.wiki.br/wp-content/uploads/Arte-de-Trancar.jpg", reqs: ["Fazer uma trança simples com 3 fios.", "Fazer um chaveiro usando a técnica de trançado.", "Saber como finalizar as pontas para não desfiar."] }
-                ];
-                save();
-            }
+            db.especialidades_catalogo = lote1;
+            save(); 
+            alert("Lote 1 atualizado com logos estáveis do GitHub e requisitos completos!");
         }
+        
 
         function abrirCatalogoEspecialidades() {
             injetarCatalogoPadrao(); // Garante que o catálogo existe
