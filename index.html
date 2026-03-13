@@ -1635,13 +1635,13 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
         // SISTEMA DE ESPECIALIDADES (CATÁLOGO E LÓGICA)
         // =======================================================
 function injetarCatalogoPadrao() {
-            // LOTE 1: 10 Especialidades - Links de Imagem via GitHub (Estáveis) e Requisitos DSA Integrais
+            // LOTE 1: 10 Especialidades com Requisitos Oficiais Integrais (Padrão DSA)
             const lote1 = [
                 { 
                     id: 1, 
                     nome: "Acampamento I", 
                     area: "Atividades Recreativas", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD001.png", 
+                    logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1481278336058658867/4.png?ex=69b4b5b4&is=69b36434&hm=412d9416e69d66fe014f9e17823582764eda6680eb673d2b6ac4b7372bd33999&", 
                     reqs: [
                         "1. Entender e praticar a boa educação no campo, em relação à preservação da natureza.",
                         "2. Saber oito coisas que devem ser feitas quando se está perdido.",
@@ -1663,7 +1663,7 @@ function injetarCatalogoPadrao() {
                     id: 2, 
                     nome: "Cães", 
                     area: "Natureza", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/EN011.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/C%C3%A3es-1.png", 
                     reqs: [
                         "1. Dar o nome científico do cão doméstico.",
                         "2. Citar 5 características peculiares da família Canidae.",
@@ -1684,7 +1684,7 @@ function injetarCatalogoPadrao() {
                     id: 3, 
                     nome: "Arte de Trançar", 
                     area: "Artes e Habilidades Manuais", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AM001.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/Arte-de-Tran%C3%A7ar-1.png", 
                     reqs: [
                         "1. Fazer uma trança de cabelo, dividindo-o em três partes.",
                         "2. Fazer um puxador de zíper ou um chaveiro usando o trançado redondo ou quadrado de 4 cordões.",
@@ -1697,7 +1697,7 @@ function injetarCatalogoPadrao() {
                     id: 4, 
                     nome: "Primeiros Socorros - Básico", 
                     area: "Saúde e Ciência", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/CS001.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/Primeiros-Socorros-B%C3%A1sico-1.png", 
                     reqs: [
                         "1. Conhecer as causas do choque e demonstrar o seu tratamento adequado.",
                         "2. Conhecer os passos adequados para a respiração de resgate.",
@@ -1723,7 +1723,7 @@ function injetarCatalogoPadrao() {
                     id: 5, 
                     nome: "Nós e Amarras", 
                     area: "Atividades Recreativas", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD011.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/N%C3%B3s-e-Amarras-1.png", 
                     reqs: [
                         "1. Definir os seguintes termos: Seio, Ponta corredia, Ponta fixa, Nó superior, Laçada, Volta, Curva, Amarra, Emenda, Chicote.",
                         "2. Conhecer os cuidados para conservação das cordas.",
@@ -1739,7 +1739,7 @@ function injetarCatalogoPadrao() {
                     id: 6, 
                     nome: "Fogueiras e Cozinha ao Ar Livre", 
                     area: "Atividades Recreativas", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD004.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/Fogueiras-e-Cozinha-ao-Ar-Livre-1.png", 
                     reqs: [
                         "1. Preparar cinco tipos diferentes de fogueiras e descrever os usos de cada uma.",
                         "2. Fazer uma fogueira de forma segura e com os cuidados de conservação do meio ambiente.",
@@ -1756,26 +1756,26 @@ function injetarCatalogoPadrao() {
                 },
                 { 
                     id: 7, 
-                    nome: "Natação Principiante I", 
+                    nome: "Segurança Básica na Água", 
                     area: "Atividades Recreativas", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD010.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/Seguran%C3%A7a-B%C3%A1sica-na-%C3%81gua.png", 
                     reqs: [
-                        "1. Recuperar um objeto no fundo da piscina, em águas rasas.",
-                        "2. Respirar ritmicamente (fazer 'bolinhas'): 15 vezes.",
-                        "3. Deslizar de frente (parafuso) por 2 corpos de distância.",
-                        "4. Deslizar de costas por 2 corpos de distância.",
-                        "5. Mudar de direção no nado crawl e de costas.",
-                        "6. Bater pernas em estilo livre (crawl) e de costas por 15 metros.",
-                        "7. Nadar em estilo crawl por 15 metros.",
-                        "8. Nadar de costas por 15 metros.",
-                        "9. Demonstrar a técnica de flutuação de segurança por 30 segundos."
+                        "1. Entrar e sair da água de forma independente (sem ajuda).",
+                        "2. Prender a respiração, submergir o rosto totalmente sob a água por 5 segundos.",
+                        "3. Submergir a cabeça e abrir os olhos para encontrar um objeto no fundo da piscina.",
+                        "4. Flutuar de barriga para baixo e também de costas por 15 segundos.",
+                        "5. Nadar de bruços (crawl) ou outro estilo livre, por 15 metros sem parar.",
+                        "6. Deslizar na água e bater os pés por 10 metros.",
+                        "7. Conhecer as regras de segurança ao redor de piscinas, rios e lagos.",
+                        "8. Demonstrar como usar corretamente um colete salva-vidas.",
+                        "9. Conhecer o básico de um resgate seguro sem precisar entrar na água."
                     ] 
                 },
                 { 
                     id: 8, 
                     nome: "Astronomia", 
                     area: "Natureza", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/EN001.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/Astronomia-1.png", 
                     reqs: [
                         "1. Responder: O que é o Sistema Solar e qual corpo celeste é o seu centro? O que é um planeta? O que é uma estrela? O que é uma constelação?",
                         "2. Fazer um diagrama do Sistema Solar apontando a posição dos planetas a partir do Sol.",
@@ -1792,7 +1792,7 @@ function injetarCatalogoPadrao() {
                     id: 9, 
                     nome: "Sementes", 
                     area: "Natureza", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/EN045.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/Sementes.png", 
                     reqs: [
                         "1. Qual é o principal propósito de uma semente?",
                         "2. Quais os alimentos que o homem consome que são puramente sementes?",
@@ -1806,7 +1806,7 @@ function injetarCatalogoPadrao() {
                     id: 10, 
                     nome: "Mapa e Bússola", 
                     area: "Atividades Recreativas", 
-                    logo: "https://raw.githubusercontent.com/mda-oficial/especialidades/main/img/AD007.png", 
+                    logo: "https://mda.wiki.br/wp-content/uploads/Mapa-e-B%C3%BAssola-1.png", 
                     reqs: [
                         "1. Explicar o que é um mapa topográfico e suas características principais (curvas de nível).",
                         "2. Conhecer e identificar 20 símbolos convencionais usados em mapas.",
@@ -1823,7 +1823,7 @@ function injetarCatalogoPadrao() {
 
             db.especialidades_catalogo = lote1;
             save(); 
-            alert("Lote 1 atualizado com logos estáveis do GitHub e requisitos completos!");
+            console.log("Catálogo Lote 1 Oficial DSA atualizado com sucesso!");
         }
         
 
