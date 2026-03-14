@@ -783,6 +783,10 @@
         <div class="panel-layout">
             
             <aside class="sidebar">
+
+                <button onclick="abrirGerenciamentoEspecialidades()" class="btn-save" style="margin-top: 10px; background: #e63946; color: white;">
+    <i class="fa-solid fa-trash-can"></i> GERENCIAR TODAS ESPECIALIDADES
+</button>
                 <button onclick="abrirMinhasEspecialidadesLider()" class="btn-save" style="margin-top: 20px; background: var(--amarelo); color: black;">
                     <i class="fa-solid fa-star"></i> MINHAS ESPECIALIDADES
                 </button>
@@ -1042,7 +1046,7 @@
                 espAndamento.dataConclusao = new Date().toLocaleDateString();
 
                 // Pergunta se o líder quer dar pontos pela conquista
-                if(confirm("Deseja recompensar o desbravador com 50 pontos por esta especialidade?")) {
+             if(!m.isLider && confirm("Deseja recompensar o desbravador com 50 pontos por esta especialidade?")) {
                     m.pontos += 50;
                     if(!m.historico) m.historico = [];
                     m.historico.push({ id: Date.now(), data: new Date().toLocaleString(), valor: 50, just: `Conquista: Especialidade ${espData.nome}` });
@@ -1457,11 +1461,13 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
         <img src="${m.foto || 'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--amarelo);object-fit:cover;">
                     <div style="font-weight:bold; margin-top:10px; font-size:1.1rem;">${m.nome}</div>
                     <div style="color:#aaa; font-size:0.8rem; margin-bottom:5px;"><i class="fa-solid fa-campground"></i> ${m.unid}</div>
-                    <div style="color:var(--amarelo); font-size:1.3rem; font-weight:bold; background:#111; padding:5px; border-radius:8px;">${m.pontos} <i class="fa-solid fa-star"></i></div>
-                    <div class="dbv-card-pts">
-                        <button onclick="abrirModalPontos(${m.id}, 10)"><i class="fa-solid fa-plus"></i> 10</button>
-                        <button onclick="abrirModalPontos(${m.id}, -10)"><i class="fa-solid fa-minus"></i> 10</button>
-                    </div>
+${!m.isLider ? `
+    <div style="color:var(--amarelo); font-size:1.3rem; font-weight:bold; background:#111; padding:5px; border-radius:8px;">${m.pontos} <i class="fa-solid fa-star"></i></div>
+    <div class="dbv-card-pts">
+        <button onclick="abrirModalPontos(${m.id}, 10)"><i class="fa-solid fa-plus"></i> 10</button>
+        <button onclick="abrirModalPontos(${m.id}, -10)"><i class="fa-solid fa-minus"></i> 10</button>
+    </div>
+` : `<div style="color:#aaa; font-size:0.9rem; margin-top:15px; font-weight:bold; background:#111; padding:5px; border-radius:8px;">PERFIL LIDERANÇA</div>`}
                     <button class="btn-hist" onclick="abrirHistorico(${m.id})"><i class="fa-solid fa-clock-rotate-left"></i> Ver Histórico</button>
                 </div>
             `).join('');
@@ -1617,14 +1623,14 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
 
         /* RANKINGS */
         function renderRankings() {
-            const topM = [...db.membros].sort((a,b) => b.pontos - a.pontos).slice(0,5);
+            const topM = [...db.membros].filter(m => !m.isLider).sort((a,b) => b.pontos - a.pontos).slice(0,5);
             let medalhas = ['🥇', '🥈', '🥉', '🏅', '🏅'];
             document.getElementById('ranking-membros-list').innerHTML = topM.map((m, i) => `
                 <div class="rank-item"><b>${medalhas[i]}</b> <img src="${m.foto || 'https://via.placeholder.com/50'}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;"> <span style="flex:1;">${m.nome}</span> <span style="color:var(--amarelo); font-weight:bold;">${m.pontos} pts</span></div>
             `).join('');
             
             const rankU = db.unidades.filter(u => u.nome !== 'Administração').map(u => {
-                const soma = db.membros.filter(m => m.unid === u.nome).reduce((acc, cur) => acc + cur.pontos, 0);
+                const soma = db.membros.filter(m => m.unid === u.nome && !m.isLider).reduce((acc, cur) => acc + cur.pontos, 0);
                 return { ...u, total: soma };
             }).sort((a,b) => b.total - a.total);
             
@@ -6258,7 +6264,8 @@ function renderizarMinhasClassesDbv(idMembro) {
         
         if(mc.status === 'andamento') {
             statusCor = 'var(--amarelo)'; statusTxt = 'Em Andamento';
-            acao = `<button onclick="enviarClasseParaAvaliacao(${idMembro}, ${cData.id})" class="btn-custom" style="display:inline-flex; font-size:0.7rem; padding:5px 10px;"><i class="fa-solid fa-paper-plane"></i> ENVIAR CADERNO</button>`;
+            // MUDANÇA AQUI: Usa o botão amarelo de Checklist idêntico ao das especialidades!
+            acao = `<button onclick="abrirChecklistClasseDesbravador(${cData.id})" class="btn-save" style="padding:8px 12px; font-size:0.7rem; width:auto; height:auto; background:var(--amarelo); color:black;"><i class="fa-solid fa-list-check"></i> CHECKLIST</button>`;
         } else if (mc.status === 'aguardando_lider') {
             statusCor = '#ff9900'; statusTxt = 'Avaliando Caderno...';
         } else if (mc.status === 'aguardando_investidura') {
@@ -6450,7 +6457,7 @@ function mudarStatusClasse(idMembro, idClasse, novoStatus) {
     } else if(novoStatus === 'concluida') {
         if(!confirm(`Confirmar que ${m.nome} FOI INVESTIDO nesta classe?`)) return;
         
-        if(confirm(`Deseja dar 200 pontos para ${m.nome} pela investidura?`)) {
+       if(!m.isLider && confirm(`Deseja dar 200 pontos para ${m.nome} pela investidura?`)) {
             m.pontos += 200;
             if(!m.historico) m.historico = [];
             m.historico.push({ id: Date.now(), data: new Date().toLocaleString(), valor: 200, just: `Conclusão da Classe: ${CATALOGO_CLASSES.find(x=>x.id===idClasse).nome}` });
@@ -6462,6 +6469,149 @@ function mudarStatusClasse(idMembro, idClasse, novoStatus) {
     renderAprovacoesClasses();
 }
 
+function abrirChecklistClasseDesbravador(idClasse) {
+    const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+    const classeAndamento = membro.classes.find(c => c.idClasse === idClasse);
+    const cData = CATALOGO_CLASSES.find(c => c.id === idClasse);
+
+    if(!classeAndamento || !cData) return;
+
+    // CUIDADO: Você precisa adicionar a tag "reqs: [...]" dentro de cada classe no CATALOGO_CLASSES. 
+    // Para não dar tela preta enquanto você não adiciona, criei esta segurança provisória:
+    const listaReqs = cData.reqs || ["Requisitos ainda não foram cadastrados no sistema pelo administrador."];
+
+    if(!classeAndamento.reqsConcluidos) classeAndamento.reqsConcluidos = [];
+
+    const total = listaReqs.length;
+    const concluidos = classeAndamento.reqsConcluidos.length;
+    const progresso = Math.round((concluidos / total) * 100);
+
+    let html = `
+        <div style="text-align:center; margin-bottom: 20px;">
+            <img src="${cData.logo}" style="width:80px; margin-bottom:10px;">
+            <h3 style="color:var(--amarelo); margin-top:5px;">${cData.nome}</h3>
+            <p style="color:#aaa;">Progresso: ${progresso}%</p>
+            <div style="width:100%; background:#222; height:10px; border-radius:5px; margin-top:5px; overflow:hidden;"><div style="width:${progresso}%; background:#00cc66; height:100%;"></div></div>
+        </div>
+        <div style="max-height: 45vh; overflow-y: auto; padding-right:10px; display:flex; flex-direction:column; gap:8px;">
+    `;
+
+    listaReqs.forEach((req, idx) => {
+        const isChecked = classeAndamento.reqsConcluidos.includes(idx) ? 'checked' : '';
+        html += `
+        <label style="background:#111; padding:10px; border-radius:8px; border:1px solid ${isChecked ? '#00cc66' : '#333'}; display:flex; gap:10px; cursor:pointer;">
+            <input type="checkbox" ${isChecked} onchange="toggleReqClasseDbv(${idClasse}, ${idx})" style="accent-color:#00cc66; width:20px; height:20px; margin-top:2px;">
+            <span style="color:${isChecked ? '#888' : 'white'}; text-decoration:${isChecked ? 'line-through' : 'none'};">${req}</span>
+        </label>`;
+    });
+    html += `</div>`;
+
+    if(concluidos === total && classeAndamento.status === 'andamento') {
+        html += `<button onclick="enviarClasseParaAvaliacao(${membro.id}, ${idClasse}); document.getElementById('modal-checklist-esp').style.display='none';" class="btn-save" style="margin-top:20px;"><i class="fa-solid fa-paper-plane"></i> ENVIAR CADERNO PARA O LÍDER APROVAR</button>`;
+    }
+
+    // Usa a mesma janelinha modal para desenhar a interface
+    document.getElementById('conteudo-checklist-esp').innerHTML = html;
+    document.getElementById('modal-checklist-esp').style.display = 'flex';
+}
+
+function toggleReqClasseDbv(idClasse, idxReq) {
+    const membro = db.membros.find(m => m.id === dbvLogadoAtualId);
+    const classeAndamento = membro.classes.find(c => c.idClasse === idClasse);
+    const pos = classeAndamento.reqsConcluidos.indexOf(idxReq);
+
+    if(pos === -1) classeAndamento.reqsConcluidos.push(idxReq);
+    else classeAndamento.reqsConcluidos.splice(pos, 1);
+
+    save();
+    abrirChecklistClasseDesbravador(idClasse);
+}
+
+// Função para abrir o modal e carregar os dados
+function abrirGerenciamentoEspecialidades() {
+    document.getElementById('modal-gerenciar-esp').style.display = 'flex';
+    renderizarGerenciamentoEsp();
+}
+
+// Função para listar todos os membros e as especialidades que eles possuem
+function renderizarGerenciamentoEsp() {
+    const container = document.getElementById('lista-gerenciamento-esp');
+    const busca = document.getElementById('busca-admin-esp').value.toLowerCase();
+    let html = '';
+
+    db.membros.forEach(membro => {
+        if (!membro.especialidades || membro.especialidades.length === 0) return;
+
+        // Filtra especialidades do membro que batem com a busca (ou o nome do membro)
+        const especialidadesFiltradas = membro.especialidades.filter(espMembro => {
+            const espDados = db.especialidades_catalogo.find(c => c.id === espMembro.idEsp);
+            const nomeEsp = espDados ? espDados.nome.toLowerCase() : '';
+            return membro.nome.toLowerCase().includes(busca) || nomeEsp.includes(busca);
+        });
+
+        if (especialidadesFiltradas.length > 0) {
+            html += `<div style="background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid var(--amarelo);">
+                <strong style="font-size: 1.1rem; color: white; display: block; margin-bottom: 10px;">
+                    <i class="fa-solid fa-user"></i> ${membro.nome} (${membro.unid})
+                </strong>`;
+
+            especialidadesFiltradas.forEach(espMembro => {
+                const espDados = db.especialidades_catalogo.find(c => c.id === espMembro.idEsp);
+                if (espDados) {
+                    html += `
+                    <div class="admin-list-item" style="background:#111; margin-bottom: 5px; border: 1px solid #333;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${espDados.logo}" style="width:30px; height:30px; object-fit:contain;">
+                            <span>${espDados.nome} (${espMembro.status})</span>
+                        </div>
+                        <button onclick="excluirEspecialidadeMembro(${membro.id}, ${espMembro.idEsp})" 
+                                style="background:var(--vermelho); padding: 5px 10px; font-size: 0.8rem;">
+                            <i class="fa-solid fa-trash"></i> EXCLUIR
+                        </button>
+                    </div>`;
+                }
+            });
+            html += `</div>`;
+        }
+    });
+
+    container.innerHTML = html || '<p style="text-align:center; color:#888;">Nenhuma especialidade encontrada para os critérios.</p>';
+}
+
+// Função que executa a exclusão definitiva
+async function excluirEspecialidadeMembro(idMembro, idEsp) {
+    const membro = db.membros.find(m => m.id === idMembro);
+    const espDados = db.especialidades_catalogo.find(c => c.id === idEsp);
+
+    if (confirm(`TEM CERTEZA que deseja APAGAR a especialidade "${espDados.nome}" do perfil de ${membro.nome}? Esta ação não pode ser desfeita.`)) {
+        // Remove a especialidade do array do membro
+        membro.especialidades = membro.especialidades.filter(e => e.idEsp !== idEsp);
+        
+        // Salva as alterações no banco de dados
+        await save(); 
+        
+        // Atualiza a visualização
+        renderizarGerenciamentoEsp();
+        alert("Especialidade removida com sucesso!");
+    }
+}
+
     </script>
+
+    <div id="modal-gerenciar-esp" class="modal-overlay" style="z-index: 9010;">
+    <div class="modal-box" style="max-width: 700px;">
+        <div class="close-modal" onclick="document.getElementById('modal-gerenciar-esp').style.display='none'">
+            <i class="fa-solid fa-times"></i> Fechar
+        </div>
+        <h2 style="color:var(--amarelo); margin: 20px 0;"><i class="fa-solid fa-shield-halved"></i> Administração de Especialidades</h2>
+        <div class="input-group">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="busca-admin-esp" placeholder="Buscar desbravador ou especialidade..." oninput="renderizarGerenciamentoEsp()">
+        </div>
+        <div id="lista-gerenciamento-esp" style="margin-top:20px; max-height: 60vh; overflow-y: auto;">
+            </div>
+    </div>
+</div>
+
 </body>
 </html>
