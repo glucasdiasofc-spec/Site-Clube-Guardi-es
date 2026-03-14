@@ -6457,7 +6457,7 @@ function mudarStatusClasse(idMembro, idClasse, novoStatus) {
     } else if(novoStatus === 'concluida') {
         if(!confirm(`Confirmar que ${m.nome} FOI INVESTIDO nesta classe?`)) return;
         
-       if(!m.isLider && confirm(`Deseja dar 200 pontos para ${m.nome} pela investidura?`)) {
+        if(confirm(`Deseja dar 200 pontos para ${m.nome} pela investidura?`)) {
             m.pontos += 200;
             if(!m.historico) m.historico = [];
             m.historico.push({ id: Date.now(), data: new Date().toLocaleString(), valor: 200, just: `Conclusão da Classe: ${CATALOGO_CLASSES.find(x=>x.id===idClasse).nome}` });
