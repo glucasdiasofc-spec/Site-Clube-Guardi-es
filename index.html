@@ -469,6 +469,14 @@
         </div>
     </div>
 
+    <div id="modal-all-leaders" class="modal-overlay">
+        <div class="modal-box" style="max-width: 700px;">
+            <div class="close-modal" onclick="document.getElementById('modal-all-leaders').style.display='none'"><i class="fa-solid fa-times"></i></div>
+            <h3 style="color:var(--vermelho); margin-bottom: 20px; text-align: center;"><i class="fa-solid fa-user-tie"></i> Nossa Liderança</h3>
+            <div id="grid-all-leaders" class="dbv-grid"></div>
+        </div>
+    </div>
+
     <main id="home-page" class="page active">
         <div id="hero-top-container"></div>
 
@@ -489,6 +497,7 @@
                 <div id="lideranca-track" class="carousel-track"></div>
                 <button class="carousel-btn" onclick="nextLider()">&gt;</button>
             </div>
+           <button onclick="verTodosLideres()" class="btn-lideranca" style="margin: 20px auto 0; width: fit-content; background: var(--vermelho);"><i class="fa-solid fa-list-ul"></i> VER TODOS</button>
         </section>
 
         <div id="notice-area"></div>
@@ -505,7 +514,7 @@
                 <div id="ganhadores-track" class="carousel-track"></div>
                 <button class="carousel-btn" onclick="nextGanhador()">&gt;</button>
             </div>
-            <button onclick="verTodosGanhadores()" class="btn-custom" style="display:inline-flex; margin-top:20px; background:var(--amarelo); color:black;"><i class="fa-solid fa-list-ul"></i> VER TODOS</button>
+           <button onclick="verTodosGanhadores()" class="btn-save" style="margin: 20px auto 0; width: fit-content; padding: 10px 25px;"><i class="fa-solid fa-list-ul"></i> VER TODOS</button>
         </section>
 
         <section id="unidades-showcase-section" style="display:none;">
@@ -692,6 +701,10 @@
             <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="edit-user-p" placeholder="Nova senha (opcional)"></div>
             <label class="input-label">Unidade:</label>
             <div class="input-group"><i class="fa-solid fa-campground"></i><select id="edit-user-unid"></select></div>
+            <label class="input-label">Cargo (Opcional):</label>
+            <label class="input-label" style="color: var(--amarelo);"><i class="fa-solid fa-eye-slash"></i> Visibilidade:</label>
+            <label style="background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333;"><input type="checkbox" id="edit-user-oculto"> Ocultar este líder do carrossel da Home Page</label>
+            <div class="input-group"><i class="fa-solid fa-briefcase"></i><input type="text" id="edit-user-cargo" placeholder="Ex: Diretor(a), Instrutor(a), etc."></div>
             <label class="input-label">Permissões:</label>
             <div class="perm-grid">
                 <label><input type="checkbox" id="edit-perm-h"> 🏠 Editar Home</label>
@@ -737,6 +750,8 @@
             <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="edit-m-foto" placeholder="URL da Foto"></div>
             <label class="input-label">Login de Acesso:</label>
             <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="edit-m-login" placeholder="Login"></div>
+            <label class="input-label">Cargo (Opcional):</label>
+            <div class="input-group"><i class="fa-solid fa-briefcase"></i><input type="text" id="edit-m-cargo" placeholder="Ex: Diretor(a), Instrutor(a), etc."></div>
             <label class="input-label">Nova Senha (deixe em branco para manter a atual):</label>
             <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="edit-m-senha" placeholder="Senha"></div>
             <button onclick="salvarEdicaoMembro()" class="btn-save" style="margin-top: 20px;"><i class="fa-solid fa-floppy-disk"></i> SALVAR ALTERAÇÕES</button>
@@ -862,6 +877,8 @@
                     </div>
                     <label class="input-label">Vincular a qual Unidade?</label>
                     <div class="input-group"><i class="fa-solid fa-campground"></i><select id="new-unid-sel"></select></div>
+                    <label class="input-label">Cargo (Opcional):</label>
+                    <div class="input-group"><i class="fa-solid fa-briefcase"></i><input type="text" id="new-cargo" placeholder="Ex: Diretor(a), Instrutor(a), etc."></div>
                     <label class="input-label">Permissões do Usuário:</label>
                     <div class="perm-grid">
                         <label><input type="checkbox" id="perm-h"> 🏠 Editar Home</label>
@@ -940,7 +957,7 @@
         // SUBSTiTUA o seu DB_PADRAO (por volta da linha 937) por este:
 const DB_PADRAO = {
     usuarios: [{u:"admin", p:"123", tipo:"geral", unid:"Administração", foto:"", perms:{h:true,u:true,m:true}}],
-    unidades: [{nome:"Administração", logo:"", cor:"#333333"}, {nome:"Águia", logo:"", cor:"#e63946"}],
+    unidades: [{nome:"Administração", logo:"", cor:"#333333"}, {nome:"Lideranças", logo:"", cor:"#ffcc00"}, {nome:"Águia", logo:"", cor:"#e63946"}],
     membros: [],
     catalogo_cargos: [
         { id: 1, nome: "Diretor(a)", tipo: "lideranca", cor: "#e63946" },
@@ -1525,15 +1542,11 @@ ${!m.isLider ? `
             const secLid = document.getElementById('lideranca-section');
             if(h.showLideranca) {
                 secLid.style.display = 'block';
-                const lideres = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral');
+               const lideres = db.usuarios.filter(u => (u.tipo === 'lider' || u.tipo === 'geral') && !u.ocultoHome);
                 document.getElementById('lideranca-track').innerHTML = lideres.map((l, i) => {
-                    // Busca os cargos do líder no banco de membros
-                    const m = db.membros.find(x => x.login === l.u);
-                    let cargosTxt = l.unid; // Padrão
-                    if (m && m.cargos && m.cargos.length > 0) {
-                       const catalogo = db.catalogo_cargos || CATALOGO_CARGOS;
-                       cargosTxt = m.cargos.map(idC => catalogo.find(c => c.id === idC)?.nome).filter(Boolean).join('<br>');
-                    } else if (l.tipo === 'geral') { cargosTxt = "Administração Geral"; }
+                    // Busca o cargo do líder
+                    let cargosTxt = l.cargo || l.unid; // Usa o cargo se existir, senão usa a unidade
+                    if (l.tipo === 'geral') { cargosTxt = "Administração Geral"; }
 
                     return `<div class="carousel-item" id="lid-item-${i}"><img src="${l.foto||'https://via.placeholder.com/150'}"><h3>${l.u}</h3><p style="font-size:0.85rem;">${cargosTxt}</p></div>`;
                 }).join('');
@@ -1559,7 +1572,7 @@ ${!m.isLider ? `
             const secUnid = document.getElementById('unidades-showcase-section');
             if(h.showUnidades) {
                 secUnid.style.display = 'block';
-                const uHtml = db.unidades.filter(u=>u.nome!=='Administração').map(u => {
+                const uHtml = db.unidades.filter(u=>u.nome!=='Administração' && u.nome!=='Lideranças').map(u => {
                     const mb = db.membros.filter(m => m.unid === u.nome);
                     return `
                     <div class="unit-home-box" style="border-top-color: ${u.cor}; box-shadow: 0 5px 30px ${u.cor}40;">
@@ -1603,7 +1616,22 @@ ${!m.isLider ? `
                 <div class="dbv-card"><img src="${g.foto||'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--amarelo);object-fit:cover;"><div style="font-weight:bold; margin-top:10px; font-size:1.1rem;">${g.nome}</div><div style="color:var(--amarelo); font-size:1rem; font-weight:bold; background:#111; padding:5px; border-radius:8px;">${g.edicao}</div></div>
             `).join('');
         }
-
+function verTodosLideres() {
+    document.getElementById('modal-all-leaders').style.display = 'flex';
+    // Puxa todos que não estão ocultos
+    const lideres = db.usuarios.filter(u => (u.tipo === 'lider' || u.tipo === 'geral') && !u.ocultoHome);
+    
+    document.getElementById('grid-all-leaders').innerHTML = lideres.map(l => {
+        let cargosTxt = l.cargo || l.unid;
+        if (l.tipo === 'geral') { cargosTxt = "Administração Geral"; }
+        return `
+        <div class="dbv-card" style="border-bottom-color: var(--vermelho);">
+            <img src="${l.foto||'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--vermelho);object-fit:cover;">
+            <div style="font-weight:bold; margin-top:10px; font-size:1.1rem;">${l.u}</div>
+            <div style="color:var(--amarelo); font-size:0.85rem; font-weight:bold; background:#111; padding:5px; border-radius:8px; margin-top: 5px;">${cargosTxt}</div>
+        </div>`;
+    }).join('');
+}
         /* SISTEMA DE PONTOS E HISTÓRICO */
         function abrirModalPontos(id, val) {
             const m = db.membros.find(x => x.id === id);
@@ -1683,13 +1711,13 @@ ${!m.isLider ? `
 
         /* RANKINGS */
         function renderRankings() {
-            const topM = [...db.membros].filter(m => !m.isLider).sort((a,b) => b.pontos - a.pontos).slice(0,5);
+            const topM = [...db.membros].filter(m => !m.isLider && m.unid !== 'Lideranças').sort((a,b) => b.pontos - a.pontos).slice(0,5);
             let medalhas = ['🥇', '🥈', '🥉', '🏅', '🏅'];
             document.getElementById('ranking-membros-list').innerHTML = topM.map((m, i) => `
                 <div class="rank-item"><b>${medalhas[i]}</b> <img src="${m.foto || 'https://via.placeholder.com/50'}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;"> <span style="flex:1;">${m.nome}</span> <span style="color:var(--amarelo); font-weight:bold;">${m.pontos} pts</span></div>
             `).join('');
             
-            const rankU = db.unidades.filter(u => u.nome !== 'Administração').map(u => {
+            const rankU = db.unidades.filter(u => u.nome !== 'Administração' && u.nome !== 'Lideranças').map(u => {
                 const soma = db.membros.filter(m => m.unid === u.nome && !m.isLider).reduce((acc, cur) => acc + cur.pontos, 0);
                 return { ...u, total: soma };
             }).sort((a,b) => b.total - a.total);
@@ -6057,6 +6085,7 @@ const lote_oficial = [
                     <div class="user-mgmt-info">
                         <strong>${u.u} ${isAdmin ? '<span style="color:var(--amarelo); font-size:0.75rem;">[ADMIN]</span>' : ''} ${isMe ? '<span style="color:#888; font-size:0.75rem;">(você)</span>' : ''}</strong>
                         <span><i class="fa-solid fa-campground"></i> ${u.unid || 'Sem unidade'}</span>
+                        ${u.cargo ? `<span style="color:#ffcc00; font-size:0.8rem;"><i class="fa-solid fa-briefcase"></i> ${u.cargo}</span>` : ''}
                     </div>
                     <div class="user-mgmt-actions">
                         <button class="btn-edit-user" onclick="abrirEdicaoUsuario('${u.u}')"><i class="fa-solid fa-pen"></i></button>
@@ -6077,6 +6106,9 @@ const lote_oficial = [
             const sel = document.getElementById('edit-user-unid');
             sel.innerHTML = db.unidades.map(un => `<option value="${un.nome}" ${un.nome === u.unid ? 'selected' : ''}>${un.nome}</option>`).join('');
             
+            // Cargo
+            document.getElementById('edit-user-cargo').value = u.cargo || '';
+            
             // Permissões
             const perms = u.perms || {};
             document.getElementById('edit-perm-h').checked = perms.h || false;
@@ -6084,6 +6116,7 @@ const lote_oficial = [
             document.getElementById('edit-perm-m').checked = perms.m || false;
             document.getElementById('edit-perm-w').checked = perms.w || false;
             document.getElementById('edit-perm-t').checked = perms.t || false;
+            document.getElementById('edit-user-oculto').checked = u.ocultoHome || false;
             
             document.getElementById('modal-edit-user').style.display = 'flex';
         }
@@ -6093,6 +6126,7 @@ const lote_oficial = [
             const novoU = document.getElementById('edit-user-u').value.trim();
             const novaP = document.getElementById('edit-user-p').value;
             const novaUnid = document.getElementById('edit-user-unid').value;
+            const novoCargo = document.getElementById('edit-user-cargo').value;
             
             if (!novoU) return alert("O login não pode ficar em branco!");
             
@@ -6107,6 +6141,8 @@ const lote_oficial = [
             db.usuarios[idx].u = novoU;
             if (novaP) db.usuarios[idx].p = novaP;
             db.usuarios[idx].unid = novaUnid;
+            db.usuarios[idx].cargo = novoCargo || '';
+            db.usuarios[idx].ocultoHome = document.getElementById('edit-user-oculto').checked;
             db.usuarios[idx].perms = {
                 h: document.getElementById('edit-perm-h').checked,
                 u: document.getElementById('edit-perm-u').checked,
@@ -6135,10 +6171,13 @@ const lote_oficial = [
 
         /* FUNÇÕES DE APOIO ORIGINAIS */
         function criarUsuario() {
-            const u = document.getElementById('new-u').value, p = document.getElementById('new-p').value, unid = document.getElementById('new-unid-sel').value;
+            const u = document.getElementById('new-u').value, p = document.getElementById('new-p').value, unid = document.getElementById('new-unid-sel').value, cargo = document.getElementById('new-cargo').value;
             if(!u || !p) return alert("Preencha usuário e senha!");
-            db.usuarios.push({u, p, tipo:'lider', unid, foto:'', perms:{h:document.getElementById('perm-h').checked, u:document.getElementById('perm-u').checked, m:document.getElementById('perm-m').checked, w:document.getElementById('perm-w').checked, t:document.getElementById('perm-t').checked}});
-            save(); alert("Usuário criado com sucesso!"); document.getElementById('new-u').value = ""; document.getElementById('new-p').value = "";
+            // Substitua o .push da função criarUsuario por isto:
+const oculto = document.getElementById('new-user-oculto') ? document.getElementById('new-user-oculto').checked : false;
+
+db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoHome: oculto, perms:{h:document.getElementById('perm-h').checked, u:document.getElementById('perm-u').checked, m:document.getElementById('perm-m').checked, w:document.getElementById('perm-w').checked, t:document.getElementById('perm-t').checked}});
+            save(); alert("Usuário criado com sucesso!"); document.getElementById('new-u').value = ""; document.getElementById('new-p').value = ""; document.getElementById('new-cargo').value = ""; renderListaUsuarios();
         }
         function cadastrarMembro() {
             const n = document.getElementById('m-nome').value, f = document.getElementById('m-foto').value;
@@ -6208,7 +6247,7 @@ const lote_oficial = [
         // Sobrescrevendo a função de cadastrar membro para incluir Login e Senha
         function criarNovaUnidade() {
             const novoN = prompt("Digite o nome da NOVA Unidade:");
-            if(!novoN) return; // Se cancelar ou deixar em branco, não faz nada
+            if(!novoN || novoN.trim() === "") return; // Se cancelar ou deixar em branco, não faz nada
             
             // Verifica se a unidade já existe
             if(db.unidades.find(u => u.nome.toLowerCase() === novoN.toLowerCase())) {
@@ -6218,11 +6257,19 @@ const lote_oficial = [
             const novaLogo = prompt("URL da logo da Unidade (Opcional - pode deixar em branco e adicionar depois):") || "";
             
             // Adiciona a nova unidade no banco de dados com uma cor amarela padrão
-            db.unidades.push({ nome: novoN, logo: novaLogo, cor: "#ffcc00" });
-            save();
-            
-            alert("Unidade '" + novoN + "' criada com sucesso!");
-            location.reload(); // Recarrega a página para atualizar as listas
+            try {
+                db.unidades.push({ nome: novoN.trim(), logo: novaLogo, cor: "#ffcc00" });
+                save();
+                alert("Unidade '" + novoN + "' criada com sucesso!");
+                // Atualizar a lista de unidades em vez de recarregar a página
+                const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
+                if(document.getElementById('new-unid-sel')) document.getElementById('new-unid-sel').innerHTML = htmlUnid;
+                if(document.getElementById('m-unid-dest')) document.getElementById('m-unid-dest').innerHTML = htmlUnid;
+                if(document.getElementById('edit-unid-sel')) document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
+                render();
+            } catch(e) {
+                alert("Erro ao criar unidade: " + e.message);
+            }
         }
         
 
@@ -6234,6 +6281,7 @@ const lote_oficial = [
             document.getElementById('edit-m-nome').value = m.nome;
             document.getElementById('edit-m-foto').value = m.foto || "";
             document.getElementById('edit-m-login').value = m.login || "";
+            document.getElementById('edit-m-cargo').value = m.cargo || "";
             document.getElementById('edit-m-senha').value = m.senha || ""; // Mostra a atual se tiver
             document.getElementById('modal-edit-membro').style.display = 'flex';
         }
@@ -6250,6 +6298,7 @@ const lote_oficial = [
             m.nome = document.getElementById('edit-m-nome').value;
             m.foto = document.getElementById('edit-m-foto').value;
             m.login = novoLog;
+            m.cargo = document.getElementById('edit-m-cargo').value || "";
             
             const novaSen = document.getElementById('edit-m-senha').value;
             if(novaSen) m.senha = novaSen; // Só altera a senha se o líder digitou uma nova
