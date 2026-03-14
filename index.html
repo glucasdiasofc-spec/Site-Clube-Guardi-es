@@ -941,6 +941,25 @@
             home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""}, timer: "2026-12-31T23:59", showTimer: true, timerReplace: "O evento começou!", showEventDate: true, heroesList: [], showLideranca: true, showUnidades: true, showGanhadores: true, ganhadoresTitulo: "Desbravadores Destaque", ganhadores: [], gallery: [], colors: { bg: "#121212", txt: "#ffffff", hBg: "transparent", hTxt: "#ffcc00", fBg: "#000000", fTxt: "#ffffff" }, glow: false, logoUrl: "" } 
         };
         let db = null; let user = null; let slideIntervalIdMap = {}; let liderIdx = 0, ganhadorIdx = 0; let carrosselLiderId = null, carrosselGanhadorId = null;
+
+const CATALOGO_CARGOS = [
+            // CARGOS DE LIDERANÇA
+            { id: 1, nome: "Diretor(a)", tipo: "lideranca", cor: "#e63946" },
+            { id: 2, nome: "Diretor(a) Associado(a)", tipo: "lideranca", cor: "#e63946" },
+            { id: 3, nome: "Secretário(a)", tipo: "lideranca", cor: "#ff9900" },
+            { id: 4, nome: "Tesoureiro(a)", tipo: "lideranca", cor: "#00cc66" },
+            { id: 5, nome: "Instrutor(a)", tipo: "lideranca", cor: "#333333" },
+            { id: 6, nome: "Conselheiro(a)", tipo: "lideranca", cor: "#1a6b3c" },
+            { id: 7, nome: "Capelão", tipo: "lideranca", cor: "#9b1d26" },
+            { id: 8, nome: "Apoio / Diretoria", tipo: "lideranca", cor: "#aaaaaa" },
+            // CARGOS DA UNIDADE (DESBRAVADORES)
+            { id: 101, nome: "Capitão", tipo: "dbv", cor: "#ffcc00" },
+            { id: 102, nome: "Secretário(a) de Unidade", tipo: "dbv", cor: "#ff9900" },
+            { id: 103, nome: "Tesoureiro(a) de Unidade", tipo: "dbv", cor: "#00cc66" },
+            { id: 104, nome: "Almoxarife", tipo: "dbv", cor: "#444444" },
+            { id: 105, nome: "Padioleiro", tipo: "dbv", cor: "#e63946" }
+        ];
+
         const CATALOGO_CLASSES = [
     { id: 101, nome: "Amigo", tipo: "regular", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482106940065579260/1.png?ex=69b5bf26&is=69b46da6&hm=31bba2922a99cfc96bab6f18c55dcd35d555c388e5b9e5a6bff2dcf4f4bda554&" },
     { id: 102, nome: "Amigo da Natureza", tipo: "avancada", logo: "https://cdn.discordapp.com/attachments/1479988087416295539/1482115001576718416/2.png?ex=69b5c6a8&is=69b47528&hm=6b5838e575863d1f99e9b89fe2f5ad6c42ac8ad076653e2963dddc83818fcbce&" },
@@ -1459,9 +1478,10 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             const meusM = db.membros.filter(m => canEditAll || m.unid === user.unid);
             document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
     <div class="dbv-card" style="${h.glow ? 'box-shadow: 0 0 15px var(--amarelo)' : ''}">
-        <button class="btn-del" onclick="excluirMembro(${m.id})"><i class="fa-solid fa-times"></i></button>
-        <button class="btn-edit-user" style="position:absolute; top:-10px; right: 25px; border-radius:50%; width:30px; height:30px; padding:0; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" onclick="abrirEdicaoMembro(${m.id})"><i class="fa-solid fa-pen"></i></button>
         
+        <button class="btn-del" onclick="excluirMembro(${m.id})" title="Excluir"><i class="fa-solid fa-times"></i></button>
+        <button class="btn-edit-user" style="position:absolute; top:-10px; right: 25px; border-radius:50%; width:30px; height:30px; padding:0; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" onclick="abrirEdicaoMembro(${m.id})" title="Editar"><i class="fa-solid fa-pen"></i></button>
+        <button onclick="abrirModalCargos(${m.id})" style="position:absolute; top:-10px; right: 60px; border-radius:50%; width:30px; height:30px; padding:0; background:#1a6b3c; color:white; border:none; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="Cargos"><i class="fa-solid fa-sitemap"></i></button>
         <img src="${m.foto || 'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--amarelo);object-fit:cover;">
                     <div style="font-weight:bold; margin-top:10px; font-size:1.1rem;">${m.nome}</div>
                     <div style="color:#aaa; font-size:0.8rem; margin-bottom:5px;"><i class="fa-solid fa-campground"></i> ${m.unid}</div>
@@ -1487,11 +1507,21 @@ ${!m.isLider ? `
             const h = db.home;
             
             // LIDERANÇA
+            // LIDERANÇA COM CARGOS
             const secLid = document.getElementById('lideranca-section');
             if(h.showLideranca) {
                 secLid.style.display = 'block';
                 const lideres = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral');
-                document.getElementById('lideranca-track').innerHTML = lideres.map((l, i) => `<div class="carousel-item" id="lid-item-${i}"><img src="${l.foto||'https://via.placeholder.com/150'}"><h3>${l.u}</h3><p>${l.unid}</p></div>`).join('');
+                document.getElementById('lideranca-track').innerHTML = lideres.map((l, i) => {
+                    // Busca os cargos do líder no banco de membros
+                    const m = db.membros.find(x => x.login === l.u);
+                    let cargosTxt = l.unid; // Padrão
+                    if (m && m.cargos && m.cargos.length > 0) {
+                        cargosTxt = m.cargos.map(idC => CATALOGO_CARGOS.find(c => c.id === idC)?.nome).filter(Boolean).join('<br>');
+                    } else if (l.tipo === 'geral') { cargosTxt = "Administração Geral"; }
+
+                    return `<div class="carousel-item" id="lid-item-${i}"><img src="${l.foto||'https://via.placeholder.com/150'}"><h3>${l.u}</h3><p style="font-size:0.85rem;">${cargosTxt}</p></div>`;
+                }).join('');
                 liderIdx = 0; atualizarCarrossel('lid-item-', lideres.length, liderIdx);
                 if(carrosselLiderId) clearInterval(carrosselLiderId);
                 if(lideres.length > 1) carrosselLiderId = setInterval(nextLider, 3000);
@@ -1510,6 +1540,7 @@ ${!m.isLider ? `
             } else secGanh.style.display = 'none';
 
             // UNIDADES
+            // UNIDADES COM CARGOS DOS DBVs
             const secUnid = document.getElementById('unidades-showcase-section');
             if(h.showUnidades) {
                 secUnid.style.display = 'block';
@@ -1522,7 +1553,16 @@ ${!m.isLider ? `
                             <h2>${u.nome}</h2>
                         </div>
                         <div class="dbv-grid">
-                            ${mb.map(m => `<div class="dbv-card" style="border-bottom-color:${u.cor};"><img src="${m.foto||'https://via.placeholder.com/100'}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;"><div style="font-weight:bold;margin-top:10px;">${m.nome}</div></div>`).join('')}
+                            ${mb.map(m => {
+                                let badges = '';
+                                if(m.cargos && m.cargos.length > 0) {
+                                    badges = m.cargos.map(idC => {
+                                        const c = CATALOGO_CARGOS.find(x => x.id === idC);
+                                        return c ? `<span style="background:${c.cor}; color:white; font-size:0.6rem; padding:2px 5px; border-radius:4px; display:inline-block; margin-top:5px; margin-right:3px;">${c.nome}</span>` : '';
+                                    }).join('');
+                                }
+                                return `<div class="dbv-card" style="border-bottom-color:${u.cor};"><img src="${m.foto||'https://via.placeholder.com/100'}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;"><div style="font-weight:bold;margin-top:10px;">${m.nome}</div><div>${badges}</div></div>`;
+                            }).join('')}
                         </div>
                     </div>`;
                 }).join('');
@@ -6678,6 +6718,100 @@ async function excluirClasseMembro(idMembro, idClasse) {
     }
 }
 
+// =======================================================
+// SISTEMA DE CARGOS (LOGICA ADMIN E DBV)
+// =======================================================
+
+function abrirModalCargos(idMembro) {
+    const membro = db.membros.find(m => m.id === idMembro);
+    if(!membro) return;
+    
+    if(!membro.cargos) membro.cargos = [];
+    
+    document.getElementById('id-membro-cargo-atual').value = membro.id;
+    document.getElementById('nome-membro-cargo').innerHTML = `Cargos de: <b>${membro.nome}</b>`;
+    
+    // Gerar checkboxes Liderança
+    const lideres = CATALOGO_CARGOS.filter(c => c.tipo === 'lideranca');
+    document.getElementById('lista-cargos-lideranca').innerHTML = lideres.map(c => `
+        <label style="background:#111; padding:8px; border-radius:5px; border:1px solid ${c.cor}50; font-size:0.85rem;">
+            <input type="checkbox" class="chk-cargo" value="${c.id}" ${membro.cargos.includes(c.id) ? 'checked' : ''}>
+            <span style="color:${c.cor}; font-weight:bold;">${c.nome}</span>
+        </label>
+    `).join('');
+
+    // Gerar checkboxes Unidade
+    const dbvs = CATALOGO_CARGOS.filter(c => c.tipo === 'dbv');
+    document.getElementById('lista-cargos-unidade').innerHTML = dbvs.map(c => `
+        <label style="background:#111; padding:8px; border-radius:5px; border:1px solid ${c.cor}50; font-size:0.85rem;">
+            <input type="checkbox" class="chk-cargo" value="${c.id}" ${membro.cargos.includes(c.id) ? 'checked' : ''}>
+            <span style="color:${c.cor}; font-weight:bold;">${c.nome}</span>
+        </label>
+    `).join('');
+    
+    document.getElementById('modal-gerenciar-cargos').style.display = 'flex';
+}
+
+function salvarCargosMembro() {
+    const idMembro = parseInt(document.getElementById('id-membro-cargo-atual').value);
+    const membro = db.membros.find(m => m.id === idMembro);
+    
+    // Captura todas as checkboxes marcadas
+    const checkboxes = document.querySelectorAll('.chk-cargo:checked');
+    const novosCargos = Array.from(checkboxes).map(chk => parseInt(chk.value));
+    
+    membro.cargos = novosCargos;
+    save();
+    
+    document.getElementById('modal-gerenciar-cargos').style.display = 'none';
+    alert("Cargos atualizados com sucesso!");
+    render(); // Atualiza a tela de fundo (Home e Admin)
+}
+
+// ADICIONAR BOTÕES DE SECRETÁRIO E TESOUREIRO NO PERFIL DO DBV
+// (Esta função engatilha na exibição do perfil)
+const originalExibirPerfilDbv = exibirPerfilDbv;
+exibirPerfilDbv = function(id) {
+    originalExibirPerfilDbv(id); // Roda a sua função original primeiro
+    
+    const m = db.membros.find(x => x.id === id);
+    if(!m || !m.cargos) return;
+    
+    const ehSecretario = m.cargos.includes(102); // ID do Sec. de Unidade
+    const ehTesoureiro = m.cargos.includes(103); // ID do Tes. de Unidade
+    
+    if(ehSecretario || ehTesoureiro) {
+        let btnHtml = `<div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #333; text-align:left;">
+            <h4 style="color:white; margin-bottom:15px;"><i class="fa-solid fa-briefcase"></i> Painel de Cargos Oficiais</h4>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">`;
+            
+        if(ehSecretario) {
+            btnHtml += `<button onclick="abrirPainelSecretarioUnidade()" class="btn-save" style="flex:1; background:#ff9900; color:black; font-size:0.8rem;"><i class="fa-solid fa-calendar-check"></i> PAINEL DO SECRETÁRIO</button>`;
+        }
+        if(ehTesoureiro) {
+            btnHtml += `<button onclick="abrirPainelTesoureiroUnidade()" class="btn-save" style="flex:1; background:#00cc66; color:black; font-size:0.8rem;"><i class="fa-solid fa-coins"></i> PAINEL DO TESOUREIRO</button>`;
+        }
+        btnHtml += `</div></div>`;
+        
+        // Insere as opções gerenciais antes do botão "VOLTAR" na área do DBV
+        const container = document.querySelector('.dbv-profile-card');
+        const btnVoltar = container.querySelector('button[onclick*="dbv-search-container"]');
+        if(btnVoltar) {
+            btnVoltar.insertAdjacentHTML('beforebegin', btnHtml);
+        }
+    }
+};
+
+function abrirPainelSecretarioUnidade() {
+    alert("Módulo do Secretário (Calendário de Frequência) será carregado aqui!");
+    // Futura implementação do calendário
+}
+
+function abrirPainelTesoureiroUnidade() {
+    alert("Módulo do Tesoureiro (Controle de Mensalidade/Caixa) será carregado aqui!");
+    // Futura implementação do financeiro
+}
+
     </script>
 
     <div id="modal-gerenciar-esp" class="modal-overlay" style="z-index: 9010;">
@@ -6707,6 +6841,25 @@ async function excluirClasseMembro(idMembro, idClasse) {
         </div>
         <div id="lista-gerenciamento-classes" style="margin-top:20px; max-height: 60vh; overflow-y: auto;">
         </div>
+    </div>
+</div>
+
+<div id="modal-gerenciar-cargos" class="modal-overlay" style="z-index: 9020;">
+    <div class="modal-box" style="max-width: 500px;">
+        <div class="close-modal" onclick="document.getElementById('modal-gerenciar-cargos').style.display='none'">
+            <i class="fa-solid fa-times"></i> Fechar
+        </div>
+        <h2 style="color:var(--amarelo); margin: 10px 0;"><i class="fa-solid fa-sitemap"></i> Gerenciar Cargos</h2>
+        <p id="nome-membro-cargo" style="color:white; font-size:1.1rem; margin-bottom:20px;"></p>
+        
+        <h4 style="color:#aaa; border-bottom:1px solid #333; padding-bottom:5px; margin-bottom:10px;">Cargos de Liderança</h4>
+        <div id="lista-cargos-lideranca" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;"></div>
+        
+        <h4 style="color:#aaa; border-bottom:1px solid #333; padding-bottom:5px; margin-bottom:10px;">Cargos de Unidade</h4>
+        <div id="lista-cargos-unidade" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;"></div>
+
+        <input type="hidden" id="id-membro-cargo-atual">
+        <button onclick="salvarCargosMembro()" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> SALVAR CARGOS</button>
     </div>
 </div>
 
