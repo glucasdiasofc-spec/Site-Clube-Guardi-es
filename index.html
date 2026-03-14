@@ -787,6 +787,10 @@
                 <button onclick="abrirGerenciamentoEspecialidades()" class="btn-save" style="margin-top: 10px; background: #e63946; color: white;">
     <i class="fa-solid fa-trash-can"></i> GERENCIAR TODAS ESPECIALIDADES
 </button>
+
+<button onclick="abrirGerenciamentoClasses()" class="btn-save" style="margin-top: 10px; background: #e63946; color: white;">
+    <i class="fa-solid fa-trash-can"></i> GERENCIAR TODAS AS CLASSES
+</button>
                 <button onclick="abrirMinhasEspecialidadesLider()" class="btn-save" style="margin-top: 20px; background: var(--amarelo); color: black;">
                     <i class="fa-solid fa-star"></i> MINHAS ESPECIALIDADES
                 </button>
@@ -6596,6 +6600,84 @@ async function excluirEspecialidadeMembro(idMembro, idEsp) {
     }
 }
 
+// =======================================================
+// ADMINISTRAÇÃO: EXCLUIR CLASSES DE MEMBROS
+// =======================================================
+
+function abrirGerenciamentoClasses() {
+    document.getElementById('modal-gerenciar-classes').style.display = 'flex';
+    renderizarGerenciamentoClasses();
+}
+
+function renderizarGerenciamentoClasses() {
+    const container = document.getElementById('lista-gerenciamento-classes');
+    const busca = document.getElementById('busca-admin-classes').value.toLowerCase();
+    let html = '';
+
+    db.membros.forEach(membro => {
+        if (!membro.classes || membro.classes.length === 0) return;
+
+        // Filtra classes do membro que batem com a busca (ou o nome do membro)
+        const classesFiltradas = membro.classes.filter(classeMembro => {
+            const classeDados = CATALOGO_CLASSES.find(c => c.id === classeMembro.idClasse);
+            const nomeClasse = classeDados ? classeDados.nome.toLowerCase() : '';
+            return membro.nome.toLowerCase().includes(busca) || nomeClasse.includes(busca);
+        });
+
+        if (classesFiltradas.length > 0) {
+            html += `<div style="background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid var(--vermelho);">
+                <strong style="font-size: 1.1rem; color: white; display: block; margin-bottom: 10px;">
+                    <i class="fa-solid fa-user"></i> ${membro.nome} (${membro.unid})
+                </strong>`;
+
+            classesFiltradas.forEach(classeMembro => {
+                const classeDados = CATALOGO_CLASSES.find(c => c.id === classeMembro.idClasse);
+                if (classeDados) {
+                    // Formata o status para ficar legível
+                    let statusFormatado = classeMembro.status.replace('_', ' ').toUpperCase();
+                    
+                    html += `
+                    <div class="admin-list-item" style="background:#111; margin-bottom: 5px; border: 1px solid #333;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${classeDados.logo}" style="width:30px; height:30px; object-fit:contain;">
+                            <span>${classeDados.nome} <span style="font-size:0.75rem; color:#888;">(${statusFormatado})</span></span>
+                        </div>
+                        <button onclick="excluirClasseMembro(${membro.id}, ${classeMembro.idClasse})" 
+                                style="background:var(--vermelho); padding: 5px 10px; font-size: 0.8rem;">
+                            <i class="fa-solid fa-trash"></i> EXCLUIR
+                        </button>
+                    </div>`;
+                }
+            });
+            html += `</div>`;
+        }
+    });
+
+    container.innerHTML = html || '<p style="text-align:center; color:#888;">Nenhuma classe encontrada para os critérios.</p>';
+}
+
+async function excluirClasseMembro(idMembro, idClasse) {
+    const membro = db.membros.find(m => m.id === idMembro);
+    const classeDados = CATALOGO_CLASSES.find(c => c.id === idClasse);
+
+    if (confirm(`TEM CERTEZA que deseja APAGAR a classe "${classeDados.nome}" do perfil de ${membro.nome}? Todo o progresso do caderno será perdido. Esta ação não pode ser desfeita.`)) {
+        // Remove a classe do array do membro
+        membro.classes = membro.classes.filter(c => c.idClasse !== idClasse);
+        
+        // Salva as alterações no banco de dados
+        await save(); 
+        
+        // Atualiza a visualização da janela
+        renderizarGerenciamentoClasses();
+        
+        // Atualiza as telas de fundo caso o Admin as tenha deixado abertas
+        if (typeof renderizarAprovacoesClasses === "function") renderizarAprovacoesClasses();
+        if (dbvLogadoAtualId === idMembro && typeof renderizarMinhasClassesDbv === "function") renderizarMinhasClassesDbv(idMembro);
+        
+        alert("Classe removida com sucesso!");
+    }
+}
+
     </script>
 
     <div id="modal-gerenciar-esp" class="modal-overlay" style="z-index: 9010;">
@@ -6610,6 +6692,21 @@ async function excluirEspecialidadeMembro(idMembro, idEsp) {
         </div>
         <div id="lista-gerenciamento-esp" style="margin-top:20px; max-height: 60vh; overflow-y: auto;">
             </div>
+    </div>
+</div>
+
+<div id="modal-gerenciar-classes" class="modal-overlay" style="z-index: 9010;">
+    <div class="modal-box" style="max-width: 700px;">
+        <div class="close-modal" onclick="document.getElementById('modal-gerenciar-classes').style.display='none'">
+            <i class="fa-solid fa-times"></i> Fechar
+        </div>
+        <h2 style="color:var(--vermelho); margin: 20px 0;"><i class="fa-solid fa-book-skull"></i> Administração de Classes</h2>
+        <div class="input-group">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="busca-admin-classes" placeholder="Buscar desbravador ou classe..." oninput="renderizarGerenciamentoClasses()">
+        </div>
+        <div id="lista-gerenciamento-classes" style="margin-top:20px; max-height: 60vh; overflow-y: auto;">
+        </div>
     </div>
 </div>
 
