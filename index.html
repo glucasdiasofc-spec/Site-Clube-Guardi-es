@@ -1812,6 +1812,18 @@ ${!m.isLider ? `
                 <div style="text-transform:uppercase; font-size:0.7rem; color:#888;">pontos acumulados</div>
             </div>
 
+            ${(m.cargos && m.cargos.includes('Secretário')) ? `
+    <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #457b9d; text-align:center;">
+        <h4 style="color:#457b9d; margin-bottom:10px;"><i class="fa-solid fa-book"></i> Área da Secretaria</h4>
+        <button onclick="abrirPainelSecretario('${m.unid}')" class="btn-save" style="background:#457b9d; color:white; width:100%;"><i class="fa-solid fa-calendar-check"></i> FAZER CHAMADA DA UNIDADE</button>
+    </div>` : ''}
+
+${(m.cargos && m.cargos.includes('Tesoureiro')) ? `
+    <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #00cc66; text-align:center;">
+        <h4 style="color:#00cc66; margin-bottom:10px;"><i class="fa-solid fa-piggy-bank"></i> Área da Tesouraria</h4>
+        <button onclick="abrirPainelTesoureiro('${m.unid}')" class="btn-save" style="background:#00cc66; color:white; width:100%;"><i class="fa-solid fa-coins"></i> LIVRO CAIXA DA UNIDADE</button>
+    </div>` : ''}
+
             <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #333; text-align:left;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <h4 style="color:white; margin:0;"><i class="fa-solid fa-medal"></i> Especialidades</h4>
@@ -6823,13 +6835,15 @@ exibirPerfilDbv = function(id) {
 };
 
 function abrirPainelSecretarioUnidade() {
-    alert("Módulo do Secretário (Calendário de Frequência) será carregado aqui!");
-    // Futura implementação do calendário
+    const m = db.membros.find(x => x.id === dbvLogadoAtualId);
+    if(!m) return alert("Erro ao carregar dados do membro!");
+    abrirPainelSecretario(m.unid);
 }
 
 function abrirPainelTesoureiroUnidade() {
-    alert("Módulo do Tesoureiro (Controle de Mensalidade/Caixa) será carregado aqui!");
-    // Futura implementação do financeiro
+    const m = db.membros.find(x => x.id === dbvLogadoAtualId);
+    if(!m) return alert("Erro ao carregar dados do membro!");
+    abrirPainelTesoureiro(m.unid);
 }
 
 
@@ -6885,6 +6899,252 @@ function abrirModalConfigCargos() {
     } else {
         alert("Erro: Modal de configuração de cargos não encontrado.");
     }
+}
+
+
+/* ================================================
+   SISTEMA DE TESOURARIA E SECRETARIA (UNIDADES)
+   ================================================ */
+
+function garantirDadosUnidade(unidNome) {
+    let u = db.unidades.find(x => x.nome === unidNome);
+    if(u) {
+        if(!u.caixa) u.caixa = [];
+        if(!u.chamadas) u.chamadas = [];
+    }
+    return u;
+}
+
+// ---- TESOURARIA ----
+let currentTesUnid = "";
+
+function abrirPainelTesoureiro(unidNome) {
+    currentTesUnid = unidNome;
+    document.getElementById('tes-unid-nome').innerText = unidNome;
+    document.getElementById('modal-tesoureiro').style.display = 'flex';
+    renderTesouraria();
+}
+
+function renderTesouraria() {
+    const u = garantirDadosUnidade(currentTesUnid);
+    if(!u) return;
+
+    let saldo = 0;
+    let html = '';
+
+    // Inverte para mostrar o mais recente em cima
+    const historico = [...u.caixa].reverse();
+
+    historico.forEach(item => {
+        saldo += (item.tipo === 'entrada' ? item.valor : -item.valor);
+        const cor = item.tipo === 'entrada' ? '#00cc66' : 'var(--vermelho)';
+        const icone = item.tipo === 'entrada' ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
+        
+        html += `
+        <div style="background:#1a1a1a; padding:10px 15px; border-radius:8px; border-left: 4px solid ${cor}; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <strong style="display:block; color:white; font-size:0.95rem;">${item.desc}</strong>
+                <span style="color:#888; font-size:0.75rem;">${item.data}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <strong style="color:${cor};">R$ ${item.valor.toFixed(2).replace('.', ',')} <i class="fa-solid ${icone}"></i></strong>
+                <button onclick="deletarTransacao(${item.id})" style="background:none; border:none; color:#e63946; cursor:pointer; font-size:0.9rem;"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>`;
+    });
+
+    // Calcula saldo real
+    saldo = u.caixa.reduce((acc, curr) => acc + (curr.tipo === 'entrada' ? curr.valor : -curr.valor), 0);
+    
+    document.getElementById('tes-saldo').innerText = `R$ ${saldo.toFixed(2).replace('.', ',')}`;
+    document.getElementById('tes-saldo').style.color = saldo >= 0 ? '#00cc66' : 'var(--vermelho)';
+    document.getElementById('tes-lista').innerHTML = html || '<p style="text-align:center; color:#666; margin-top:10px;">Nenhuma movimentacao registrada.</p>';
+    atualizarEstatisticasTesouraria();
+}
+
+function atualizarEstatisticasTesouraria() {
+    const u = garantirDadosUnidade(currentTesUnid);
+    if(!u || !u.caixa) return;
+    
+    const totalEntradas = u.caixa.filter(t => t.tipo === 'entrada').reduce((acc, t) => acc + t.valor, 0);
+    const totalSaidas = u.caixa.filter(t => t.tipo === 'saida').reduce((acc, t) => acc + t.valor, 0);
+    const saldo = totalEntradas - totalSaidas;
+    
+    const statsDiv = document.getElementById('tes-stats');
+    if(statsDiv) {
+        statsDiv.innerHTML = `
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:15px;">
+                <div style="background:#0a2a0a; padding:10px; border-radius:8px; border-left:4px solid #00cc66; text-align:center;">
+                    <span style="color:#888; font-size:0.75rem; display:block;">ENTRADAS</span>
+                    <strong style="color:#00cc66; font-size:1.2rem;">R$ ${totalEntradas.toFixed(2).replace('.', ',')}</strong>
+                </div>
+                <div style="background:#2a0a0a; padding:10px; border-radius:8px; border-left:4px solid var(--vermelho); text-align:center;">
+                    <span style="color:#888; font-size:0.75rem; display:block;">SAIDAS</span>
+                    <strong style="color:var(--vermelho); font-size:1.2rem;">R$ ${totalSaidas.toFixed(2).replace('.', ',')}</strong>
+                </div>
+                <div style="background:#0a1a2a; padding:10px; border-radius:8px; border-left:4px solid #457b9d; text-align:center;">
+                    <span style="color:#888; font-size:0.75rem; display:block;">SALDO</span>
+                    <strong style="color:#457b9d; font-size:1.2rem;">R$ ${saldo.toFixed(2).replace('.', ',')}</strong>
+                </div>
+            </div>
+        `;
+    }
+}
+
+async function adicionarTransacao() {
+    const desc = document.getElementById('tes-desc').value;
+    const valor = parseFloat(document.getElementById('tes-valor').value);
+    const tipo = document.getElementById('tes-tipo').value;
+
+    if(!desc || isNaN(valor) || valor <= 0) return alert("Preencha uma descrição e um valor válido!");
+
+    const u = garantirDadosUnidade(currentTesUnid);
+    u.caixa.push({
+        id: Date.now(),
+        data: new Date().toLocaleDateString(),
+        desc: desc,
+        valor: valor,
+        tipo: tipo
+    });
+
+    await save();
+    document.getElementById('tes-desc').value = '';
+    document.getElementById('tes-valor').value = '';
+    renderTesouraria();
+}
+
+function deletarTransacao(idTransacao) {
+    if(!confirm("Tem certeza que deseja deletar este lancamento?")) return;
+    const u = garantirDadosUnidade(currentTesUnid);
+    u.caixa = u.caixa.filter(t => t.id !== idTransacao);
+    save();
+    renderTesouraria();
+}
+
+// ---- SECRETARIA (CHAMADAS) ----
+let currentSecUnid = "";
+let dataChamadaAtiva = "";
+
+function abrirPainelSecretario(unidNome) {
+    currentSecUnid = unidNome;
+    document.getElementById('sec-unid-nome').innerText = unidNome;
+    document.getElementById('sec-area-frequencia').style.display = 'none';
+    document.getElementById('modal-secretario').style.display = 'flex';
+    renderListaChamadas();
+}
+
+function renderListaChamadas() {
+    const u = garantirDadosUnidade(currentSecUnid);
+    if(!u) return;
+
+    let html = '';
+    const historico = [...u.chamadas].reverse();
+
+    historico.forEach(c => {
+        html += `
+        <div style="background:#1a1a1a; padding:10px 15px; border-radius:8px; border-left: 4px solid #457b9d; display:flex; justify-content:space-between; align-items:center;">
+            <strong style="color:white; font-size:0.95rem;"><i class="fa-regular fa-calendar"></i> ${c.data}</strong>
+            <div style="display:flex; gap:5px;">
+                <button onclick="abrirChamadaExistente('${c.data}')" class="btn-custom" style="display:inline-flex; padding:5px 10px; font-size:0.75rem; background:#457b9d;"><i class="fa-solid fa-pen"></i> VER/EDITAR</button>
+                <button onclick="deletarChamada('${c.data}')" style="background:none; border:none; color:#e63946; cursor:pointer; font-size:0.9rem; padding:5px 10px;"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>`;
+    });
+
+    document.getElementById('sec-lista-chamadas').innerHTML = html || '<p style="text-align:center; color:#666; margin-top:10px;">Nenhuma chamada registrada.</p>';
+}
+
+function criarChamada() {
+    const dataRaw = document.getElementById('sec-data').value;
+    if(!dataRaw) return alert("Selecione uma data!");
+    
+    // Converte a data para o formato DD/MM/AAAA
+    const dataSplit = dataRaw.split('-');
+    const dataFormatada = `${dataSplit[2]}/${dataSplit[1]}/${dataSplit[0]}`;
+
+    const u = garantirDadosUnidade(currentSecUnid);
+    if(u.chamadas.find(c => c.data === dataFormatada)) {
+        return alert("Já existe uma chamada para esta data. Edite a existente abaixo.");
+    }
+
+    u.chamadas.push({ data: dataFormatada, presentes: [] });
+    abrirChamadaExistente(dataFormatada);
+}
+
+function abrirChamadaExistente(data) {
+    dataChamadaAtiva = data;
+    document.getElementById('sec-data-atual-txt').innerText = `Data: ${data}`;
+    document.getElementById('sec-area-frequencia').style.display = 'block';
+
+    const u = garantirDadosUnidade(currentSecUnid);
+    const registro = u.chamadas.find(c => c.data === data);
+    
+    // Busca os membros DBV desta unidade (ignorando líderes para a chamada da unidade)
+    const membrosDaUnidade = db.membros.filter(m => m.unid === currentSecUnid && !m.isLider);
+
+    let html = '';
+    membrosDaUnidade.forEach(m => {
+        const estaPresente = registro.presentes.includes(m.id);
+        html += `
+        <label style="background:#222; padding:10px 15px; border-radius:8px; display:flex; align-items:center; gap:15px; cursor:pointer; border: 1px solid ${estaPresente ? '#00cc66' : '#444'};">
+            <input type="checkbox" id="chk-pres-${m.id}" ${estaPresente ? 'checked' : ''} style="width:20px; height:20px; accent-color:#00cc66;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="${m.foto || 'https://via.placeholder.com/30'}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                <span style="color:white; font-weight:bold;">${m.nome}</span>
+            </div>
+        </label>`;
+    });
+
+    if(membrosDaUnidade.length === 0) html = "<p style='color:#888; text-align:center;'>Nenhum desbravador cadastrado nesta unidade.</p>";
+
+    document.getElementById('sec-lista-membros').innerHTML = html;
+}
+
+async function salvarChamadaAtual() {
+    const u = garantirDadosUnidade(currentSecUnid);
+    const registro = u.chamadas.find(c => c.data === dataChamadaAtiva);
+    const membrosDaUnidade = db.membros.filter(m => m.unid === currentSecUnid && !m.isLider);
+
+    registro.presentes = []; // Zera e remonta
+
+    membrosDaUnidade.forEach(m => {
+        const checkbox = document.getElementById(`chk-pres-${m.id}`);
+        if(checkbox && checkbox.checked) {
+            registro.presentes.push(m.id);
+        }
+    });
+
+    await save();
+    alert(`Chamada do dia ${dataChamadaAtiva} salva com sucesso!`);
+    document.getElementById('sec-area-frequencia').style.display = 'none';
+    document.getElementById('sec-data').value = '';
+    renderListaChamadas();
+}
+
+function deletarChamada(data) {
+    if(!confirm(`Tem certeza que deseja deletar a chamada de ${data}?`)) return;
+    const u = garantirDadosUnidade(currentSecUnid);
+    u.chamadas = u.chamadas.filter(c => c.data !== data);
+    save();
+    renderListaChamadas();
+}
+
+function gerarRelatorioFrequencia() {
+    const u = garantirDadosUnidade(currentSecUnid);
+    if(!u || !u.chamadas || u.chamadas.length === 0) return alert("Nenhuma chamada registrada!");
+    
+    const membrosDaUnidade = db.membros.filter(m => m.unid === currentSecUnid && !m.isLider);
+    let relatorio = `RELATORIO DE FREQUENCIA - ${currentSecUnid}\n`;
+    relatorio += `Gerado em: ${new Date().toLocaleDateString()}\n\n`;
+    
+    membrosDaUnidade.forEach(m => {
+        const presencas = u.chamadas.filter(c => c.presentes.includes(m.id)).length;
+        const totalChamadas = u.chamadas.length;
+        const percentual = totalChamadas > 0 ? ((presencas / totalChamadas) * 100).toFixed(1) : 0;
+        relatorio += `${m.nome}: ${presencas}/${totalChamadas} (${percentual}%)\n`;
+    });
+    
+    alert(relatorio);
 }
 
     </script>
@@ -6956,6 +7216,60 @@ function abrirModalConfigCargos() {
             <button onclick="adicionarNovoTipoCargo()" class="btn-save" style="background:var(--amarelo); color:black;">CADASTRAR CARGO</button>
         </div>
         <div id="lista-tipos-cargos" style="max-height:300px; overflow-y:auto;"></div>
+    </div>
+</div>
+
+<div id="modal-tesoureiro" class="modal-overlay" style="z-index: 9030;">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="close-modal" onclick="document.getElementById('modal-tesoureiro').style.display='none'"><i class="fa-solid fa-times"></i></div>
+        <h3 style="color:#00cc66; margin-bottom: 5px;"><i class="fa-solid fa-coins"></i> Tesouraria da Unidade <span id="tes-unid-nome"></span></h3>
+        <h2 id="tes-saldo" style="text-align:center; color:white; font-size: 2.5rem; margin:15px 0;">R$ 0,00</h2>
+        
+        <div id="tes-stats" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:15px;"></div>
+        
+        <div style="background:#111; padding:15px; border-radius:10px; margin-bottom:20px; border: 1px solid #333;">
+            <h4 style="color:var(--amarelo); margin-bottom: 10px; font-size: 0.9rem;">Lançar Novo Registro:</h4>
+            <input type="text" id="tes-desc" placeholder="Descrição (Ex: Mensalidade João)">
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="number" id="tes-valor" placeholder="Valor (R$)" style="flex: 1; margin: 0;">
+                <select id="tes-tipo" style="flex: 1; margin: 0; padding: 14px; border-radius: 10px; background: #222; color: white; border: 1px solid #444;">
+                    <option value="entrada">Entrada (+)</option>
+                    <option value="saida">Saída (-)</option>
+                </select>
+            </div>
+            <button class="btn-save" onclick="adicionarTransacao()" style="background: #00cc66; color: white;"><i class="fa-solid fa-check"></i> SALVAR LANÇAMENTO</button>
+        </div>
+        
+        <h4 style="color:#aaa; margin-bottom: 10px; font-size: 0.85rem;">Histórico de Caixa:</h4>
+        <div id="tes-lista" style="max-height:250px; overflow-y:auto; display: flex; flex-direction: column; gap: 8px;"></div>
+    </div>
+</div>
+
+<div id="modal-secretario" class="modal-overlay" style="z-index: 9030;">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="close-modal" onclick="document.getElementById('modal-secretario').style.display='none'"><i class="fa-solid fa-times"></i></div>
+        <h3 style="color:#457b9d; margin-bottom: 15px;"><i class="fa-solid fa-calendar-check"></i> Diário da Unidade <span id="sec-unid-nome"></span></h3>
+        
+        <div style="background:#111; padding:15px; border-radius:10px; margin-bottom:15px; border: 1px solid #333;">
+            <h4 style="color:var(--amarelo); margin-bottom: 10px; font-size: 0.9rem;">Abrir Nova Chamada:</h4>
+            <div style="display: flex; gap: 10px;">
+                <input type="date" id="sec-data" style="margin: 0; flex: 2;">
+                <button class="btn-save" onclick="criarChamada()" style="background: #457b9d; color: white; flex: 1;"><i class="fa-solid fa-plus"></i> CRIAR</button>
+            </div>
+        </div>
+
+        <div id="sec-area-frequencia" style="display:none; background:#1a1a1a; padding:15px; border-radius:10px; margin-bottom: 15px; border: 1px solid #457b9d;">
+            <h4 id="sec-data-atual-txt" style="color:white; margin-bottom:15px; text-align: center; font-size: 1.2rem;"></h4>
+            <div id="sec-lista-membros" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;"></div>
+            <button class="btn-save" onclick="salvarChamadaAtual()" style="background: #457b9d; color: white;"><i class="fa-solid fa-floppy-disk"></i> SALVAR FREQUÊNCIA</button>
+        </div>
+
+        <h4 style="color:#aaa; margin-bottom: 10px; font-size: 0.85rem;">Reuniões Passadas:</h4>
+        <div id="sec-lista-chamadas" style="max-height:150px; overflow-y:auto; display: flex; flex-direction: column; gap: 8px;"></div>
+        
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <button class="btn-save" onclick="gerarRelatorioFrequencia()" style="background: #457b9d; color: white; flex:1;"><i class="fa-solid fa-chart-bar"></i> RELATORIO</button>
+        </div>
     </div>
 </div>
 
