@@ -783,13 +783,16 @@
         <div class="panel-layout">
             
             <aside class="sidebar">
-
                 <button onclick="abrirGerenciamentoEspecialidades()" class="btn-save" style="margin-top: 10px; background: #e63946; color: white;">
     <i class="fa-solid fa-trash-can"></i> GERENCIAR TODAS ESPECIALIDADES
 </button>
 
 <button onclick="abrirGerenciamentoClasses()" class="btn-save" style="margin-top: 10px; background: #e63946; color: white;">
     <i class="fa-solid fa-trash-can"></i> GERENCIAR TODAS AS CLASSES
+</button>
+
+<button onclick="abrirModalConfigCargos()" class="btn-save" style="background:#444; margin-top:10px;">
+    <i class="fa-solid fa-gears"></i> CRIAR/EDITAR TIPOS DE CARGOS
 </button>
                 <button onclick="abrirMinhasEspecialidadesLider()" class="btn-save" style="margin-top: 20px; background: var(--amarelo); color: black;">
                     <i class="fa-solid fa-star"></i> MINHAS ESPECIALIDADES
@@ -934,12 +937,19 @@
         firebase.initializeApp(firebaseConfig);
         const firestoreDb = firebase.firestore();
         const DOC_REF = firestoreDb.collection("sistema").doc("dados");
-        const DB_PADRAO = { 
-            usuarios: [{u:"admin", p:"123", tipo:"geral", unid:"Administração", foto:"", perms:{h:true,u:true,m:true,w:true,t:true}}], 
-            unidades: [{nome:"Administração", logo:"", cor:"#333333"}, {nome:"Águia", logo:"", cor:"#e63946"}], 
-            membros: [], 
-            home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""}, timer: "2026-12-31T23:59", showTimer: true, timerReplace: "O evento começou!", showEventDate: true, heroesList: [], showLideranca: true, showUnidades: true, showGanhadores: true, ganhadoresTitulo: "Desbravadores Destaque", ganhadores: [], gallery: [], colors: { bg: "#121212", txt: "#ffffff", hBg: "transparent", hTxt: "#ffcc00", fBg: "#000000", fTxt: "#ffffff" }, glow: false, logoUrl: "" } 
-        };
+        // SUBSTiTUA o seu DB_PADRAO (por volta da linha 937) por este:
+const DB_PADRAO = {
+    usuarios: [{u:"admin", p:"123", tipo:"geral", unid:"Administração", foto:"", perms:{h:true,u:true,m:true}}],
+    unidades: [{nome:"Administração", logo:"", cor:"#333333"}, {nome:"Águia", logo:"", cor:"#e63946"}],
+    membros: [],
+    catalogo_cargos: [
+        { id: 1, nome: "Diretor(a)", tipo: "lideranca", cor: "#e63946" },
+        { id: 101, nome: "Capitão", tipo: "dbv", cor: "#ffcc00" },
+        { id: 102, nome: "Secretário(a) de Unidade", tipo: "dbv", cor: "#ff9900" },
+        { id: 103, nome: "Tesoureiro(a) de Unidade", tipo: "dbv", cor: "#00cc66" }
+    ],
+    home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""} }
+};
         let db = null; let user = null; let slideIntervalIdMap = {}; let liderIdx = 0, ganhadorIdx = 0; let carrosselLiderId = null, carrosselGanhadorId = null;
 
 const CATALOGO_CARGOS = [
@@ -997,6 +1007,8 @@ const CATALOGO_CARGOS = [
                 const snap = await DOC_REF.get(); 
                 if (snap.exists) { 
                     db = snap.data(); 
+                    // Garantir que o catálogo de cargos exista no banco
+                    if(!db.catalogo_cargos) db.catalogo_cargos = JSON.parse(JSON.stringify(CATALOGO_CARGOS));
                 } else { 
                     db = JSON.parse(JSON.stringify(DB_PADRAO)); 
                     await DOC_REF.set(db); 
@@ -1004,11 +1016,13 @@ const CATALOGO_CARGOS = [
             } catch(e) { 
                 console.error(e); 
                 db = JSON.parse(JSON.stringify(DB_PADRAO)); 
+            } finally {
+                const loader = document.getElementById("loading-overlay");
+                if (loader) loader.style.display = "none"; 
+                render(); 
+                iniciarTimer(); 
+                toggleTimerInputs(); 
             }
-            document.getElementById("loading-overlay").style.display = "none"; 
-            render(); 
-            iniciarTimer(); 
-            toggleTimerInputs(); 
         }
         // =======================================================
         // LIDERANÇA: APROVAÇÃO DE ESPECIALIDADES
@@ -1517,7 +1531,8 @@ ${!m.isLider ? `
                     const m = db.membros.find(x => x.login === l.u);
                     let cargosTxt = l.unid; // Padrão
                     if (m && m.cargos && m.cargos.length > 0) {
-                        cargosTxt = m.cargos.map(idC => CATALOGO_CARGOS.find(c => c.id === idC)?.nome).filter(Boolean).join('<br>');
+                       const catalogo = db.catalogo_cargos || CATALOGO_CARGOS;
+                       cargosTxt = m.cargos.map(idC => catalogo.find(c => c.id === idC)?.nome).filter(Boolean).join('<br>');
                     } else if (l.tipo === 'geral') { cargosTxt = "Administração Geral"; }
 
                     return `<div class="carousel-item" id="lid-item-${i}"><img src="${l.foto||'https://via.placeholder.com/150'}"><h3>${l.u}</h3><p style="font-size:0.85rem;">${cargosTxt}</p></div>`;
@@ -1556,8 +1571,9 @@ ${!m.isLider ? `
                             ${mb.map(m => {
                                 let badges = '';
                                 if(m.cargos && m.cargos.length > 0) {
+                                    const catalogo = db.catalogo_cargos || CATALOGO_CARGOS;
                                     badges = m.cargos.map(idC => {
-                                        const c = CATALOGO_CARGOS.find(x => x.id === idC);
+                                        const c = catalogo.find(x => x.id === idC);
                                         return c ? `<span style="background:${c.cor}; color:white; font-size:0.6rem; padding:2px 5px; border-radius:4px; display:inline-block; margin-top:5px; margin-right:3px;">${c.nome}</span>` : '';
                                     }).join('');
                                 }
@@ -6732,7 +6748,8 @@ function abrirModalCargos(idMembro) {
     document.getElementById('nome-membro-cargo').innerHTML = `Cargos de: <b>${membro.nome}</b>`;
     
     // Gerar checkboxes Liderança
-    const lideres = CATALOGO_CARGOS.filter(c => c.tipo === 'lideranca');
+    const catalogo = db.catalogo_cargos || CATALOGO_CARGOS;
+    const lideres = catalogo.filter(c => c.tipo === 'lideranca');
     document.getElementById('lista-cargos-lideranca').innerHTML = lideres.map(c => `
         <label style="background:#111; padding:8px; border-radius:5px; border:1px solid ${c.cor}50; font-size:0.85rem;">
             <input type="checkbox" class="chk-cargo" value="${c.id}" ${membro.cargos.includes(c.id) ? 'checked' : ''}>
@@ -6741,7 +6758,7 @@ function abrirModalCargos(idMembro) {
     `).join('');
 
     // Gerar checkboxes Unidade
-    const dbvs = CATALOGO_CARGOS.filter(c => c.tipo === 'dbv');
+    const dbvs = catalogo.filter(c => c.tipo === 'dbv');
     document.getElementById('lista-cargos-unidade').innerHTML = dbvs.map(c => `
         <label style="background:#111; padding:8px; border-radius:5px; border:1px solid ${c.cor}50; font-size:0.85rem;">
             <input type="checkbox" class="chk-cargo" value="${c.id}" ${membro.cargos.includes(c.id) ? 'checked' : ''}>
@@ -6756,16 +6773,19 @@ function salvarCargosMembro() {
     const idMembro = parseInt(document.getElementById('id-membro-cargo-atual').value);
     const membro = db.membros.find(m => m.id === idMembro);
     
-    // Captura todas as checkboxes marcadas
-    const checkboxes = document.querySelectorAll('.chk-cargo:checked');
+    if(!membro) return alert("Erro: Membro não encontrado.");
+    
+    // Captura todas as checkboxes marcadas dentro do modal de cargos
+    const modal = document.getElementById('modal-gerenciar-cargos');
+    const checkboxes = modal.querySelectorAll('.chk-cargo:checked');
     const novosCargos = Array.from(checkboxes).map(chk => parseInt(chk.value));
     
     membro.cargos = novosCargos;
     save();
     
-    document.getElementById('modal-gerenciar-cargos').style.display = 'none';
+    modal.style.display = 'none';
     alert("Cargos atualizados com sucesso!");
-    render(); // Atualiza a tela de fundo (Home e Admin)
+    render(); 
 }
 
 // ADICIONAR BOTÕES DE SECRETÁRIO E TESOUREIRO NO PERFIL DO DBV
@@ -6810,6 +6830,61 @@ function abrirPainelSecretarioUnidade() {
 function abrirPainelTesoureiroUnidade() {
     alert("Módulo do Tesoureiro (Controle de Mensalidade/Caixa) será carregado aqui!");
     // Futura implementação do financeiro
+}
+
+
+function renderizarTiposCargos() {
+    const cont = document.getElementById('lista-tipos-cargos');
+    if(!cont) return;
+    cont.innerHTML = db.catalogo_cargos.map(c => `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:10px; margin-bottom:5px; border-left:4px solid ${c.cor}; border-radius:5px;">
+            <span style="color:white; font-size:0.9rem;">${c.nome} <small style="color:#666;">(${c.tipo})</small></span>
+            <button onclick="removerTipoCargo(${c.id})" style="background:none; border:none; color:#e63946; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+        </div>
+    `).join('');
+}
+
+function adicionarNovoTipoCargo() {
+    const nome = document.getElementById('novo-nome-cargo').value;
+    const tipo = document.getElementById('novo-tipo-cargo').value;
+    const cor = document.getElementById('nova-cor-cargo').value;
+    
+    if(!nome) return alert("Digite o nome do cargo!");
+
+    db.catalogo_cargos.push({ 
+        id: Date.now(), 
+        nome: nome, 
+        tipo: tipo, 
+        cor: cor 
+    });
+    
+    save();
+    document.getElementById('novo-nome-cargo').value = '';
+    document.getElementById('novo-tipo-cargo').value = 'lideranca';
+    document.getElementById('nova-cor-cargo').value = '#ffcc00';
+    renderizarTiposCargos();
+    if(typeof renderizarGerenciamentoCargos === 'function') renderizarGerenciamentoCargos();
+    alert("Cargo criado com sucesso!");
+}
+
+function removerTipoCargo(id) {
+    if(!confirm("Apagar este cargo o removerá de todos os membros. Confirmar?")) return;
+    db.catalogo_cargos = db.catalogo_cargos.filter(c => c.id !== id);
+    db.membros.forEach(m => { if(m.cargos) m.cargos = m.cargos.filter(cid => cid !== id); });
+    save();
+    renderizarTiposCargos();
+}
+
+function abrirModalConfigCargos() {
+    const modal = document.getElementById('modal-config-cargos');
+    if(modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            renderizarTiposCargos();
+        }, 100);
+    } else {
+        alert("Erro: Modal de configuração de cargos não encontrado.");
+    }
 }
 
     </script>
@@ -6860,6 +6935,27 @@ function abrirPainelTesoureiroUnidade() {
 
         <input type="hidden" id="id-membro-cargo-atual">
         <button onclick="salvarCargosMembro()" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> SALVAR CARGOS</button>
+    </div>
+</div>
+
+
+
+<div id="modal-config-cargos" class="modal-overlay" style="z-index: 9999;">
+    <div class="modal-box" style="max-width: 500px;">
+        <div class="close-modal" onclick="document.getElementById('modal-config-cargos').style.display='none'">
+            <i class="fa-solid fa-times"></i>
+        </div>
+        <h2 style="color:var(--amarelo);"><i class="fa-solid fa-plus"></i> Novo Tipo de Cargo</h2>
+        <div style="background:#1a1a1a; padding:15px; border-radius:10px; margin: 20px 0; display:flex; flex-direction:column; gap:10px;">
+            <input type="text" id="novo-nome-cargo" placeholder="Ex: Webmaster, Cozinheiro...">
+            <select id="novo-tipo-cargo">
+                <option value="lideranca">Liderança</option>
+                <option value="dbv">Unidade (Desbravador)</option>
+            </select>
+            <input type="color" id="nova-cor-cargo" value="#ffcc00" style="width:100%; height:40px;">
+            <button onclick="adicionarNovoTipoCargo()" class="btn-save" style="background:var(--amarelo); color:black;">CADASTRAR CARGO</button>
+        </div>
+        <div id="lista-tipos-cargos" style="max-height:300px; overflow-y:auto;"></div>
     </div>
 </div>
 
