@@ -1510,13 +1510,14 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             
             if(canEditAll) { document.getElementById('container-m-unid-dest').style.display = 'block'; document.getElementById('container-edit-unid-sel').style.display = 'block'; }
 
-            const meusM = db.membros.filter(m => canEditAll || m.unid === user.unid);
+const meusM = db.membros.filter(m => canEditAll || m.unid === user.unid);
             document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
     <div class="dbv-card" style="${h.glow ? 'box-shadow: 0 0 15px var(--amarelo)' : ''}">
         
         <button class="btn-del" onclick="excluirMembro(${m.id})" title="Excluir"><i class="fa-solid fa-times"></i></button>
         <button class="btn-edit-user" style="position:absolute; top:-10px; right: 25px; border-radius:50%; width:30px; height:30px; padding:0; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" onclick="abrirEdicaoMembro(${m.id})" title="Editar"><i class="fa-solid fa-pen"></i></button>
         <button onclick="abrirModalCargos(${m.id})" style="position:absolute; top:-10px; right: 60px; border-radius:50%; width:30px; height:30px; padding:0; background:#1a6b3c; color:white; border:none; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="Cargos"><i class="fa-solid fa-sitemap"></i></button>
+        ${user.tipo === 'geral' ? `<button onclick="acessarComoDbv(${m.id})" style="position:absolute; top:-10px; right: 95px; border-radius:50%; width:30px; height:30px; padding:0; background:#457b9d; color:white; border:none; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="Acessar Área do DBV"><i class="fa-solid fa-right-to-bracket"></i></button>` : ''}
         <img src="${m.foto || 'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--amarelo);object-fit:cover;">
                     <div style="font-weight:bold; margin-top:10px; font-size:1.1rem;">${m.nome}</div>
                     <div style="color:#aaa; font-size:0.8rem; margin-bottom:5px;"><i class="fa-solid fa-campground"></i> ${m.unid}</div>
@@ -6081,7 +6082,7 @@ const lote_oficial = [
             if (!container) return;
             const lista = db.usuarios.filter(u => u.tipo !== 'geral' || user.tipo === 'geral');
             if (lista.length === 0) { container.innerHTML = '<p style="color:#888; text-align:center;">Nenhum usuário cadastrado.</p>'; return; }
-            container.innerHTML = lista.map(u => {
+           container.innerHTML = lista.map(u => {
                 const isAdmin = u.tipo === 'geral';
                 const isMe = u.u === user.u;
                 return `<div class="user-mgmt-card">
@@ -6092,6 +6093,7 @@ const lote_oficial = [
                         ${u.cargo ? `<span style="color:#ffcc00; font-size:0.8rem;"><i class="fa-solid fa-briefcase"></i> ${u.cargo}</span>` : ''}
                     </div>
                     <div class="user-mgmt-actions">
+                        ${user.tipo === 'geral' && !isMe ? `<button style="background: rgba(69, 123, 157, 0.15); color: #457b9d; border: 1px solid #457b9d; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: 0.2s;" onclick="acessarComoLider('${u.u}')" onmouseover="this.style.background='#457b9d'; this.style.color='white';" onmouseout="this.style.background='rgba(69, 123, 157, 0.15)'; this.style.color='#457b9d';" title="Entrar nesta conta"><i class="fa-solid fa-right-to-bracket"></i> ACESSAR</button>` : ''}
                         <button class="btn-edit-user" onclick="abrirEdicaoUsuario('${u.u}')"><i class="fa-solid fa-pen"></i></button>
                         ${!isMe && !isAdmin ? `<button class="btn-del-user" onclick="excluirUsuario('${u.u}')"><i class="fa-solid fa-trash"></i></button>` : ''}
                     </div>
@@ -7199,6 +7201,32 @@ function gerarRelatorioFrequencia() {
     
     alert(relatorio);
 }
+
+// =======================================================
+        // ACESSO RÁPIDO DO ADMIN ÀS CONTAS (IMPERSONATE)
+        // =======================================================
+        function acessarComoLider(uLogin) {
+            if (!confirm(`Deseja acessar o sistema como o líder "${uLogin}"?`)) return;
+            
+            const lider = db.usuarios.find(x => x.u === uLogin);
+            if (lider) {
+                user = lider; // Substitui o usuário da sessão atual
+                navegarPara('admin-page');
+                render(); // Atualiza o painel com as permissões do novo usuário
+                alert(`Você agora está logado na conta de: ${uLogin}.`);
+            }
+        }
+
+        function acessarComoDbv(idMembro) {
+            const m = db.membros.find(x => x.id === idMembro);
+            if (!m) return;
+            
+            if (!confirm(`Deseja acessar a Área do Desbravador como "${m.nome}"?`)) return;
+            
+            navegarPara('dbv-area-page');
+            exibirPerfilDbv(idMembro);
+            alert(`Você acessou o perfil de desbravador de: ${m.nome}.`);
+        }
 
     </script>
 
