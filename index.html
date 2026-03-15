@@ -839,7 +839,7 @@
                     <button onclick="criarNovaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px; background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white;"><i class="fa-solid fa-plus"></i> CRIAR NOVA UNIDADE</button>
                 </div>
                 
-                <button onclick="resetSistema()" style="width:100%; background:rgba(230,57,70,0.1); color:var(--vermelho); border:1px solid var(--vermelho); border-radius:8px; padding:12px; cursor:pointer; font-weight:bold; margin-top:30px; transition:0.3s;"><i class="fa-solid fa-triangle-exclamation"></i> RESET TOTAL DO SISTEMA</button>
+                <button id="btn-reset-sistema" onclick="resetSistema()" style="display:none; width:100%; background:rgba(230,57,70,0.1); color:var(--vermelho); border:1px solid var(--vermelho); border-radius:8px; padding:12px; cursor:pointer; font-weight:bold; margin-top:30px; transition:0.3s;"><i class="fa-solid fa-triangle-exclamation"></i> RESET TOTAL DO SISTEMA</button>
             </aside>
 
             <div class="main-content">
@@ -1493,6 +1493,10 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             document.getElementById('nav-custom').style.display = user.perms.h ? 'flex' : 'none';
             document.getElementById('admin-only-users').style.display = isGeral ? 'block' : 'none';
             document.getElementById('delete-unid-section').style.display = isGeral ? 'block' : 'none';
+            // Controle do botão de Reset (Apenas Admin Geral)
+        if (document.getElementById('btn-reset-sistema')) {
+            document.getElementById('btn-reset-sistema').style.display = isGeral ? 'block' : 'none';
+        }
             document.getElementById('box-gerenciamento-unid').style.display = user.perms.u ? 'block' : 'none';
             document.getElementById('memb-section').style.display = user.perms.m ? 'block' : 'none';
             document.getElementById('hall-section').style.display = user.perms.w ? 'block' : 'none';
