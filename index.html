@@ -2,7 +2,28 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal Desbravadores</title>
+
+    <!-- PWA META TAGS -->
+    <meta name="theme-color" content="#ffcc00">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Portal DBV">
+    <meta name="application-name" content="Portal DBV">
+    <meta name="msapplication-TileColor" content="#ffcc00">
+    <meta name="description" content="Portal de Gestão do Clube de Desbravadores - Sistema completo de pontos, especialidades e comunicação.">
+
+    <!-- OPEN GRAPH / SOCIAL -->
+    <meta property="og:title" content="Portal Desbravadores">
+    <meta property="og:description" content="Sistema de Gestão do Clube de Desbravadores">
+    <meta property="og:type" content="website">
+
+    <!-- MANIFEST LINK (gerado via JS) -->
+    <link id="pwa-manifest-link" rel="manifest">
+
+    <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         
@@ -263,42 +284,363 @@
         .close-modal:hover { color: white; }
     
     
-        /* RESPONSIVIDADE MOBILE HARMÔNICA (SEM HAMBÚRGUER) */
+        /* ============================================================
+           DESIGN MOBILE-FIRST APRIMORADO (INSPIRADO EM CLUBEGUARDIOES.COM)
+           ============================================================ */
         @media (max-width: 768px) {
-            body { padding-top: 300px !important; }
-            header { height: auto !important; padding: 90px 85px !important; }
-            
-            .logo-container { 
-                position: relative !important; top: 0 !important; left: 0 !important; 
-                transform: none !important; margin: 0 auto 15px !important; 
-            }
-            .header-logo { height: 40px !important; }
-            
-            .user-info-header { 
-                position: relative !important; right: 0 !important; top: 0 !important; 
-                transform: none !important; flex-wrap: wrap !important; 
-                justify-content: center !important; gap: 8px !important; width: 100% !important;
-            }
-            
-            .user-status, .btn-lideranca, .btn-custom { 
-                padding: 8px 12px !important; font-size: 0.8rem !important; 
-                flex: 1 1 auto !important; min-width: 140px !important;
-                justify-content: center !important; box-shadow: none !important;
+            /* BODY */
+            body {
+                padding-top: 0 !important;
+                font-size: 16px;
             }
 
-            .hero { padding: 40px 15px !important; }
-            .hero h1 { font-size: 2rem !important; }
-            .hero p.subtitle { font-size: 1rem !important; }
-            
-            .unit-timer { min-width: 70px !important; padding: 10px !important; }
-            .unit-timer b { font-size: 1.8rem !important; }
-            
-            .home-gallery { grid-template-columns: 1fr !important; gap: 20px !important; }
-            .gallery-card.layout-grid { height: auto !important; min-height: 250px !important; }
-            
-            .panel-layout { display: flex !important; flex-direction: column !important; }
-            .sidebar, .main-content, .ranking-column { width: 100% !important; position: static !important; }
-            .dbv-grid { grid-template-columns: 1fr 1fr !important; }
+            /* HEADER MOBILE - COMPACTO E ELEGANTE */
+            header#main-header {
+                height: auto !important;
+                padding: 10px 15px !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                flex-wrap: nowrap !important;
+                gap: 8px !important;
+                min-height: 64px !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 1000 !important;
+                border-bottom: 2px solid var(--amarelo) !important;
+                background-color: rgba(0,0,0,0.95) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+            }
+
+            /* LOGO MOBILE */
+            .logo-container {
+                position: static !important;
+                top: auto !important;
+                left: auto !important;
+                transform: none !important;
+                margin: 0 !important;
+                flex-shrink: 0 !important;
+            }
+
+            .header-logo {
+                height: var(--size-mob-logo, 44px) !important;
+                width: auto !important;
+                max-width: 44px !important;
+            }
+
+            /* BOTÕES DO HEADER MOBILE */
+            .user-info-header {
+                position: static !important;
+                right: auto !important;
+                top: auto !important;
+                transform: none !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                align-items: center !important;
+                gap: 6px !important;
+                flex: 1 !important;
+                justify-content: flex-end !important;
+                opacity: 1 !important;
+            }
+
+            /* STATUS DO USUÁRIO */
+            .user-status {
+                padding: 8px 10px !important;
+                font-size: 0.7rem !important;
+                border-radius: 20px !important;
+                white-space: nowrap !important;
+                max-width: 110px !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                flex-shrink: 1 !important;
+                box-shadow: none !important;
+            }
+
+            /* BOTÕES NATIVOS - ÁREA DE TOQUE GENEROSA */
+            .btn-lideranca,
+            .btn-desbravador,
+            .btn-custom {
+                padding: 10px 12px !important;
+                font-size: 0.7rem !important;
+                border-radius: 22px !important;
+                white-space: nowrap !important;
+                min-width: 0 !important;
+                flex-shrink: 0 !important;
+                box-shadow: none !important;
+                gap: 4px !important;
+            }
+
+            /* ESCONDER TEXTO DOS BOTÕES, MOSTRAR SÓ ÍCONE NO MOBILE */
+            .btn-lideranca .btn-text,
+            .btn-desbravador .btn-text {
+                display: none !important;
+            }
+
+            /* BODY PADDING PARA COMPENSAR HEADER FIXO */
+            body {
+                padding-top: 64px !important;
+            }
+
+            /* HERO SECTION */
+            .hero {
+                padding: 30px 15px !important;
+                border-radius: 12px !important;
+                margin: 10px 0 !important;
+            }
+
+            .hero h1 {
+                font-size: clamp(1.6rem, 6vw, 2.4rem) !important;
+                line-height: 1.2 !important;
+                letter-spacing: 1px !important;
+            }
+
+            .hero p.subtitle {
+                font-size: clamp(0.9rem, 3.5vw, 1.1rem) !important;
+                line-height: 1.5 !important;
+            }
+
+            /* CRONÔMETRO MOBILE */
+            .timer {
+                gap: 8px !important;
+            }
+
+            .unit-timer {
+                min-width: 62px !important;
+                padding: 10px 8px !important;
+                border-radius: 10px !important;
+            }
+
+            .unit-timer b {
+                font-size: 1.8rem !important;
+            }
+
+            .unit-timer span {
+                font-size: 0.65rem !important;
+            }
+
+            /* GALERIA MOBILE - QUASE TELA CHEIA */
+            .home-gallery {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+                padding: 0 5px !important;
+            }
+
+            .gallery-card {
+                border-radius: 14px !important;
+                width: 100% !important;
+            }
+
+            .gallery-card.layout-grid {
+                height: auto !important;
+                min-height: 220px !important;
+            }
+
+            .gallery-card.layout-full {
+                min-height: 220px !important;
+            }
+
+            .gallery-card.layout-title h2 {
+                font-size: 1.6rem !important;
+            }
+
+            /* PAINEL ADMIN MOBILE */
+            .panel-layout {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 16px !important;
+            }
+
+            .sidebar, .main-content, .ranking-column {
+                width: 100% !important;
+                position: static !important;
+                padding: 20px 15px !important;
+            }
+
+            /* GRID DE MEMBROS */
+            .dbv-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+            }
+
+            /* PÁGINAS */
+            .page {
+                padding: 15px 12px !important;
+            }
+
+            /* CARDS DE MEMBROS */
+            .dbv-card {
+                padding: 14px 10px !important;
+                border-radius: 12px !important;
+            }
+
+            /* MODAIS */
+            .modal-box {
+                padding: 20px 15px !important;
+                border-radius: 16px !important;
+                max-height: 90vh !important;
+            }
+
+            /* INPUTS */
+            .input-group input,
+            .input-group select {
+                padding: 14px 14px 14px 42px !important;
+                font-size: 16px !important; /* Evita zoom no iOS */
+                border-radius: 12px !important;
+            }
+
+            input:not(.input-group input):not([type="checkbox"]):not([type="color"]),
+            select:not(.input-group select),
+            textarea {
+                font-size: 16px !important; /* Evita zoom no iOS */
+                border-radius: 12px !important;
+                padding: 14px !important;
+            }
+
+            /* BOTÃO SALVAR */
+            .btn-save {
+                border-radius: 14px !important;
+                padding: 15px !important;
+                font-size: 0.95rem !important;
+                letter-spacing: 0.5px !important;
+            }
+
+            /* SEÇÕES SHOWCASE */
+            .showcase-section {
+                padding: 25px 15px !important;
+                border-radius: 14px !important;
+                margin: 20px 0 !important;
+            }
+
+            .showcase-section h2 {
+                font-size: 1.5rem !important;
+            }
+
+            /* CARROSSEL */
+            .carousel-track {
+                width: 260px !important;
+            }
+
+            /* ÁREA DO DESBRAVADOR */
+            .dbv-area-hero h1 {
+                font-size: 1.8rem !important;
+            }
+
+            .dbv-area-hero p {
+                font-size: 0.95rem !important;
+            }
+
+            .dbv-search-box {
+                padding: 20px 15px !important;
+                border-radius: 16px !important;
+                margin: 15px auto !important;
+            }
+
+            .dbv-profile-card {
+                padding: 20px 15px !important;
+                border-radius: 16px !important;
+                margin: 15px auto !important;
+            }
+
+            .dbv-profile-header {
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 12px !important;
+            }
+
+            .dbv-profile-header img {
+                width: 80px !important;
+                height: 80px !important;
+            }
+
+            .dbv-profile-info h2 {
+                font-size: 1.4rem !important;
+            }
+
+            /* RANKING */
+            .rank-item {
+                padding: 12px !important;
+                border-radius: 10px !important;
+            }
+
+            /* UNIDADES NA HOME */
+            .unit-home-header {
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 12px !important;
+            }
+
+            .unit-home-header h2 {
+                font-size: 1.4rem !important;
+            }
+
+            /* FOOTER */
+            footer {
+                padding: 25px 15px !important;
+                margin-top: 30px !important;
+            }
+
+            /* SPLASH SCREEN NO MOBILE */
+            body.is-home header.initial-splash .logo-container {
+                transform: translate(-50%, -50%) scale(2.2) !important;
+            }
+
+            /* GESTÃO DE USUÁRIOS */
+            .user-mgmt-card {
+                flex-wrap: wrap !important;
+                gap: 10px !important;
+                padding: 12px !important;
+            }
+
+            .user-mgmt-actions {
+                width: 100% !important;
+                justify-content: flex-end !important;
+            }
+
+            /* GRID CUSTOMIZADOR */
+            .custom-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .perm-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* SEÇÃO LIDERANÇA */
+            .lideranca-grid {
+                grid-template-columns: 1fr 1fr !important;
+            }
+
+            /* FORM BOX */
+            .form-box {
+                padding: 18px 14px !important;
+                border-radius: 14px !important;
+            }
+        }
+
+        /* EXTRA PEQUENO (< 400px) */
+        @media (max-width: 400px) {
+            .btn-lideranca,
+            .btn-desbravador {
+                padding: 9px 8px !important;
+                font-size: 0.65rem !important;
+            }
+
+            .user-status {
+                max-width: 80px !important;
+                font-size: 0.65rem !important;
+            }
+
+            .dbv-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .hero h1 {
+                font-size: 1.4rem !important;
+            }
         }
 
         /* ÁREA DO DESBRAVADOR */
@@ -400,7 +742,40 @@
     /* E se a galeria grande ficar imensa no celular, isso aqui segura ela: */
     .gallery-card.layout-full { min-height: 250px !important; }
 }
-/* ESTILOS DAS ESPECIALIDADES */
+/* ESTILOS DE UPLOAD */
+        .upload-btn-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #1a1a1a;
+            border: 1px dashed #444;
+            border-radius: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #888;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            margin: 8px 0;
+        }
+
+        .upload-btn-label:hover {
+            border-color: var(--amarelo);
+            color: var(--amarelo);
+            background: rgba(255,204,0,0.05);
+        }
+
+        #upload-drop-zone:hover {
+            border-color: var(--amarelo) !important;
+            background: rgba(255,204,0,0.05) !important;
+        }
+
+        #upload-drop-zone.drag-over {
+            border-color: var(--amarelo) !important;
+            background: rgba(255,204,0,0.1) !important;
+        }
+
+        /* ESTILOS DAS ESPECIALIDADES */
         .esp-card {
             background: #111; border: 1px solid #333; border-radius: 12px; padding: 15px; text-align: center;
             cursor: pointer; transition: 0.3s;
@@ -429,10 +804,10 @@
             <div class="scroll-down-msg">Role para baixo <i class="fa-solid fa-chevron-down"></i></div>
         </div>
         <div class="user-info-header">
-            <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> Visitante</span>
-            <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> Customizar Site</button>
-            <button class="btn-desbravador" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> Área do Desbravador</button>
-            <button class="btn-lideranca" onclick="abrirLogin()"><i class="fa-solid fa-lock"></i> Área do Líder</button>
+            <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <span class="btn-text">Visitante</span></span>
+            <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> <span class="btn-text">Customizar</span></button>
+            <button class="btn-desbravador" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> <span class="btn-text">Área do Desbravador</span></button>
+            <button class="btn-lideranca" onclick="abrirLogin()"><i class="fa-solid fa-lock"></i> <span class="btn-text">Área do Líder</span></button>
         </div>
     </header>
 
@@ -662,7 +1037,40 @@
                     <div class="config-sec">
                         <h4><i class="fa-solid fa-photo-film"></i> Gerenciar Galeria</h4>
                         <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333; margin-bottom: 10px;">
-                            <input type="text" id="new-media-url" placeholder="URL da Foto/Vídeo">
+
+                            <!-- ABAS URL / UPLOAD -->
+                            <div style="display:flex; gap:0; margin-bottom:12px; border-radius:10px; overflow:hidden; border:1px solid #333;">
+                                <button id="tab-url-btn" onclick="switchMediaTab('url')" style="flex:1; padding:10px; background:#222; color:var(--amarelo); border:none; cursor:pointer; font-weight:bold; font-size:0.85rem; transition:0.2s;"><i class="fa-solid fa-link"></i> Via URL</button>
+                                <button id="tab-upload-btn" onclick="switchMediaTab('upload')" style="flex:1; padding:10px; background:#111; color:#888; border:none; cursor:pointer; font-weight:bold; font-size:0.85rem; transition:0.2s;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Arquivo</button>
+                            </div>
+
+                            <!-- PAINEL URL -->
+                            <div id="media-tab-url">
+                                <input type="text" id="new-media-url" placeholder="URL da Foto/Vídeo (https://...)">
+                                <p style="color:#666; font-size:0.75rem; margin:-5px 0 8px; padding:0 5px;"><i class="fa-solid fa-circle-info"></i> Se a imagem não aparecer em alguns dispositivos, use a aba Upload.</p>
+                            </div>
+
+                            <!-- PAINEL UPLOAD -->
+                            <div id="media-tab-upload" style="display:none;">
+                                <div id="upload-drop-zone" style="border:2px dashed #444; border-radius:10px; padding:20px; text-align:center; cursor:pointer; transition:0.3s; background:#0a0a0a; margin-bottom:8px;" onclick="document.getElementById('upload-file-input').click()" ondragover="event.preventDefault(); this.style.borderColor='var(--amarelo)'" ondragleave="this.style.borderColor='#444'" ondrop="handleFileDrop(event)">
+                                    <i class="fa-solid fa-cloud-arrow-up" style="font-size:2rem; color:#555; display:block; margin-bottom:8px;"></i>
+                                    <p style="color:#888; font-size:0.85rem; margin:0;">Clique ou arraste uma imagem/vídeo aqui</p>
+                                    <p style="color:#555; font-size:0.75rem; margin:5px 0 0;">JPG, PNG, GIF, WebP, MP4 (máx. 10MB)</p>
+                                </div>
+                                <input type="file" id="upload-file-input" accept="image/*,video/*" style="display:none;" onchange="handleFileSelect(this)">
+                                <div id="upload-preview" style="display:none; margin-bottom:8px; text-align:center;">
+                                    <img id="upload-preview-img" style="max-width:100%; max-height:150px; border-radius:8px; border:1px solid #333;">
+                                    <p id="upload-file-name" style="color:#aaa; font-size:0.8rem; margin:5px 0 0;"></p>
+                                    <p style="color:#666; font-size:0.75rem; margin:2px 0 0;"><i class="fa-solid fa-circle-info"></i> A imagem será convertida para Base64 e salva localmente.</p>
+                                </div>
+                                <div id="upload-progress" style="display:none; background:#1a1a1a; border-radius:8px; padding:10px; text-align:center;">
+                                    <div style="background:#333; border-radius:5px; overflow:hidden; height:6px; margin-bottom:8px;">
+                                        <div id="upload-progress-bar" style="background:var(--amarelo); height:100%; width:0%; transition:width 0.3s;"></div>
+                                    </div>
+                                    <span id="upload-progress-txt" style="color:#aaa; font-size:0.8rem;">Processando...</span>
+                                </div>
+                            </div>
+
                             <input type="text" id="new-media-title" placeholder="Título (Opcional)">
                             <textarea id="new-media-desc" placeholder="Texto / Descrição que fica embaixo (Opcional)" style="margin-bottom: 5px;"></textarea>
                             <div style="display:flex; gap:10px;">
@@ -746,8 +1154,12 @@
             <input type="hidden" id="edit-m-id">
             <label class="input-label">Nome Completo:</label>
             <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="edit-m-nome" placeholder="Nome"></div>
-            <label class="input-label">URL da Foto:</label>
-            <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="edit-m-foto" placeholder="URL da Foto"></div>
+            <label class="input-label">Foto do Desbravador:</label>
+            <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="edit-m-foto" placeholder="URL da Foto (ou use upload abaixo)"></div>
+            <label style="background:#1a1a1a; border:1px dashed #444; border-radius:10px; padding:10px 15px; cursor:pointer; color:#888; font-size:0.85rem; display:flex; align-items:center; gap:8px; justify-content:center; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'">
+                <i class="fa-solid fa-cloud-arrow-up" style="color:var(--amarelo);"></i> Upload da Foto (alternativa à URL)
+                <input type="file" accept="image/*" style="display:none;" onchange="uploadFotoEditMembro(this)">
+            </label>
             <label class="input-label">Login de Acesso:</label>
             <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="edit-m-login" placeholder="Login"></div>
             <label class="input-label">Cargo (Opcional):</label>
@@ -833,8 +1245,12 @@
                     <div class="input-group" style="display:none;" id="container-edit-unid-sel"><i class="fa-solid fa-list"></i><select id="edit-unid-sel" onchange="carregarDadosUnidade()"></select></div>
                     <label class="input-label">Nome da Unidade:</label>
                     <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="edit-unid-nome" placeholder="Nome"></div>
-                    <label class="input-label">Logo da Unidade (URL):</label>
-                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="edit-unid-logo" placeholder="URL do Logo"></div>
+                    <label class="input-label">Logo da Unidade:</label>
+                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="edit-unid-logo" placeholder="URL do Logo (ou use upload abaixo)"></div>
+                    <label style="background:#1a1a1a; border:1px dashed #444; border-radius:10px; padding:8px 15px; cursor:pointer; color:#888; font-size:0.8rem; display:flex; align-items:center; gap:8px; justify-content:center; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'">
+                        <i class="fa-solid fa-upload" style="color:var(--amarelo);"></i> Upload do Logo da Unidade
+                        <input type="file" accept="image/*" style="display:none;" onchange="uploadLogoUnidade(this)">
+                    </label>
                     <button onclick="atualizarMinhaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px;"><i class="fa-solid fa-check"></i> SALVAR UNIDADE</button>
                     <button onclick="criarNovaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px; background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white;"><i class="fa-solid fa-plus"></i> CRIAR NOVA UNIDADE</button>
                 </div>
@@ -917,6 +1333,13 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="m-nome" placeholder="Nome do Membro"></div>
                         <div class="input-group"><i class="fa-solid fa-image-portrait"></i><input type="text" id="m-foto" placeholder="URL da Foto (Opcional)"></div>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
+                        <span style="color:#888; font-size:0.8rem;">Foto via upload:</span>
+                        <label style="background:#222; border:1px solid #444; border-radius:8px; padding:8px 12px; cursor:pointer; color:#aaa; font-size:0.8rem; display:flex; align-items:center; gap:6px; flex:1; justify-content:center; transition:0.2s;" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'">
+                            <i class="fa-solid fa-upload" style="color:var(--amarelo);"></i> Upload Foto do Membro
+                            <input type="file" accept="image/*" style="display:none;" onchange="uploadFotoMembro(this)">
+                        </label>
                     </div>
                     <div class="input-group" id="container-m-unid-dest" style="display:none;"><i class="fa-solid fa-campground"></i><select id="m-unid-dest"></select></div>
                     <button onclick="cadastrarMembro()" class="btn-save" style="margin-bottom: 30px;"><i class="fa-solid fa-user-plus"></i> ADICIONAR MEMBRO</button>
@@ -7228,6 +7651,381 @@ function gerarRelatorioFrequencia() {
             alert(`Você acessou o perfil de desbravador de: ${m.nome}.`);
         }
 
+        /* ================================================
+           SISTEMA DE UPLOAD DE IMAGENS (BASE64)
+           ================================================ */
+
+        // Converte arquivo para Base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                // Verificar tamanho (máx 10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    reject(new Error("Arquivo muito grande! Máximo 10MB."));
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Redimensionar imagem para economizar espaço no Firestore
+        function resizeImage(base64, maxWidth = 1200, maxHeight = 1200, quality = 0.85) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    let { width, height } = img;
+                    
+                    // Calcular proporção
+                    if (width > maxWidth || height > maxHeight) {
+                        const ratio = Math.min(maxWidth / width, maxHeight / height);
+                        width = Math.round(width * ratio);
+                        height = Math.round(height * ratio);
+                    }
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.src = base64;
+            });
+        }
+
+        // Alternar abas URL/Upload na galeria
+        function switchMediaTab(tab) {
+            const urlTab = document.getElementById('media-tab-url');
+            const uploadTab = document.getElementById('media-tab-upload');
+            const urlBtn = document.getElementById('tab-url-btn');
+            const uploadBtn = document.getElementById('tab-upload-btn');
+            
+            if (tab === 'url') {
+                urlTab.style.display = 'block';
+                uploadTab.style.display = 'none';
+                urlBtn.style.background = '#222';
+                urlBtn.style.color = 'var(--amarelo)';
+                uploadBtn.style.background = '#111';
+                uploadBtn.style.color = '#888';
+            } else {
+                urlTab.style.display = 'none';
+                uploadTab.style.display = 'block';
+                urlBtn.style.background = '#111';
+                urlBtn.style.color = '#888';
+                uploadBtn.style.background = '#222';
+                uploadBtn.style.color = 'var(--amarelo)';
+            }
+        }
+
+        // Processar arquivo selecionado para galeria
+        async function handleFileSelect(input) {
+            const file = input.files[0];
+            if (!file) return;
+            await processUploadFile(file);
+        }
+
+        // Processar arquivo arrastado para galeria
+        async function handleFileDrop(event) {
+            event.preventDefault();
+            document.getElementById('upload-drop-zone').style.borderColor = '#444';
+            const file = event.dataTransfer.files[0];
+            if (!file) return;
+            await processUploadFile(file);
+        }
+
+        // Processar o arquivo de upload para galeria
+        async function processUploadFile(file) {
+            const progressDiv = document.getElementById('upload-progress');
+            const progressBar = document.getElementById('upload-progress-bar');
+            const progressTxt = document.getElementById('upload-progress-txt');
+            const previewDiv = document.getElementById('upload-preview');
+            const previewImg = document.getElementById('upload-preview-img');
+            const fileNameTxt = document.getElementById('upload-file-name');
+            
+            progressDiv.style.display = 'block';
+            previewDiv.style.display = 'none';
+            progressBar.style.width = '20%';
+            progressTxt.textContent = 'Lendo arquivo...';
+            
+            try {
+                const base64 = await fileToBase64(file);
+                progressBar.style.width = '50%';
+                progressTxt.textContent = 'Otimizando imagem...';
+                
+                let finalData = base64;
+                if (file.type.startsWith('image/')) {
+                    finalData = await resizeImage(base64);
+                }
+                
+                progressBar.style.width = '90%';
+                progressTxt.textContent = 'Pronto!';
+                
+                // Mostrar preview
+                previewDiv.style.display = 'block';
+                previewImg.src = finalData;
+                fileNameTxt.textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
+                
+                // Colocar o base64 no campo de URL
+                document.getElementById('new-media-url').value = finalData;
+                
+                progressBar.style.width = '100%';
+                setTimeout(() => { progressDiv.style.display = 'none'; }, 1000);
+                
+            } catch (err) {
+                progressDiv.style.display = 'none';
+                alert('Erro ao processar arquivo: ' + err.message);
+            }
+        }
+
+        // Upload da logo do site
+        async function uploadLogoUnidade(input) {
+            const file = input.files[0];
+            try {
+                const base64 = await fileToBase64(file);
+                const resized = await resizeImage(base64, 300, 300, 0.9);
+                document.getElementById('edit-unid-logo').value = resized;
+                alert('Logo carregada! Clique em "Salvar Unidade" para aplicar.');
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        async function uploadLogoSite(input) {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+                const base64 = await fileToBase64(file);
+                const resized = await resizeImage(base64, 400, 400, 0.9);
+                document.getElementById('cfg-logo').value = resized;
+                alert('Logo carregada! Clique em "Salvar Todas as Alterações" para aplicar.');
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        // Upload da minha foto (líder)
+        async function uploadMinhaFoto(input) {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+                const base64 = await fileToBase64(file);
+                const resized = await resizeImage(base64, 400, 400, 0.85);
+                alterarMinhaFoto(resized);
+                alert('Foto atualizada com sucesso!');
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        // Upload da foto do membro (cadastro)
+        async function uploadFotoMembro(input) {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+                const base64 = await fileToBase64(file);
+                const resized = await resizeImage(base64, 400, 400, 0.85);
+                document.getElementById('m-foto').value = resized;
+                alert('Foto carregada! Clique em "Adicionar Membro" para salvar.');
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        // Upload da foto do ganhador
+        async function uploadFotoGanhador(input) {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+                const base64 = await fileToBase64(file);
+                const resized = await resizeImage(base64, 400, 400, 0.85);
+                document.getElementById('g-foto').value = resized;
+                alert('Foto carregada! Clique em "Registrar no Hall da Fama" para salvar.');
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        // Upload da foto no modal de editar membro
+        async function uploadFotoEditMembro(input) {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+                const base64 = await fileToBase64(file);
+                const resized = await resizeImage(base64, 400, 400, 0.85);
+                document.getElementById('edit-m-foto').value = resized;
+                alert('Foto carregada! Clique em "Salvar Alterações" para aplicar.');
+            } catch (err) {
+                alert('Erro: ' + err.message);
+            }
+        }
+
+        /* ================================================
+           PWA - SERVICE WORKER E MANIFEST
+           ================================================ */
+
+        // Gerar e registrar o manifest.json via Blob URL
+        function registrarPWA() {
+            // Manifest JSON
+            const manifestData = {
+                name: "Portal Desbravadores",
+                short_name: "Portal DBV",
+                description: "Sistema de Gestão do Clube de Desbravadores",
+                start_url: "./",
+                display: "standalone",
+                orientation: "portrait-primary",
+                background_color: "#121212",
+                theme_color: "#ffcc00",
+                icons: [
+                    {
+                        src: "PNGDBV.webp",
+                        sizes: "192x192",
+                        type: "image/webp",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: "PNGDBV.webp",
+                        sizes: "512x512",
+                        type: "image/webp",
+                        purpose: "any maskable"
+                    }
+                ],
+                categories: ["education", "productivity"],
+                lang: "pt-BR",
+                dir: "ltr"
+            };
+
+            // Criar Blob URL para o manifest
+            const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            document.getElementById('pwa-manifest-link').href = manifestURL;
+
+            // Registrar Service Worker (inline via Blob)
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE_NAME = 'portal-dbv-v1';
+                    const STATIC_ASSETS = ['./', './index.html'];
+
+                    self.addEventListener('install', (event) => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME).then((cache) => {
+                                return cache.addAll(STATIC_ASSETS).catch(() => {});
+                            })
+                        );
+                        self.skipWaiting();
+                    });
+
+                    self.addEventListener('activate', (event) => {
+                        event.waitUntil(
+                            caches.keys().then((cacheNames) => {
+                                return Promise.all(
+                                    cacheNames
+                                        .filter((name) => name !== CACHE_NAME)
+                                        .map((name) => caches.delete(name))
+                                );
+                            })
+                        );
+                        self.clients.claim();
+                    });
+
+                    self.addEventListener('fetch', (event) => {
+                        // Estratégia: Network First com fallback para cache
+                        if (event.request.method !== 'GET') return;
+                        
+                        // Não interceptar requisições do Firebase
+                        if (event.request.url.includes('firestore') || 
+                            event.request.url.includes('firebase') ||
+                            event.request.url.includes('googleapis')) {
+                            return;
+                        }
+
+                        event.respondWith(
+                            fetch(event.request)
+                                .then((response) => {
+                                    if (response.ok) {
+                                        const responseClone = response.clone();
+                                        caches.open(CACHE_NAME).then((cache) => {
+                                            cache.put(event.request, responseClone);
+                                        });
+                                    }
+                                    return response;
+                                })
+                                .catch(() => {
+                                    return caches.match(event.request);
+                                })
+                        );
+                    });
+                `;
+
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                const swURL = URL.createObjectURL(swBlob);
+
+                navigator.serviceWorker.register(swURL)
+                    .then(() => console.log('[PWA] Service Worker registrado com sucesso!'))
+                    .catch((err) => console.warn('[PWA] Falha ao registrar SW:', err));
+            }
+        }
+
+        // Capturar evento de instalação (Android/Chrome)
+        let deferredInstallPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            
+            // Mostrar botão de instalação customizado após 3 segundos
+            setTimeout(() => {
+                const banner = document.getElementById('pwa-install-banner-android');
+                if (banner) banner.style.display = 'flex';
+            }, 3000);
+        });
+
+        function instalarPWA() {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                deferredInstallPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('[PWA] Usuário aceitou a instalação');
+                    }
+                    deferredInstallPrompt = null;
+                    const banner = document.getElementById('pwa-install-banner-android');
+                    if (banner) banner.style.display = 'none';
+                });
+            }
+        }
+
+        // Detectar iOS e mostrar banner de instrução
+        function verificarBannerIOS() {
+            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+            const isInStandaloneMode = window.navigator.standalone === true;
+            const bannerMostrado = localStorage.getItem('ios-banner-dismissed');
+            
+            if (isIOS && !isInStandaloneMode && !bannerMostrado) {
+                setTimeout(() => {
+                    const banner = document.getElementById('pwa-install-banner-ios');
+                    if (banner) banner.style.display = 'flex';
+                }, 4000);
+            }
+        }
+
+        function fecharBannerIOS() {
+            const banner = document.getElementById('pwa-install-banner-ios');
+            if (banner) banner.style.display = 'none';
+            localStorage.setItem('ios-banner-dismissed', '1');
+        }
+
+        function fecharBannerAndroid() {
+            const banner = document.getElementById('pwa-install-banner-android');
+            if (banner) banner.style.display = 'none';
+        }
+
+        // Inicializar PWA
+        window.addEventListener('load', () => {
+            registrarPWA();
+            verificarBannerIOS();
+        });
+
     </script>
 
     <div id="modal-gerenciar-esp" class="modal-overlay" style="z-index: 9010;">
@@ -7353,6 +8151,139 @@ function gerarRelatorioFrequencia() {
         </div>
     </div>
 </div>
+
+    <!-- ================================================
+         BANNER DE INSTALAÇÃO PWA - ANDROID/CHROME
+         ================================================ -->
+    <div id="pwa-install-banner-android" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:99999; background:linear-gradient(135deg, #1a1a1a, #111); border-top:2px solid var(--amarelo); padding:14px 16px; align-items:center; gap:12px; box-shadow:0 -4px 20px rgba(0,0,0,0.6); animation:slideUpBanner 0.4s ease;">
+        <div style="width:44px; height:44px; background:linear-gradient(135deg, var(--amarelo), #d4aa00); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(255,204,0,0.3);">
+            <i class="fa-solid fa-mobile-screen" style="color:black; font-size:1.2rem;"></i>
+        </div>
+        <div style="flex:1; min-width:0;">
+            <strong style="display:block; color:white; font-size:0.9rem; line-height:1.2;">Instalar Portal DBV</strong>
+            <span style="color:#aaa; font-size:0.75rem;">Adicione à tela inicial para acesso rápido</span>
+        </div>
+        <button onclick="instalarPWA()" style="background:var(--amarelo); color:black; border:none; padding:10px 16px; border-radius:22px; font-weight:bold; font-size:0.8rem; cursor:pointer; white-space:nowrap; flex-shrink:0;">
+            <i class="fa-solid fa-download"></i> Instalar
+        </button>
+        <button onclick="fecharBannerAndroid()" style="background:none; border:none; color:#666; cursor:pointer; padding:8px; flex-shrink:0; font-size:1.1rem;">
+            <i class="fa-solid fa-times"></i>
+        </button>
+    </div>
+
+    <!-- ================================================
+         BANNER DE INSTALAÇÃO PWA - iOS (iPhone/iPad)
+         ================================================ -->
+    <div id="pwa-install-banner-ios" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:99999; background:linear-gradient(135deg, #1a1a1a, #0d0d0d); border-top:2px solid var(--amarelo); padding:16px; flex-direction:column; gap:12px; box-shadow:0 -4px 20px rgba(0,0,0,0.7); animation:slideUpBanner 0.4s ease; border-radius:20px 20px 0 0;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:48px; height:48px; background:linear-gradient(135deg, var(--amarelo), #d4aa00); border-radius:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(255,204,0,0.3);">
+                    <i class="fa-solid fa-mobile-screen" style="color:black; font-size:1.3rem;"></i>
+                </div>
+                <div>
+                    <strong style="display:block; color:white; font-size:0.95rem;">Instalar Portal DBV</strong>
+                    <span style="color:#aaa; font-size:0.8rem;">Acesso rápido como app nativo</span>
+                </div>
+            </div>
+            <button onclick="fecharBannerIOS()" style="background:rgba(255,255,255,0.1); border:none; color:#aaa; cursor:pointer; padding:8px 10px; border-radius:50%; font-size:1rem; transition:0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div style="background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.2); border-radius:12px; padding:14px;">
+            <p style="color:#ddd; font-size:0.85rem; margin:0 0 10px; line-height:1.5;">Para instalar no seu iPhone, siga os passos:</p>
+            <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:8px;">
+                <div style="width:28px; height:28px; background:rgba(255,204,0,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                    <span style="color:var(--amarelo); font-weight:bold; font-size:0.8rem;">1</span>
+                </div>
+                <p style="color:#ccc; font-size:0.85rem; margin:0; line-height:1.4;">Toque no ícone <strong style="color:var(--amarelo);">Compartilhar</strong> <i class="fa-solid fa-arrow-up-from-bracket" style="color:var(--amarelo);"></i> na barra inferior do Safari</p>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:10px;">
+                <div style="width:28px; height:28px; background:rgba(255,204,0,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                    <span style="color:var(--amarelo); font-weight:bold; font-size:0.8rem;">2</span>
+                </div>
+                <p style="color:#ccc; font-size:0.85rem; margin:0; line-height:1.4;">Role e toque em <strong style="color:var(--amarelo);">"Adicionar à Tela de Início"</strong> <i class="fa-solid fa-plus-square" style="color:var(--amarelo);"></i></p>
+            </div>
+        </div>
+        <div style="display:flex; justify-content:center; align-items:center; gap:6px; padding-bottom:4px;">
+            <div style="width:6px; height:6px; background:var(--amarelo); border-radius:50%;"></div>
+            <div style="width:6px; height:6px; background:#444; border-radius:50%;"></div>
+            <div style="width:6px; height:6px; background:#444; border-radius:50%;"></div>
+        </div>
+    </div>
+
+    <!-- ESTILOS DOS BANNERS PWA -->
+    <style>
+        @keyframes slideUpBanner {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* MELHORIAS GERAIS DE TOQUE MOBILE */
+        @media (max-width: 768px) {
+            /* Área de toque mínima de 44px (Apple HIG) */
+            button, a, input[type="checkbox"], input[type="radio"], label[for] {
+                min-height: 44px;
+            }
+
+            /* Scroll suave */
+            * {
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Prevenir highlight azul no toque */
+            * {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* Melhorar legibilidade */
+            p, span, li {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            /* Modais mais acessíveis */
+            .modal-overlay {
+                align-items: flex-end !important;
+                padding-bottom: 0 !important;
+            }
+
+            .modal-box {
+                border-radius: 20px 20px 0 0 !important;
+                max-height: 92vh !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+            }
+
+            /* Exceção para modais pequenos */
+            .modal-box[style*="max-width: 400px"],
+            .modal-box[style*="max-width:400px"] {
+                border-radius: 20px !important;
+                max-width: 95% !important;
+                margin: auto !important;
+            }
+
+            /* Scroll horizontal suave nas tabelas */
+            .dbv-grid, .custom-grid {
+                overflow-x: hidden;
+            }
+
+            /* Splash screen mobile */
+            body.is-home header.initial-splash {
+                height: 100vh !important;
+            }
+
+            body.is-home header.initial-splash .user-info-header {
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+
+            /* Ajuste do banner de instalação para não cobrir conteúdo */
+            body.has-pwa-banner {
+                padding-bottom: 80px !important;
+            }
+        }
+    </style>
 
 </body>
 </html>
