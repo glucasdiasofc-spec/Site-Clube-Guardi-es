@@ -1977,6 +1977,16 @@ db.home.sizes.mobCard = document.getElementById('cfg-sz-card-mob').value || 1.0;
             }
 
             const h = db.home;
+
+            // Regra de Customização Restrita ao Admin Geral
+            const navCustom = document.getElementById('nav-custom');
+            if(navCustom) {
+                if(user && (user.tipo === 'geral' || (user.perms && user.perms.h))) {
+                    navCustom.style.display = 'inline-flex';
+                } else {
+                    navCustom.style.display = 'none';
+                }
+            }
             const page = document.getElementById('home-page');
             page.style.backgroundColor = h.colors.bg; page.style.color = h.colors.txt;
             document.documentElement.style.setProperty('--home-bg', h.colors.bg);
@@ -7927,7 +7937,7 @@ function gerarRelatorioFrequencia() {
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', quality));
+                    resolve(canvas.toDataURL('image/png'));
                 };
                 img.src = base64;
             });
