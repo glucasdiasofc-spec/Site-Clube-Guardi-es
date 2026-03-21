@@ -8476,32 +8476,34 @@ function gerarRelatorioFrequencia() {
             }
 
             /* Menu Lateral (Dropdown) */
-            header#main-header .user-info-header {
-                position: fixed !important;
-                top: 0; right: -100%;
-                width: 280px; height: 100vh;
-                background: rgba(18, 18, 18, 0.98);
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-                gap: 25px !important;
-                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                backdrop-filter: blur(15px);
-                border-left: 2px solid var(--amarelo);
-                z-index: 1050;
-                padding: 60px 20px !important;
-                opacity: 1 !important;
-                pointer-events: all !important;
-            }
-            header#main-header .user-info-header.active { right: 0; }
-            header#main-header .user-info-header button, 
-            header#main-header .user-info-header .user-status { 
-                width: 100% !important; 
-                max-width: none !important; 
-                margin: 0 !important;
-                display: flex !important;
-                justify-content: center !important;
-            }
+          header#main-header .user-info-header {
+    position: fixed !important;
+    top: 0; 
+    right: -100%; /* ESCONDIDO */
+    width: 280px; 
+    height: 100vh;
+
+    background: rgba(18, 18, 18, 0.98);
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 25px !important;
+
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(15px);
+    border-left: 2px solid var(--amarelo);
+    z-index: 1050;
+    padding: 60px 20px !important;
+
+    opacity: 0 !important;           /* 🔥 CORRIGIDO */
+    pointer-events: none !important; /* 🔥 CORRIGIDO */
+}
+
+header#main-header .user-info-header.active {
+    right: 0;
+    opacity: 1 !important;
+    pointer-events: all !important;
+}
             header#main-header .user-info-header .btn-text { display: inline !important; }
         }
 
