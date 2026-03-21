@@ -230,6 +230,16 @@
             position: absolute !important;
         }
 
+        /* =========================================
+   BLOQUEIO TOTAL MENU DURANTE SPLASH
+   ========================================= */
+body.is-home header#main-header.initial-splash .user-info-header,
+body.is-home header#main-header.initial-splash #menu-toggle {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 60% { transform: translateY(-4px); } }
         header.scrolled { border-bottom: 3px solid var(--amarelo); box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
         
