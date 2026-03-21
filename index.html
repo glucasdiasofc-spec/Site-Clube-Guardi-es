@@ -915,6 +915,18 @@
             .menu-hamburger.active span:nth-child(2) { opacity: 0; }
             .menu-hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
+            /* =========================================
+   BLOQUEIO TOTAL DO MENU NA SPLASH
+   ========================================= */
+
+/* Esconde QUALQUER menu hambúrguer na splash */
+body.is-home header#main-header.initial-splash .menu-hamburger,
+body.splash-active .menu-hamburger {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
             /* Header com limites rígidos */
             header#main-header {
                 max-height: 80px !important; 
@@ -1977,16 +1989,6 @@ db.home.sizes.mobCard = document.getElementById('cfg-sz-card-mob').value || 1.0;
             }
 
             const h = db.home;
-
-            // Regra de Customização Restrita ao Admin Geral
-            const navCustom = document.getElementById('nav-custom');
-            if(navCustom) {
-                if(user && (user.tipo === 'geral' || (user.perms && user.perms.h))) {
-                    navCustom.style.display = 'inline-flex';
-                } else {
-                    navCustom.style.display = 'none';
-                }
-            }
             const page = document.getElementById('home-page');
             page.style.backgroundColor = h.colors.bg; page.style.color = h.colors.txt;
             document.documentElement.style.setProperty('--home-bg', h.colors.bg);
