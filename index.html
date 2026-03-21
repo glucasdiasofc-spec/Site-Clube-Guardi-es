@@ -57,12 +57,6 @@
             padding-top: 80px;
         }
         
-        /* Quando o header é position:relative (splash na home do desktop),
-           o body não precisa de padding-top pois o header já ocupa espaço no fluxo */
-        body.is-home {
-            padding-top: 0;
-        }
-        
         /* HEADER PERSONALIZÁVEL */
         header { 
             width: 100%; 
@@ -129,22 +123,6 @@
             position: relative !important;
             top: auto !important;
             z-index: auto !important;
-        }
-
-        /* CORREÇÃO MOBILE: No mobile, o header NUNCA deve usar position:relative (splash),
-           pois isso faz o conteúdo desaparecer atrás do header fixo ao rolar.
-           No mobile, o header sempre fica fixo no topo. */
-        @media (max-width: 768px) {
-            body.is-home header.initial-splash {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                z-index: 1000 !important;
-                background-color: rgba(0,0,0,0.95) !important;
-                backdrop-filter: blur(12px) !important;
-                -webkit-backdrop-filter: blur(12px) !important;
-            }
         }
 
         @keyframes fadeInStart { 0% { opacity: 0; } 100% { opacity: 1; } }
@@ -623,7 +601,6 @@
             /* Garantir que o body não fique bloqueado */
             body.is-home {
                 overflow-y: auto !important;
-                padding-top: calc(64px + env(safe-area-inset-top)) !important;
             }
 
             /* GESTÃO DE USUÁRIOS */
@@ -742,13 +719,12 @@
         /* Ajustes Mobile controlados pelo painel */
         @media (max-width: 768px) {
             header#main-header {
-                /* padding lateral controlado pelo painel, vertical fixo para evitar header gigante */
-                padding: 10px var(--size-mob-header-pad, 15px) !important;
-                min-height: 64px !important;
+                padding: var(--size-mob-header-pad, 25px) 15px !important;
+                min-height: auto !important;
                 border-bottom: 3px solid var(--amarelo) !important;
             }
-            .header-logo { height: var(--size-mob-logo, 44px) !important; }
-            body { padding-top: calc(64px + env(safe-area-inset-top)) !important; }
+            .header-logo { height: var(--size-mob-logo, 70px) !important; }
+            body { padding-top: calc(var(--size-mob-header-pad, 25px) * 2 + 100px) !important; }
             
             /* Correção da Galeria no celular para não ficar gigante */
             .gallery-card.layout-grid { height: auto !important; min-height: 250px !important; }
@@ -1073,7 +1049,7 @@
                         <div class="color-row"><span>Título Principal da Home:</span> <div><input type="number" step="0.1" id="cfg-sz-hero-pc" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> rem</div></div>
 
                         <label class="input-label" style="color:var(--amarelo); margin-top:15px;"><i class="fa-solid fa-mobile-screen"></i> Para Celular (Mobile)</label>
-                        <div class="color-row"><span>Padding Lateral do Cabeçalho:</span> <div><input type="number" id="cfg-sz-head-mob" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> px</div></div>
+                        <div class="color-row"><span>Espessura do Cabeçalho:</span> <div><input type="number" id="cfg-sz-head-mob" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> px</div></div>
                         <div class="color-row"><span>Tamanho da Logo:</span> <div><input type="number" id="cfg-sz-logo-mob" style="width:70px; background:#222; color:white; border:1px solid #444; border-radius:5px; padding:5px; text-align:center;"> px</div></div>
                     </div>
 
@@ -1442,7 +1418,7 @@ const DB_PADRAO = {
         { id: 102, nome: "Secretário(a) de Unidade", tipo: "dbv", cor: "#ff9900" },
         { id: 103, nome: "Tesoureiro(a) de Unidade", tipo: "dbv", cor: "#00cc66" }
     ],
-    home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""}, colors: {bg:"#121212", txt:"#ffffff", hBg:"#000000", hTxt:"#ffffff", fBg:"#000000", fTxt:"#ffffff"}, sizes: {pcGaleria:320, pcHero:4.0, mobHead:15, mobLogo:44, pcGalFull:400, pcSub:1.5, mobBtn:12, mobCard:1.0}, gallery:[], ganhadores:[], heroesList:[], showTimer:false, timer:"", showEventDate:false, timerReplace:"", glow:false, showLideranca:false, showUnidades:false, showGanhadores:false, ganhadoresTitulo:"Desbravadores Destaque", logoUrl:"" }
+    home: { title: "Clube Desbravadores", subTitle: "", notice: "", footer: "", social: {fb:"", ig:"", yt:""} }
 };
         let db = null; let user = null; let slideIntervalIdMap = {}; let liderIdx = 0, ganhadorIdx = 0; let carrosselLiderId = null, carrosselGanhadorId = null;
 
@@ -1847,11 +1823,6 @@ db.home.sizes.mobCard = document.getElementById('cfg-sz-card-mob').value || 1.0;
             }
 
             const h = db.home;
-            // Proteção contra dados antigos sem o objeto colors
-            if(!h.colors) h.colors = {bg:"#121212", txt:"#ffffff", hBg:"#000000", hTxt:"#ffffff", fBg:"#000000", fTxt:"#ffffff"};
-            if(!h.gallery) h.gallery = [];
-            if(!h.ganhadores) h.ganhadores = [];
-            if(!h.heroesList) h.heroesList = [];
             const page = document.getElementById('home-page');
             page.style.backgroundColor = h.colors.bg; page.style.color = h.colors.txt;
             document.documentElement.style.setProperty('--home-bg', h.colors.bg);
@@ -1861,7 +1832,7 @@ db.home.sizes.mobCard = document.getElementById('cfg-sz-card-mob').value || 1.0;
             document.getElementById('status-txt').style.color = h.colors.hTxt;
 
             // Aplicar Tamanhos Dinâmicos no Painel
-            if(!h.sizes) h.sizes = { pcGaleria: 320, pcHero: 4.0, mobHead: 15, mobLogo: 44, pcGalFull:400, pcSub:1.5, mobBtn:12, mobCard:1.0 };
+            if(!h.sizes) h.sizes = { pcGaleria: 320, pcHero: 4.0, mobHead: 25, mobLogo: 70 };
             
             if(document.getElementById('cfg-sz-galeria')) {
                 document.getElementById('cfg-sz-galeria').value = h.sizes.pcGaleria;
@@ -6711,13 +6682,8 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
         /* SCROLL HEADER */
         window.addEventListener("scroll", () => {
             const header = document.getElementById("main-header");
-            if (window.scrollY > 50) {
-                header.classList.add("scrolled");
-                header.classList.remove("initial-splash");
-                document.body.classList.remove('is-home');
-            } else {
-                header.classList.remove("scrolled");
-            }
+            if (window.scrollY > 50) { header.classList.add("scrolled"); header.classList.remove("initial-splash"); } 
+            else { header.classList.remove("scrolled"); }
         });
 
         // INICIALIZAÇÃO
@@ -8342,20 +8308,15 @@ function gerarRelatorioFrequencia() {
                 overflow-x: hidden;
             }
 
-            /* Splash screen mobile - CORRIGIDO: header fixo no mobile */
+            /* Splash screen mobile - DESABILITADO */
             body.is-home header.initial-splash {
                 height: auto !important;
-                min-height: 64px !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                z-index: 1000 !important;
+                min-height: auto !important;
             }
 
             body.is-home header.initial-splash .user-info-header {
-                opacity: 1 !important;
-                pointer-events: auto !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
             }
 
             /* Ajuste do banner de instalação para não cobrir conteúdo */
