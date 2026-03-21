@@ -133,7 +133,13 @@
         }
 
         /* --- SPLASH: o header vira tela cheia --- */
+        /* SPLASH: Trava o scroll no body enquanto splash está ativa */
+        body.splash-active { overflow: hidden !important; height: 100vh !important; }
+        
         body.is-home header#main-header.initial-splash {
+            background-color: #121212 !important; /* Fundo sólido para iOS */
+            height: 100vh !important;
+            height: 100dvh !important; /* Fix Safari iOS */
             /* Dimensões: ocupa 100% da viewport, sem vazamentos */
             width: 100% !important;
             height: 100vh !important;
@@ -261,6 +267,18 @@
         .unit-timer span { font-size: 0.9rem; color: var(--amarelo); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         .event-date-txt { font-weight: bold; font-size: 1.2rem; text-shadow: 2px 2px 5px #000; margin-top: 15px; display: block; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; width: fit-content; margin-left: auto; margin-right: auto; }
         .timer-replacement { font-size: 1.8rem; font-weight: bold; background: rgba(0,0,0,0.8); padding: 25px 40px; border-radius: 15px; display: inline-block; border: 2px solid var(--amarelo); backdrop-filter: blur(5px); }
+
+        
+        /* Correção Galeria: Diferenciar Grid Destaque de Secundários */
+        .home-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .gallery-card.layout-grid { height: 280px !important; }
+        .gallery-card.layout-full { grid-column: 1 / -1; min-height: 400px !important; }
+        
+        @media (max-width: 600px) {
+            .home-gallery { grid-template-columns: 1fr !important; }
+            .gallery-card.layout-grid { height: 220px !important; }
+            .gallery-card.layout-full { min-height: 250px !important; }
+        }
 
         /* GALERIA MULTIMÍDIA */
         .home-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; margin-top: 50px; }
@@ -886,6 +904,56 @@
         .req-list { margin-top: 15px; text-align: left; background: #1a1a1a; padding: 15px; border-radius: 10px; max-height: 300px; overflow-y: auto;}
         .req-item { margin-bottom: 10px; font-size: 0.95rem; color: #ddd; padding-bottom:10px; border-bottom:1px solid #333;}
         
+    
+        /* MENU HAMBÚRGUER E LIMITES DO HEADER */
+        .menu-hamburger { background: none; border: none; cursor: pointer; padding: 10px; z-index: 1100; flex-direction: column; gap: 5px; }
+        .menu-hamburger span { display: block; width: 25px; height: 3px; background: var(--amarelo); border-radius: 3px; transition: 0.3s; }
+        
+        @media (max-width: 768px) {
+            .menu-hamburger { display: flex !important; }
+            .menu-hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .menu-hamburger.active span:nth-child(2) { opacity: 0; }
+            .menu-hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+            /* Header com limites rígidos */
+            header#main-header {
+                max-height: 80px !important; 
+                padding: 10px 15px !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            /* Menu Lateral (Dropdown) */
+            header#main-header .user-info-header {
+                position: fixed !important;
+                top: 0; right: -100%;
+                width: 280px; height: 100vh;
+                background: rgba(18, 18, 18, 0.98);
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 25px !important;
+                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                backdrop-filter: blur(15px);
+                border-left: 2px solid var(--amarelo);
+                z-index: 1050;
+                padding: 60px 20px !important;
+                opacity: 1 !important;
+                pointer-events: all !important;
+            }
+            header#main-header .user-info-header.active { right: 0; }
+            header#main-header .user-info-header button, 
+            header#main-header .user-info-header .user-status { 
+                width: 100% !important; 
+                max-width: none !important; 
+                margin: 0 !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+            header#main-header .user-info-header .btn-text { display: inline !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -908,6 +976,11 @@
             <button class="btn-desbravador" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> <span class="btn-text">Área do Desbravador</span></button>
             <button class="btn-lideranca" onclick="abrirLogin()"><i class="fa-solid fa-lock"></i> <span class="btn-text">Área do Líder</span></button>
         </div>
+            <button id="menu-toggle" class="menu-hamburger" style="display:none;">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
 
     <div id="fullscreen-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center;" onclick="this.style.display='none'">
@@ -6770,6 +6843,50 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
         // INICIALIZAÇÃO
         document.body.classList.add('is-home');
         carregarDados();
+
+        // Lógica do Menu Hambúrguer e Splash
+        function initUX() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const menuContent = document.querySelector('.user-info-header');
+            
+            if (menuToggle) {
+                menuToggle.onclick = function() {
+                    this.classList.toggle('active');
+                    menuContent.classList.toggle('active');
+                };
+            }
+
+            // Fechar menu ao clicar em qualquer botão
+            document.querySelectorAll('.user-info-header button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if(menuToggle) menuToggle.classList.remove('active');
+                    if(menuContent) menuContent.classList.remove('active');
+                });
+            });
+
+            // Gerenciar trava de scroll no Splash
+            const updateSplashScroll = () => {
+                const header = document.getElementById('main-header');
+                if (header && header.classList.contains('initial-splash')) {
+                    document.body.classList.add('splash-active');
+                } else {
+                    document.body.classList.remove('splash-active');
+                }
+            };
+            
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById("main-header");
+                if (window.scrollY > 50) { 
+                    header.classList.remove("initial-splash"); 
+                    updateSplashScroll();
+                }
+            });
+            
+            updateSplashScroll();
+        }
+        
+        window.addEventListener('load', initUX);
+
     /* ================================================
            NOVAS FUNÇÕES: ÁREA DE ACESSO DESBRAVADOR
            ================================================ */
@@ -8304,7 +8421,13 @@ function gerarRelatorioFrequencia() {
             }
 
             /* Splash screen mobile - corrigido para iOS */
-            body.is-home header#main-header.initial-splash {
+            /* SPLASH: Trava o scroll no body enquanto splash está ativa */
+        body.splash-active { overflow: hidden !important; height: 100vh !important; }
+        
+        body.is-home header#main-header.initial-splash {
+            background-color: #121212 !important; /* Fundo sólido para iOS */
+            height: 100vh !important;
+            height: 100dvh !important; /* Fix Safari iOS */
                 height: 100svh !important;
                 height: -webkit-fill-available !important;
                 min-height: -webkit-fill-available !important;
@@ -8320,6 +8443,56 @@ function gerarRelatorioFrequencia() {
                 padding-bottom: 80px !important;
             }
         }
+    
+        /* MENU HAMBÚRGUER E LIMITES DO HEADER */
+        .menu-hamburger { background: none; border: none; cursor: pointer; padding: 10px; z-index: 1100; flex-direction: column; gap: 5px; }
+        .menu-hamburger span { display: block; width: 25px; height: 3px; background: var(--amarelo); border-radius: 3px; transition: 0.3s; }
+        
+        @media (max-width: 768px) {
+            .menu-hamburger { display: flex !important; }
+            .menu-hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .menu-hamburger.active span:nth-child(2) { opacity: 0; }
+            .menu-hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+            /* Header com limites rígidos */
+            header#main-header {
+                max-height: 80px !important; 
+                padding: 10px 15px !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            /* Menu Lateral (Dropdown) */
+            header#main-header .user-info-header {
+                position: fixed !important;
+                top: 0; right: -100%;
+                width: 280px; height: 100vh;
+                background: rgba(18, 18, 18, 0.98);
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 25px !important;
+                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                backdrop-filter: blur(15px);
+                border-left: 2px solid var(--amarelo);
+                z-index: 1050;
+                padding: 60px 20px !important;
+                opacity: 1 !important;
+                pointer-events: all !important;
+            }
+            header#main-header .user-info-header.active { right: 0; }
+            header#main-header .user-info-header button, 
+            header#main-header .user-info-header .user-status { 
+                width: 100% !important; 
+                max-width: none !important; 
+                margin: 0 !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+            header#main-header .user-info-header .btn-text { display: inline !important; }
+        }
+
     </style>
 
 </body>
