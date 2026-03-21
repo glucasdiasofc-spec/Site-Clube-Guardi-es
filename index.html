@@ -8493,6 +8493,34 @@ function gerarRelatorioFrequencia() {
                 opacity: 1 !important;
                 pointer-events: all !important;
             }
+
+header#main-header .user-info-header {
+    position: fixed !important;
+    top: 0;
+    right: -100% !important; /* 🔥 ESCONDIDO */
+    width: 280px;
+    height: 100vh;
+    background: rgba(18, 18, 18, 0.98);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+
+    transition: 0.4s ease;
+    z-index: 1050;
+
+    opacity: 0; /* 🔥 invisível */
+    pointer-events: none;
+}
+
+header#main-header .user-info-header.active {
+    right: 0 !important;
+    opacity: 1;
+    pointer-events: all;
+}
+
             header#main-header .user-info-header.active { right: 0; }
             header#main-header .user-info-header button, 
             header#main-header .user-info-header .user-status { 
