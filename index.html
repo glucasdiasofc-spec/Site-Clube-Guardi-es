@@ -976,7 +976,7 @@ header#main-header .user-info-header.active {
                 justify-content: center !important;
             }
             header#main-header .user-info-header .btn-text { display: inline !important; }
-        
+        }
 
     </style>
 </head>
@@ -2143,6 +2143,14 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             document.getElementById('m-unid-dest').innerHTML = htmlUnid; document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
             
             if(canEditAll) { document.getElementById('container-m-unid-dest').style.display = 'block'; document.getElementById('container-edit-unid-sel').style.display = 'block'; }
+
+            const btnCustom = document.getElementById("nav-custom");
+
+if (!user || (user.tipo !== "geral" && !user.permiteCustom)) {
+    btnCustom.style.display = "none";
+} else {
+    btnCustom.style.display = "flex";
+}
 
 const meusM = db.membros.filter(m => canEditAll || m.unid === user.unid);
             document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
