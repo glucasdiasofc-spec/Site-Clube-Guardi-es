@@ -21,7 +21,7 @@
     <meta property="og:type" content="website">
 
     <!-- MANIFEST LINK (arquivo externo - necessário para PWA no Android/Chrome) -->
-    <link id="pwa-manifest-link" rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIlBvcnRhbCBEZXNicmF2YWRvcmVzIiwgInNob3J0X25hbWUiOiAiUG9ydGFsIERCViIsICJkZXNjcmlwdGlvbiI6ICJTaXN0ZW1hIGRlIEdlc3RcdTAwZTNvIGRvIENsdWJlIGRlIERlc2JyYXZhZG9yZXMiLCAic3RhcnRfdXJsIjogIi4vIiwgInNjb3BlIjogIi8iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0LXByaW1hcnkiLCAiYmFja2dyb3VuZF9jb2xvciI6ICIjMTIxMjEyIiwgInRoZW1lX2NvbG9yIjogIiNmZmNjMDAiLCAiaWNvbnMiOiBbeyJzcmMiOiAiUE5HREJWLndlYnAiLCAic2l6ZXMiOiAiMTkyeDE5MiIsICJ0eXBlIjogImltYWdlL3dlYnAiLCAicHVycG9zZSI6ICJhbnkgbWFza2FibGUifSwgeyJzcmMiOiAiUE5HREJWLndlYnAiLCAic2l6ZXMiOiAiNTEyeDUxMiIsICJ0eXBlIjogImltYWdlL3dlYnAiLCAicHVycG9zZSI6ICJhbnkgbWFza2FibGUifV0sICJjYXRlZ29yaWVzIjogWyJlZHVjYXRpb24iLCAicHJvZHVjdGl2aXR5Il0sICJsYW5nIjogInB0LUJSIiwgImRpciI6ICJsdHIifQ==">
+    <link id="pwa-manifest-link" rel="manifest" href="manifest.json">
 
     <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -954,55 +954,6 @@
             header#main-header .user-info-header .btn-text { display: inline !important; }
         }
 
-    
-        /* BLINDAGEM SPLASH SCREEN */
-        body.is-home header#main-header.initial-splash { 
-            background-color: #000 !important; 
-            z-index: 9999 !important; 
-            height: 100dvh !important; 
-            overflow: hidden !important; 
-            position: fixed !important;
-            top: 0 !important; left: 0 !important; width: 100% !important;
-        }
-        body.is-home.splash-active #main-content-wrapper,
-        body.is-home.splash-active footer,
-        body.is-home.splash-active .hero,
-        body.is-home.splash-active section:not(#main-header) { 
-            display: none !important; 
-        }
-        body.is-home.splash-active .menu-hamburger { display: none !important; }
-
-    
-        /* ESTABILIDADE DO CABEÇALHO COM CLAMP */
-        header#main-header {
-            height: clamp(60px, var(--size-pc-header-pad, 80px), 100px) !important;
-            transition: all 0.3s ease;
-        }
-        @media (max-width: 768px) {
-            header#main-header {
-                height: clamp(60px, 10vh, 80px) !important;
-                max-height: 80px !important;
-            }
-        }
-
-    
-        /* GRIDS E CARROSSEL COM SCROLL SNAP */
-        .carousel-track, .dbv-grid, .home-gallery.mobile-scroll {
-            display: flex !important; 
-            flex-wrap: nowrap !important; 
-            overflow-x: auto !important; 
-            scroll-snap-type: x mandatory !important; 
-            -webkit-overflow-scrolling: touch !important; 
-            gap: 15px !important;
-            padding-bottom: 10px;
-        }
-        .carousel-track > div, .dbv-grid > div, .home-gallery.mobile-scroll > div { 
-            flex: 0 0 auto !important; 
-            scroll-snap-align: start !important; 
-        }
-        /* Esconder scrollbar */
-        .carousel-track::-webkit-scrollbar, .dbv-grid::-webkit-scrollbar { display: none; }
-
     </style>
 </head>
 <body>
@@ -1031,7 +982,6 @@
             <span></span>
         </button>
     </header>
-    <div id="main-content-wrapper">
 
     <div id="fullscreen-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center;" onclick="this.style.display='none'">
         <img id="fs-img" style="max-width:90%; max-height:90%; border-radius:10px; box-shadow: 0 0 30px rgba(255,204,0,0.3);">
@@ -1146,7 +1096,6 @@
     </section>
 
 
-    </div><!-- fim main-content-wrapper -->
     <footer id="main-footer">
         <div id="footer-text">© 2026 Portal Desbravadores - Sistema de Gestão</div>
         
@@ -1174,17 +1123,7 @@
                         </div>
                         <div class="input-group">
                             <i class="fa-solid fa-align-left"></i>
-                            
-                        <div class="input-group">
-                            <i class="fa-solid fa-image"></i>
-                            <input type="text" id="cfg-hero-url" placeholder="URL da Imagem de Fundo (Hero)">
-                        </div>
-                        <label class="upload-btn-label" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'">
-                            <i class="fa-solid fa-upload" style="color:var(--amarelo);"></i> Upload Fundo Hero
-                            <input type="file" accept="image/*" style="display:none;" onchange="uploadHeroFundo(this)">
-                        </label>
-
-                        <input type="text" id="cfg-subtitle" placeholder="Texto abaixo do título (Opcional)">
+                            <input type="text" id="cfg-subtitle" placeholder="Texto abaixo do título (Opcional)">
                         </div>
                     </div>
 
@@ -7988,7 +7927,7 @@ function gerarRelatorioFrequencia() {
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/png'));
+                    resolve(canvas.toDataURL('image/jpeg', quality));
                 };
                 img.src = base64;
             });
@@ -8091,21 +8030,6 @@ function gerarRelatorioFrequencia() {
             }
         }
 
-        
-        async function uploadHeroFundo(input) {
-            const file = input.files[0];
-            if (!file) return;
-            try {
-                const base64 = await fileToBase64(file);
-                const resized = await resizeImage(base64, 1920, 1080, 0.8);
-                document.getElementById('cfg-hero-url').value = resized;
-                alert('Fundo Hero carregado! Clique em "Salvar Todas as Alterações" para aplicar.');
-            } catch (err) {
-                alert('Erro: ' + err.message);
-            }
-        }
-
-
         async function uploadLogoSite(input) {
             const file = input.files[0];
             if (!file) return;
@@ -8181,27 +8105,14 @@ function gerarRelatorioFrequencia() {
            Isso é obrigatório para o Chrome/Android aceitar a instalação nativa.
            ================================================ */
 
-        
         function registrarPWA() {
+            // O manifest já está linkado no <head> como href="manifest.json"
+            // Aqui apenas registramos o Service Worker externo
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js', { scope: '/' })
+                navigator.serviceWorker.register('./sw.js')
                     .then((reg) => {
                         console.log('[PWA] Service Worker registrado com sucesso! Escopo:', reg.scope);
                     })
-                    .catch((err) => {
-                        console.warn('[PWA] Falha ao registrar SW:', err);
-                        console.log('[PWA] Tentando registro com escopo padrão...');
-                        navigator.serviceWorker.register('./sw.js')
-                            .then(r => console.log('[PWA] SW registrado (escopo padrão):', r.scope));
-                    });
-            }
-            
-            window.addEventListener('beforeinstallprompt', (e) => {
-                console.log('[PWA] Evento beforeinstallprompt disparado!');
-                window.deferredPrompt = e;
-            });
-        }
-)
                     .catch((err) => {
                         console.warn('[PWA] Falha ao registrar SW:', err);
                     });
@@ -8581,55 +8492,6 @@ function gerarRelatorioFrequencia() {
             }
             header#main-header .user-info-header .btn-text { display: inline !important; }
         }
-
-    
-        /* BLINDAGEM SPLASH SCREEN */
-        body.is-home header#main-header.initial-splash { 
-            background-color: #000 !important; 
-            z-index: 9999 !important; 
-            height: 100dvh !important; 
-            overflow: hidden !important; 
-            position: fixed !important;
-            top: 0 !important; left: 0 !important; width: 100% !important;
-        }
-        body.is-home.splash-active #main-content-wrapper,
-        body.is-home.splash-active footer,
-        body.is-home.splash-active .hero,
-        body.is-home.splash-active section:not(#main-header) { 
-            display: none !important; 
-        }
-        body.is-home.splash-active .menu-hamburger { display: none !important; }
-
-    
-        /* ESTABILIDADE DO CABEÇALHO COM CLAMP */
-        header#main-header {
-            height: clamp(60px, var(--size-pc-header-pad, 80px), 100px) !important;
-            transition: all 0.3s ease;
-        }
-        @media (max-width: 768px) {
-            header#main-header {
-                height: clamp(60px, 10vh, 80px) !important;
-                max-height: 80px !important;
-            }
-        }
-
-    
-        /* GRIDS E CARROSSEL COM SCROLL SNAP */
-        .carousel-track, .dbv-grid, .home-gallery.mobile-scroll {
-            display: flex !important; 
-            flex-wrap: nowrap !important; 
-            overflow-x: auto !important; 
-            scroll-snap-type: x mandatory !important; 
-            -webkit-overflow-scrolling: touch !important; 
-            gap: 15px !important;
-            padding-bottom: 10px;
-        }
-        .carousel-track > div, .dbv-grid > div, .home-gallery.mobile-scroll > div { 
-            flex: 0 0 auto !important; 
-            scroll-snap-align: start !important; 
-        }
-        /* Esconder scrollbar */
-        .carousel-track::-webkit-scrollbar, .dbv-grid::-webkit-scrollbar { display: none; }
 
     </style>
 
