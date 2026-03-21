@@ -2144,14 +2144,6 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             
             if(canEditAll) { document.getElementById('container-m-unid-dest').style.display = 'block'; document.getElementById('container-edit-unid-sel').style.display = 'block'; }
 
-            const btnCustom = document.getElementById("nav-custom");
-
-if (!user || (user.tipo !== "geral" && !user.permiteCustom)) {
-    btnCustom.style.display = "none";
-} else {
-    btnCustom.style.display = "flex";
-}
-
 const meusM = db.membros.filter(m => canEditAll || m.unid === user.unid);
             document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
     <div class="dbv-card" style="${h.glow ? 'box-shadow: 0 0 15px var(--amarelo)' : ''}">
