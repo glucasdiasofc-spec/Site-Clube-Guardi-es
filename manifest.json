@@ -1,0 +1,28 @@
+{
+  "name": "Portal Desbravadores",
+  "short_name": "Portal DBV",
+  "description": "Sistema de Gestão do Clube de Desbravadores - pontos, especialidades e comunicação.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#121212",
+  "theme_color": "#ffcc00",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "PNGDBV.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "PNGDBV.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
