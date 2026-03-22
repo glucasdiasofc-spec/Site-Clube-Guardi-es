@@ -973,10 +973,13 @@ header#main-header .user-info-header .user-status {
     
 
     <header id="main-header" class="initial-splash">
-       <div class="logo-container" onclick="irParaHome()">
-            <img src="PNGDBV.webp" class="header-logo" id="main-logo-img" alt="Logo Desbravadores">
-            <div class="scroll-down-msg">Role para baixo <i class="fa-solid fa-chevron-down"></i></div>
-        </div>
+      <div class="logo-container" onclick="irParaHome()">
+    <img src="PNGDBV.webp" class="header-logo" alt="Logo">
+    <div class="scroll-down-msg">
+        <i class="fa-solid fa-chevron-down"></i>
+        <span>Role para entrar</span>
+    </div>
+</div>
         <div class="user-info-header">
             <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <span class="btn-text">Visitante</span></span>
             <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> <span class="btn-text">Customizar</span></button>
@@ -8210,12 +8213,30 @@ function gerarRelatorioFrequencia() {
             verificarBannersPWA();
         });
 
-        function irParaHome() {
+   function irParaHome() {
     const header = document.getElementById("main-header");
     const menuArea = document.querySelector(".user-info-header");
     const menuToggle = document.getElementById("menu-toggle");
 
-    // 1. Remove a tela de logo (Splash) se ela ainda estiver lá
+    // 1. Resetar a visualização: Esconde áreas de liderança/admin e mostra a home
+    // Adicione aqui o ID de qualquer outra área que você criar no futuro
+    const areasParaEsconder = [
+        'leadership-area', 
+        'admin-area', 
+        'specialties-catalog',
+        'points-history' 
+    ];
+
+    areasParaEsconder.forEach(id => {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.style.display = 'none';
+    });
+
+    // Mostra o conteúdo principal (verifique se o ID do seu conteúdo principal é 'main-content')
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) mainContent.style.display = 'block';
+
+    // 2. Remove a tela de logo (Splash) se ela estiver ativa
     if (header) {
         header.classList.remove("initial-splash");
         header.classList.add("scrolled");
@@ -8223,13 +8244,10 @@ function gerarRelatorioFrequencia() {
         document.body.style.height = "auto";
     }
 
-    // 2. Rola a página para o topo suavemente
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    // 3. Rola para o topo suavemente
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // 3. Fecha o menu de 3 linhas caso o usuário tenha clicado na logo com ele aberto
+    // 4. Fecha o menu lateral caso esteja aberto
     if (menuArea && menuArea.classList.contains('active')) {
         menuArea.classList.remove('active');
         if (menuToggle) menuToggle.classList.remove('active');
@@ -8245,6 +8263,53 @@ window.addEventListener("touchmove", () => {
         }
     }
 }, { passive: true });
+
+function irParaHome() {
+    // 1. Rolar para o topo suavemente
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 2. Destravar o Header (caso esteja na tela de Splash)
+    const header = document.getElementById("main-header");
+    if (header) {
+        header.classList.remove("initial-splash");
+        header.classList.add("scrolled");
+        document.body.classList.remove("splash-active");
+        document.body.style.height = "auto";
+    }
+
+    // 3. Voltar para a Home (Esconder áreas extras e mostrar o conteúdo principal)
+    // Aqui listamos os IDs das suas seções que devem sumir ao clicar na logo
+    const secoesParaFechar = [
+        'minhas-classes-lider-section', 
+        'aprovacoes-classes-section',
+        'specialties-catalog', // Se você tiver um catálogo de especialidades
+        'admin-area'           // Se tiver uma área de admin
+    ];
+
+    secoesParaFechar.forEach(id => {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.style.display = 'none';
+    });
+
+    // 4. Mostrar o conteúdo principal (Dashboard/Pontos)
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) mainContent.style.display = 'block';
+
+    // 5. Fechar o menu lateral (mobile) se estiver aberto
+    const menuArea = document.querySelector(".user-info-header");
+    const menuToggle = document.getElementById("menu-toggle");
+    if (menuArea && menuArea.classList.contains('active')) {
+        menuArea.classList.remove('active');
+        if (menuToggle) menuToggle.classList.remove('active');
+    }
+}
+
+// Sensor para mobile: Se o usuário rolar a tela da logo, ele entra no site
+window.addEventListener("scroll", () => {
+    if (document.body.classList.contains("splash-active") && window.scrollY > 20) {
+        irParaHome();
+    }
+});
 
     </script>
 
@@ -8437,6 +8502,17 @@ window.addEventListener("touchmove", () => {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
+        /* Garante que o corpo da página permita movimento no mobile */
+body.splash-active { 
+    overflow-y: auto !important; 
+    height: 120vh !important; 
+}
+
+/* Classe utilitária para esconder seções quando voltarmos para a home */
+.secao-oculta { 
+    display: none !important; 
+}
 
         /* MELHORIAS GERAIS DE TOQUE MOBILE */
         @media (max-width: 768px) {
