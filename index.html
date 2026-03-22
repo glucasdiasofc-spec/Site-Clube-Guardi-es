@@ -8159,28 +8159,88 @@ function gerarRelatorioFrequencia() {
            Isso é obrigatório para o Chrome/Android aceitar a instalação nativa.
            ================================================ */
 
-        function registrarPWA() {
-            // O manifest já está linkado no <head> como href="manifest.json"
-            // Aqui apenas registramos o Service Worker externo
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((reg) => {
-                        console.log('[PWA] Service Worker registrado com sucesso! Escopo:', reg.scope);
-                    })
-                    .catch((err) => {
-                        console.warn('[PWA] Falha ao registrar SW:', err);
-                    });
+        /* ================================================
+   PWA - SERVICE WORKER E MANIFEST (ARQUIVOS EXTERNOS)
+   ================================================ */
+
+function registrarPWA() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then((reg) => console.log('[PWA] Service Worker registrado com sucesso!'))
+            .catch((err) => console.warn('[PWA] Falha ao registrar SW:', err));
+    }
+}
+
+let deferredInstallPrompt = null;
+
+// O Android dispara esse evento QUANDO a PWA passa nos critérios de instalação (ícones PNG corretos, etc)
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Impede o banner padrão do Google de aparecer na parte inferior da tela sozinho
+    e.preventDefault();
+    // Salva o evento para usarmos quando o usuário clicar no seu botão "Instalar"
+    deferredInstallPrompt = e;
+    
+    // O app é instalável! Mostramos o banner imediatamente
+    const bannerAndroid = document.getElementById('pwa-install-banner-android');
+    if (bannerAndroid) bannerAndroid.style.display = 'flex';
+});
+
+function instalarPWA() {
+    if (deferredInstallPrompt) {
+        // Dispara a janela de instalação nativa do Android
+        deferredInstallPrompt.prompt();
+        // Espera a resposta do usuário (Instalou ou cancelou?)
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                fecharBannerAndroid(); // Esconde o banner pois foi instalado
             }
-        }
-
-        // Capturar evento de instalação (Android/Chrome)
-    // Capturar evento de instalação (Android/Chrome)
-        let deferredInstallPrompt = null;
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredInstallPrompt = e;
+            deferredInstallPrompt = null; // Limpa a variável
         });
+    } else {
+        // Fallback: se o navegador não der suporte ao botão automático
+        alert("Para instalar, toque no menu do seu navegador (três pontinhos) e selecione 'Adicionar à tela inicial' ou 'Instalar aplicativo'.");
+    }
+}
+
+function fecharBannerIOS() {
+    const banner = document.getElementById('pwa-install-banner-ios');
+    if (banner) banner.style.display = 'none';
+}
+
+function fecharBannerAndroid() {
+    const banner = document.getElementById('pwa-install-banner-android');
+    if (banner) banner.style.display = 'none';
+}
+
+// Forçar exibição dos banners PWA caso não esteja instalado
+function verificarBannersPWA() {
+    // Verifica se o usuário JÁ está usando o aplicativo instalado
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    
+    // Se NÃO estiver instalado, espera 3 segundos e avalia
+    if (!isStandalone) {
+        setTimeout(() => {
+            if (isIOS) {
+                const bannerIOS = document.getElementById('pwa-install-banner-ios');
+                if (bannerIOS) bannerIOS.style.display = 'flex';
+            } else {
+                // Fallback para Android: se o evento 'beforeinstallprompt' atrasar ou não disparar,
+                // forçamos o banner a aparecer para dar as instruções manuais ao usuário.
+                const bannerAndroid = document.getElementById('pwa-install-banner-android');
+                if (bannerAndroid && bannerAndroid.style.display !== 'flex') {
+                    bannerAndroid.style.display = 'flex';
+                }
+            }
+        }, 3000);
+    }
+}
+
+// Inicializar PWA
+window.addEventListener('load', () => {
+    registrarPWA();
+    verificarBannersPWA();
+});
 
         // Forçar exibição dos banners PWA SEMPRE que não estiver instalado
         function verificarBannersPWA() {
