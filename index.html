@@ -943,7 +943,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
 
     opacity: 0 !important;           /* 🔥 ESCONDIDO */
     pointer-events: none !important; /* 🔥 BLOQUEADO */
-
+    
 }
 
 header#main-header .user-info-header.active {
@@ -6904,7 +6904,7 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
             updateSplashScroll();
         }
         
-       document.addEventListener('DOMContentLoaded', initUX);
+        window.addEventListener('load', initUX);
 
     /* ================================================
            NOVAS FUNÇÕES: ÁREA DE ACESSO DESBRAVADOR
@@ -8167,10 +8167,10 @@ function gerarRelatorioFrequencia() {
         }
 
         // Detectar iOS e mostrar banner de instrução
-        function verificarBannerIOS() {
+    function verificarBannerIOS() {
             const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
             const isInStandaloneMode = window.navigator.standalone === true;
-            const bannerMostrado = localStorage.getItem('ios-banner-dismissed');
+            const bannerMostrado = sessionStorage.getItem('ios-banner-dismissed');
             
             if (isIOS && !isInStandaloneMode && !bannerMostrado) {
                 setTimeout(() => {
@@ -8180,10 +8180,10 @@ function gerarRelatorioFrequencia() {
             }
         }
 
-        function fecharBannerIOS() {
+  function fecharBannerIOS() {
             const banner = document.getElementById('pwa-install-banner-ios');
             if (banner) banner.style.display = 'none';
-            localStorage.setItem('ios-banner-dismissed', '1');
+            sessionStorage.setItem('ios-banner-dismissed', '1');
         }
 
         function fecharBannerAndroid() {
