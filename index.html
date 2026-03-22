@@ -8311,6 +8311,50 @@ window.addEventListener("scroll", () => {
     }
 });
 
+function irParaHome() {
+    // 1. Destrava a tela inicial (Splash)
+    const header = document.getElementById("main-header");
+    if (header) {
+        header.classList.remove("initial-splash");
+        header.classList.add("scrolled");
+        document.body.classList.remove("splash-active");
+        document.body.style.height = "auto";
+    }
+
+    // 2. Esconde as áreas de Liderança e Aprovações
+    const secoesParaFechar = [
+        'minhas-classes-lider-section', 
+        'aprovacoes-classes-section',
+        'pontos-historico-section'
+    ];
+
+    secoesParaFechar.forEach(id => {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.style.display = 'none';
+    });
+
+    // 3. Mostra o Dashboard/Conteúdo Principal
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) mainContent.style.display = 'block';
+
+    // 4. Sobe para o topo e fecha o menu lateral
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const menuArea = document.querySelector(".user-info-header");
+    const menuToggle = document.getElementById("menu-toggle");
+    if (menuArea && menuArea.classList.contains('active')) {
+        menuArea.classList.remove('active');
+        if (menuToggle) menuToggle.classList.remove('active');
+    }
+}
+
+// Correção extra para Mobile: deteta o toque na tela da logo
+window.addEventListener("touchmove", () => {
+    if (document.body.classList.contains("splash-active")) {
+        irParaHome();
+    }
+}, { passive: true });
+
     </script>
 
     <div id="modal-gerenciar-esp" class="modal-overlay" style="z-index: 9010;">
@@ -8567,9 +8611,10 @@ body.splash-active {
             /* Splash screen mobile - corrigido para iOS */
             /* SPLASH: Trava o scroll no body enquanto splash está ativa */
         /* Força o telemóvel a permitir o movimento de dedo para cima/baixo */
+/* SPLASH: Permite o scroll para que o JS detete o movimento e retire a logo */
 body.splash-active { 
     overflow-y: auto !important; 
-    height: 150vh !important; /* Cria um "espaço" virtual para o scroll funcionar */
+    height: 120vh !important; 
 }
         
        body.is-home header#main-header.initial-splash {
