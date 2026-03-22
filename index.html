@@ -973,7 +973,7 @@ header#main-header .user-info-header .user-status {
     
 
     <header id="main-header" class="initial-splash">
-        <div class="logo-container" onclick="removerSplashManualmente()">
+       <div class="logo-container" onclick="irParaHome()">
             <img src="PNGDBV.webp" class="header-logo" id="main-logo-img" alt="Logo Desbravadores">
             <div class="scroll-down-msg">Role para baixo <i class="fa-solid fa-chevron-down"></i></div>
         </div>
@@ -8210,20 +8210,40 @@ function gerarRelatorioFrequencia() {
             verificarBannersPWA();
         });
 
-        function removerSplashManualmente() {
+        function irParaHome() {
     const header = document.getElementById("main-header");
+    const menuArea = document.querySelector(".user-info-header");
+    const menuToggle = document.getElementById("menu-toggle");
+
+    // 1. Remove a tela de logo (Splash) se ela ainda estiver lá
     if (header) {
         header.classList.remove("initial-splash");
         header.classList.add("scrolled");
         document.body.classList.remove("splash-active");
-        // Remove o excesso de altura que criamos para o scroll
         document.body.style.height = "auto";
+    }
+
+    // 2. Rola a página para o topo suavemente
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+
+    // 3. Fecha o menu de 3 linhas caso o usuário tenha clicado na logo com ele aberto
+    if (menuArea && menuArea.classList.contains('active')) {
+        menuArea.classList.remove('active');
+        if (menuToggle) menuToggle.classList.remove('active');
     }
 }
 
-// Melhora o sensor de scroll para ser mais sensível no telemóvel
+// Mantém o sensor de movimento para quem prefere apenas rolar a tela
 window.addEventListener("touchmove", () => {
-    if (window.scrollY > 10) removerSplashManualmente();
+    if (window.scrollY > 10) {
+        const header = document.getElementById("main-header");
+        if (header && header.classList.contains("initial-splash")) {
+            irParaHome();
+        }
+    }
 }, { passive: true });
 
     </script>
