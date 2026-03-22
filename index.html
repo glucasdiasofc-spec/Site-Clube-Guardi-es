@@ -8152,51 +8152,51 @@ function gerarRelatorioFrequencia() {
         }
 
         // Capturar evento de instalação (Android/Chrome)
+    // Capturar evento de instalação (Android/Chrome)
         let deferredInstallPrompt = null;
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredInstallPrompt = e;
-            
-            // Mostrar botão de instalação customizado após 3 segundos
-            setTimeout(() => {
-                const banner = document.getElementById('pwa-install-banner-android');
-                if (banner) banner.style.display = 'flex';
-            }, 3000);
         });
+
+        // Forçar exibição dos banners PWA SEMPRE que não estiver instalado
+        function verificarBannersPWA() {
+            // Verifica se o usuário JÁ está usando o aplicativo instalado
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+            
+            // Se NÃO estiver instalado, mostra a mensagem
+            if (!isStandalone) {
+                setTimeout(() => {
+                    if (isIOS) {
+                        const bannerIOS = document.getElementById('pwa-install-banner-ios');
+                        if (bannerIOS) bannerIOS.style.display = 'flex';
+                    } else {
+                        const bannerAndroid = document.getElementById('pwa-install-banner-android');
+                        if (bannerAndroid) bannerAndroid.style.display = 'flex';
+                    }
+                }, 3000); // Aparece 3 segundos após abrir o site
+            }
+        }
 
         function instalarPWA() {
             if (deferredInstallPrompt) {
                 deferredInstallPrompt.prompt();
-                deferredInstallPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('[PWA] Usuário aceitou a instalação');
-                    }
+                deferredInstallPrompt.userChoice.then(() => {
                     deferredInstallPrompt = null;
-                    const banner = document.getElementById('pwa-install-banner-android');
-                    if (banner) banner.style.display = 'none';
+                    fecharBannerAndroid();
                 });
+            } else {
+                // Caso o navegador não suporte o botão de auto-instalar
+                alert("Para instalar, toque no menu do seu navegador (três pontinhos) e selecione 'Adicionar à tela inicial' ou 'Instalar aplicativo'.");
             }
         }
 
-        // Detectar iOS e mostrar banner de instrução
-    function verificarBannerIOS() {
-            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-            const isInStandaloneMode = window.navigator.standalone === true;
-            const bannerMostrado = sessionStorage.getItem('ios-banner-dismissed');
-            
-            if (isIOS && !isInStandaloneMode && !bannerMostrado) {
-                setTimeout(() => {
-                    const banner = document.getElementById('pwa-install-banner-ios');
-                    if (banner) banner.style.display = 'flex';
-                }, 4000);
-            }
-        }
-
-  function fecharBannerIOS() {
+        function fecharBannerIOS() {
             const banner = document.getElementById('pwa-install-banner-ios');
             if (banner) banner.style.display = 'none';
-            sessionStorage.setItem('ios-banner-dismissed', '1');
+            // Removida a trava que impedia o banner de voltar!
         }
 
         function fecharBannerAndroid() {
@@ -8207,7 +8207,7 @@ function gerarRelatorioFrequencia() {
         // Inicializar PWA
         window.addEventListener('load', () => {
             registrarPWA();
-            verificarBannerIOS();
+            verificarBannersPWA();
         });
 
     </script>
