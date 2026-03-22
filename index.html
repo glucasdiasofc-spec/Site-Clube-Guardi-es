@@ -8482,25 +8482,44 @@ function gerarRelatorioFrequencia() {
             }
 
            /* Menu Lateral (Dropdown) NO FINAL DO ARQUIVO */
-            header#main-header .user-info-header {
-                position: fixed !important;
-                top: 0; right: -100%;
-                width: 280px; height: 100vh;
-                background: rgba(18, 18, 18, 0.98);
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-                gap: 25px !important;
-                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                backdrop-filter: blur(15px);
-                border-left: 2px solid var(--amarelo);
-                z-index: 1050;
-                padding: 60px 20px !important;
-                
-                /* 🔥 CORREÇÃO: Escondendo o menu e bloqueando cliques */
-                opacity: 0 !important;
-                pointer-events: none !important;
-            }           
+           /* =========================================
+   CORREÇÃO DEFINITIVA DO MENU MOBILE 
+   ========================================= */
+@media (max-width: 768px) {
+    /* 1. Garante que o botão hambúrguer fique sempre ACIMA do menu aberto */
+    #mobile-menu-btn {
+        display: flex !important;
+        z-index: 9999 !important; /* Prioridade máxima na tela */
+        position: relative;
+    }
+
+    /* 2. Configuração do Menu Mobile para cobrir a tela toda */
+    header#main-header .user-info-header {
+        position: fixed !important;
+        top: 0 !important; 
+        right: -100% !important; /* Escondido fora da tela por padrão */
+        width: 100vw !important; /* Cobre 100% da tela (Esconde a Home) */
+        height: 100vh !important;
+        background: rgba(18, 18, 18, 0.98) !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 25px !important;
+        transition: right 0.4s ease-in-out, opacity 0.4s ease-in-out !important;
+        z-index: 9000 !important; /* Fica logo abaixo do botão hambúrguer */
+        
+        /* Estado inativo */
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* 3. Quando o botão é clicado (A classe .active entra em ação) */
+    header#main-header .user-info-header.active { 
+        right: 0 !important; /* Puxa para dentro da tela */
+        opacity: 1 !important; /* Deixa visível */
+        pointer-events: all !important; /* Permite os cliques nos botões */
+    }
+}
             header#main-header .user-info-header.active { right: 0; }
            header#main-header .user-info-header button, 
 header#main-header .user-info-header .user-status { 
