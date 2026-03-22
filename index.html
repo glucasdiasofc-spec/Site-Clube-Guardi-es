@@ -6864,12 +6864,15 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
         carregarDados();
 
         // Lógica do Menu Hambúrguer e Splash
+        // Lógica do Menu Hambúrguer e Splash
         function initUX() {
             const menuToggle = document.getElementById('menu-toggle');
             const menuContent = document.querySelector('.user-info-header');
             
             if (menuToggle) {
-                menuToggle.onclick = function() {
+                menuToggle.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     this.classList.toggle('active');
                     menuContent.classList.toggle('active');
                 };
@@ -6881,6 +6884,16 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                     if(menuToggle) menuToggle.classList.remove('active');
                     if(menuContent) menuContent.classList.remove('active');
                 });
+            });
+
+            // Fechar o menu ao clicar fora dele na tela
+            document.addEventListener('click', (e) => {
+                if (menuContent && menuContent.classList.contains('active') && 
+                    !menuContent.contains(e.target) && 
+                    !menuToggle.contains(e.target)) {
+                    menuContent.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                }
             });
 
             // Gerenciar trava de scroll no Splash
@@ -8483,9 +8496,12 @@ function gerarRelatorioFrequencia() {
            /* =========================================
    CORREÇÃO DEFINITIVA DO MENU MOBILE 
    ========================================= */
+/* =========================================
+   CORREÇÃO DEFINITIVA DO MENU MOBILE 
+   ========================================= */
 @media (max-width: 768px) {
     /* 1. Garante que o botão hambúrguer fique sempre ACIMA do menu aberto */
-    #mobile-menu-btn {
+    #menu-toggle {
         display: flex !important;
         z-index: 9999 !important; /* Prioridade máxima na tela */
         position: relative;
