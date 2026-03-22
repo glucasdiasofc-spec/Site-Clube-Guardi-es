@@ -8443,15 +8443,12 @@ function gerarRelatorioFrequencia() {
             /* SPLASH: Trava o scroll no body enquanto splash está ativa */
         body.splash-active { overflow: hidden !important; height: 100vh !important; }
         
-        body.is-home header#main-header.initial-splash {
+       body.is-home header#main-header.initial-splash {
             background-color: #121212 !important; /* Fundo sólido para iOS */
-            height: 100vh !important;
-            height: 100dvh !important; /* Fix Safari iOS */
-                height: 100svh !important;
-                height: -webkit-fill-available !important;
-                min-height: -webkit-fill-available !important;
-            }
-
+            height: 120vh !important;
+            min-height: 120vh !important;
+            padding-bottom: 100px !important;
+        }
             body.is-home header#main-header.initial-splash .user-info-header {
                 opacity: 0 !important;
                 pointer-events: none !important;
