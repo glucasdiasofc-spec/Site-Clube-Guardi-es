@@ -132,9 +132,9 @@
             100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,204,0,0.2)); }
         }
 
-        /* --- SPLASH: o header vira tela cheia --- */
-        /* SPLASH: Trava o scroll no body enquanto splash está ativa */
-        body.splash-active { overflow: hidden !important; height: 100vh !important; }
+   /* --- SPLASH: o header vira tela cheia --- */
+        /* SPLASH: Libera o scroll para que o usuário possa rolar e tirar a splash screen */
+        body.splash-active { overflow: visible !important; height: auto !important; }
         
         body.is-home header#main-header.initial-splash {
             background-color: #121212 !important; /* Fundo sólido para iOS */
