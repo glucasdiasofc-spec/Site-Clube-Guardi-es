@@ -8498,8 +8498,9 @@ function gerarRelatorioFrequencia() {
         position: fixed !important;
         top: 0 !important; 
         right: -100% !important; /* Escondido fora da tela por padrão */
-        width: 100vw !important; /* Cobre 100% da tela (Esconde a Home) */
-        height: 100vh !important;
+        width: 100vw !important; 
+        height: 100vh !important; /* Mantém como fallback para navegadores antigos */
+        height: 100dvh !important; /* ADICIONE ESTA LINHA: Resolve o buraco no Safari */
         background: rgba(18, 18, 18, 0.98) !important;
         flex-direction: column !important;
         justify-content: center !important;
