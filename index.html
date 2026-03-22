@@ -8153,83 +8153,74 @@ function gerarRelatorioFrequencia() {
             }
         }
 
-       /* ================================================
-           PWA - SERVICE WORKER E MANIFEST (CORRIGIDO E AGRESSIVO)
-           ================================================ */
+      /* ================================================
+   PWA - CONTROLE AGRESSIVO DE EXIBIÇÃO
+   ================================================ */
 
-        function registrarPWA() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((reg) => console.log('[PWA] Service Worker registrado com sucesso!'))
-                    .catch((err) => console.warn('[PWA] Falha ao registrar SW:', err));
-            }
+// 1. Registrar o Service Worker (Essencial para PWA)
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
+}
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+});
+
+// 2. FUNÇÃO QUE FORÇA A EXIBIÇÃO
+function forcarExibicaoBanner() {
+    // Verifica se já está instalado ou rodando como App
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    
+    if (isStandalone) {
+        console.log("Já está instalado. Banner não será exibido.");
+        return; 
+    }
+
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isAndroid = /android/.test(ua);
+
+    // Força a exibição ignorando qualquer lógica anterior
+    if (isIOS) {
+        const bannerIOS = document.getElementById('pwa-install-banner-ios');
+        if (bannerIOS) {
+            bannerIOS.setAttribute('style', 'display: flex !important; opacity: 1 !important; visibility: visible !important;');
         }
+    } else if (isAndroid) {
+        const bannerAndroid = document.getElementById('pwa-install-banner-android');
+        if (bannerAndroid) {
+            bannerAndroid.setAttribute('style', 'display: flex !important; opacity: 1 !important; visibility: visible !important;');
+        }
+    }
+}
 
-        let deferredInstallPrompt = null;
+// Executa imediatamente e também após o carregamento total
+forcarExibicaoBanner();
+window.addEventListener('load', forcarExibicaoBanner);
 
-        // Captura o evento nativo do Android, mas NÃO dependemos dele para MOSTRAR o seu banner
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredInstallPrompt = e;
+// 3. FUNÇÕES DE BOTÃO
+function instalarPWA() {
+    if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then(() => {
+            deferredInstallPrompt = null;
+            fecharBannerAndroid();
         });
+    } else {
+        // Se o Chrome bloquear o prompt automático, mostramos o passo a passo
+        alert("Toque nos três pontinhos (⋮) no topo do navegador e escolha 'Instalar aplicativo' ou 'Adicionar à tela inicial'.");
+    }
+}
 
-        // Forçar exibição dos banners PWA SEMPRE que rodar no navegador
-        function verificarBannersPWA() {
-            // Verifica se o usuário JÁ está usando o aplicativo instalado
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
-            
-            // Verifica o sistema operacional
-            const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-            const isAndroid = /android/i.test(navigator.userAgent);
-            
-            // Se NÃO estiver instalado (está no navegador), força o banner a aparecer!
-            if (!isStandalone) {
-                // Reduzi o tempo de 3 segundos para meio segundo (500ms).
-                // Assim ele aparece quase instantaneamente, mesmo que o usuário vá para a Home rápido.
-                setTimeout(() => {
-                    if (isIOS) {
-                        const bannerIOS = document.getElementById('pwa-install-banner-ios');
-                        if (bannerIOS) bannerIOS.style.display = 'flex';
-                    } else if (isAndroid) {
-                        // Força o banner do Android a aparecer sempre, ignorando o bloqueio do Chrome
-                        const bannerAndroid = document.getElementById('pwa-install-banner-android');
-                        if (bannerAndroid) bannerAndroid.style.display = 'flex';
-                    }
-                }, 500); 
-            }
-        }
+function fecharBannerIOS() {
+    document.getElementById('pwa-install-banner-ios').style.display = 'none';
+}
 
-        function instalarPWA() {
-            if (deferredInstallPrompt) {
-                // Se o navegador liberou o prompt automático, usa ele
-                deferredInstallPrompt.prompt();
-                deferredInstallPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        fecharBannerAndroid();
-                    }
-                    deferredInstallPrompt = null;
-                });
-            } else {
-                // Se o navegador bloqueou o prompt automático, exibe a instrução manual
-                alert("Para instalar, toque no menu do seu navegador (três pontinhos) e selecione 'Adicionar à tela inicial' ou 'Instalar aplicativo'.");
-            }
-        }
-
-        function fecharBannerIOS() {
-            const banner = document.getElementById('pwa-install-banner-ios');
-            if (banner) banner.style.display = 'none';
-        }
-
-        function fecharBannerAndroid() {
-            const banner = document.getElementById('pwa-install-banner-android');
-            if (banner) banner.style.display = 'none';
-        }
-
-        // Inicializar PWA logo que a janela carregar
-        window.addEventListener('load', () => {
-            registrarPWA();
-            verificarBannersPWA();
-        });
+function fecharBannerAndroid() {
+    document.getElementById('pwa-install-banner-android').style.display = 'none';
+}
         
   function irParaHome() {
     // 1. Usa o sistema nativo do seu site para ativar a Home e desativar outras páginas
