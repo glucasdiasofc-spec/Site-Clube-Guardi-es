@@ -8544,7 +8544,14 @@ header#main-header .user-info-header .user-status {
 }
             header#main-header .user-info-header .btn-text { display: inline !important; }
         }
-
+/* --- CORREÇÃO DE ÁREA DE CLIQUE DO MENU --- */
+#menu-toggle {
+    padding: 20px !important; /* Aumenta bastante a área de toque do dedo invisível */
+    z-index: 99999 !important; /* Força ficar na frente de tudo */
+}
+#menu-toggle i {
+    pointer-events: none !important; /* ISSO É O SEGREDO: impede que o ícone roube o clique! */
+}
     </style>
 
 </body>
