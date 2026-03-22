@@ -1921,45 +1921,59 @@ db.home.sizes.mobCard = document.getElementById('cfg-sz-card-mob').value || 1.0;
         }
 
         /* SISTEMA DE HEROS RENDERIZAÇÃO */
-        function renderHeroes() {
-            const h = db.home;
-            const mapHtml = { 'top': '', 'mid': '', 'bottom': '' };
-            
-            // Limpar intervalos antigos
-            Object.values(slideIntervalIdMap).forEach(clearInterval);
-            slideIntervalIdMap = {};
+        /* SISTEMA DE HEROS RENDERIZAÇÃO */
+function renderHeroes() {
+    const h = db.home;
+    const mapHtml = { 'top': '', 'mid': '', 'bottom': '' };
 
-            h.heroesList.forEach((hero, idx) => {
-                const divId = `hero-dyn-${hero.id}`;
-                mapHtml[hero.location] += `<div id="${divId}" class="hero" style="display:block; background-position:${hero.pos}; background-size:${hero.size}; min-height:400px; margin-bottom:40px;"></div>`;
-                
-                // Agendar start slideshow após render do HTML
-                setTimeout(() => startSlideshow(divId, hero.imgs), 100);
-            });
+    // Limpar intervalos antigos
+    Object.values(slideIntervalIdMap).forEach(clearInterval);
+    slideIntervalIdMap = {};
 
-            document.getElementById('hero-top-container').innerHTML = mapHtml['top'];
-            document.getElementById('hero-mid-container').innerHTML = mapHtml['mid'];
-            document.getElementById('hero-bottom-container').innerHTML = mapHtml['bottom'];
+    h.heroesList.forEach((hero, idx) => {
+        const divId = `hero-dyn-${hero.id}`;
+        mapHtml[hero.location] += `<div id="${divId}" class="hero" style="display:block; background-position:${hero.pos}; background-size:${hero.size}; min-height:400px; margin-bottom:40px;"></div>`;
+        
+        // Agendar start slideshow após render do HTML
+        setTimeout(() => startSlideshow(divId, hero.imgs), 100);
+    });
 
-            // Hero Default logic (Se não houver hero no top, exibe timer solto, se não oculta)
-            const defaultHero = document.getElementById('home-hero-default');
-            if (mapHtml['top'] === '') {
-                defaultHero.style.display = 'block';
-                defaultHero.style.background = 'transparent';
-                defaultHero.style.boxShadow = 'none';
-                defaultHero.style.padding = '40px 20px';
-            } else {
-                // Move os textos e timer para dentro do PRIMEIRO hero do top
-                setTimeout(() => {
-                    const firstTopHero = document.getElementById('hero-top-container').firstElementChild;
-                    if(firstTopHero) {
-                        firstTopHero.innerHTML = defaultHero.innerHTML;
-                        defaultHero.innerHTML = '';
-                        defaultHero.style.display = 'none';
-                    }
-                }, 150);
+    // 1. RESGATA OS TEXTOS E O CRONÔMETRO ANTES DE APAGAR O FUNDO ANTIGO
+    const defaultHero = document.getElementById('home-hero-default');
+    const topContainer = document.getElementById('hero-top-container');
+    const elementosHero = ['home-title-display', 'home-subtitle-display', 'timer-container', 'timer-alt-display'];
+
+    if (topContainer && topContainer.querySelector('#timer-container')) {
+        elementosHero.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) defaultHero.appendChild(el);
+        });
+    }
+
+    // 2. ATUALIZA OS FUNDOS NA TELA
+    document.getElementById('hero-top-container').innerHTML = mapHtml['top'];
+    document.getElementById('hero-mid-container').innerHTML = mapHtml['mid'];
+    document.getElementById('hero-bottom-container').innerHTML = mapHtml['bottom'];
+
+    // 3. RECOLOCA O CRONÔMETRO DENTRO DO NOVO FUNDO (OU DEIXA SOLTO SE NÃO HOUVER FUNDO)
+    if (mapHtml['top'] === '') {
+        defaultHero.style.display = 'block';
+        defaultHero.style.background = 'transparent';
+        defaultHero.style.boxShadow = 'none';
+        defaultHero.style.padding = '40px 20px';
+    } else {
+        setTimeout(() => {
+            const firstTopHero = document.getElementById('hero-top-container').firstElementChild;
+            if(firstTopHero && defaultHero) {
+                 elementosHero.forEach(id => {
+                     const el = document.getElementById(id);
+                     if(el) firstTopHero.appendChild(el);
+                 });
+                defaultHero.style.display = 'none';
             }
-        }
+        }, 150);
+    }
+}
 
         function startSlideshow(divId, imgsStr) {
             const div = document.getElementById(divId);
@@ -8213,147 +8227,30 @@ function gerarRelatorioFrequencia() {
             verificarBannersPWA();
         });
 
-   function irParaHome() {
-    const header = document.getElementById("main-header");
-    const menuArea = document.querySelector(".user-info-header");
-    const menuToggle = document.getElementById("menu-toggle");
+  function irParaHome() {
+    // 1. Usa o sistema nativo do seu site para ativar a Home e desativar outras páginas
+    navegarPara('home-page');
 
-    // 1. Resetar a visualização: Esconde áreas de liderança/admin e mostra a home
-    // Adicione aqui o ID de qualquer outra área que você criar no futuro
-    const areasParaEsconder = [
-        'leadership-area', 
-        'admin-area', 
-        'specialties-catalog',
-        'points-history' 
-    ];
-
-    areasParaEsconder.forEach(id => {
-        const elemento = document.getElementById(id);
-        if (elemento) elemento.style.display = 'none';
-    });
-
-    // Mostra o conteúdo principal (verifique se o ID do seu conteúdo principal é 'main-content')
-    const mainContent = document.getElementById('main-content');
-    if (mainContent) mainContent.style.display = 'block';
-
-    // 2. Remove a tela de logo (Splash) se ela estiver ativa
-    if (header) {
-        header.classList.remove("initial-splash");
-        header.classList.add("scrolled");
-        document.body.classList.remove("splash-active");
-        document.body.style.height = "auto";
-    }
-
-    // 3. Rola para o topo suavemente
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // 4. Fecha o menu lateral caso esteja aberto
-    if (menuArea && menuArea.classList.contains('active')) {
-        menuArea.classList.remove('active');
-        if (menuToggle) menuToggle.classList.remove('active');
-    }
-}
-
-// Mantém o sensor de movimento para quem prefere apenas rolar a tela
-window.addEventListener("touchmove", () => {
-    if (window.scrollY > 10) {
-        const header = document.getElementById("main-header");
-        if (header && header.classList.contains("initial-splash")) {
-            irParaHome();
-        }
-    }
-}, { passive: true });
-
-function irParaHome() {
-    // 1. Rolar para o topo suavemente
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // 2. Destravar o Header (caso esteja na tela de Splash)
+    // 2. Remove o Splash Screen inicial para não bloquear o site de novo
     const header = document.getElementById("main-header");
     if (header) {
         header.classList.remove("initial-splash");
         header.classList.add("scrolled");
-        document.body.classList.remove("splash-active");
-        document.body.style.height = "auto";
     }
+    document.body.classList.remove("splash-active");
+    document.body.style.height = "auto";
 
-    // 3. Voltar para a Home (Esconder áreas extras e mostrar o conteúdo principal)
-    // Aqui listamos os IDs das suas seções que devem sumir ao clicar na logo
-    const secoesParaFechar = [
-        'minhas-classes-lider-section', 
-        'aprovacoes-classes-section',
-        'specialties-catalog', // Se você tiver um catálogo de especialidades
-        'admin-area'           // Se tiver uma área de admin
-    ];
-
-    secoesParaFechar.forEach(id => {
-        const elemento = document.getElementById(id);
-        if (elemento) elemento.style.display = 'none';
-    });
-
-    // 4. Mostrar o conteúdo principal (Dashboard/Pontos)
-    const mainContent = document.querySelector('.main-content');
-    if (mainContent) mainContent.style.display = 'block';
-
-    // 5. Fechar o menu lateral (mobile) se estiver aberto
+    // 3. Fecha o menu hambúrguer (mobile) se ele estiver aberto
     const menuArea = document.querySelector(".user-info-header");
     const menuToggle = document.getElementById("menu-toggle");
     if (menuArea && menuArea.classList.contains('active')) {
         menuArea.classList.remove('active');
         if (menuToggle) menuToggle.classList.remove('active');
     }
-}
 
-// Sensor para mobile: Se o usuário rolar a tela da logo, ele entra no site
-window.addEventListener("scroll", () => {
-    if (document.body.classList.contains("splash-active") && window.scrollY > 20) {
-        irParaHome();
-    }
-});
-
-function irParaHome() {
-    // 1. Destrava a tela inicial (Splash)
-    const header = document.getElementById("main-header");
-    if (header) {
-        header.classList.remove("initial-splash");
-        header.classList.add("scrolled");
-        document.body.classList.remove("splash-active");
-        document.body.style.height = "auto";
-    }
-
-    // 2. Esconde as áreas de Liderança e Aprovações
-    const secoesParaFechar = [
-        'minhas-classes-lider-section', 
-        'aprovacoes-classes-section',
-        'pontos-historico-section'
-    ];
-
-    secoesParaFechar.forEach(id => {
-        const elemento = document.getElementById(id);
-        if (elemento) elemento.style.display = 'none';
-    });
-
-    // 3. Mostra o Dashboard/Conteúdo Principal
-    const mainContent = document.querySelector('.main-content');
-    if (mainContent) mainContent.style.display = 'block';
-
-    // 4. Sobe para o topo e fecha o menu lateral
+    // 4. Rola a página para o topo suavemente
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    const menuArea = document.querySelector(".user-info-header");
-    const menuToggle = document.getElementById("menu-toggle");
-    if (menuArea && menuArea.classList.contains('active')) {
-        menuArea.classList.remove('active');
-        if (menuToggle) menuToggle.classList.remove('active');
-    }
 }
-
-// Correção extra para Mobile: deteta o toque na tela da logo
-window.addEventListener("touchmove", () => {
-    if (document.body.classList.contains("splash-active")) {
-        irParaHome();
-    }
-}, { passive: true });
 
 
 
