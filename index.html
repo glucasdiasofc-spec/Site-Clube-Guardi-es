@@ -8355,6 +8355,8 @@ window.addEventListener("touchmove", () => {
     }
 }, { passive: true });
 
+
+
     </script>
 
     <div id="modal-gerenciar-esp" class="modal-overlay" style="z-index: 9010;">
@@ -8612,10 +8614,14 @@ body.splash-active {
             /* SPLASH: Trava o scroll no body enquanto splash está ativa */
         /* Força o telemóvel a permitir o movimento de dedo para cima/baixo */
 /* SPLASH: Permite o scroll para que o JS detete o movimento e retire a logo */
+/* Permite que o navegador sinta o scroll para remover a splash screen */
 body.splash-active { 
     overflow-y: auto !important; 
     height: 120vh !important; 
 }
+
+/* Garante que as seções de liderança sumam ao voltar para a home */
+.secao-interna { display: none; }
         
        body.is-home header#main-header.initial-splash {
             background-color: #121212 !important; /* Fundo sólido para iOS */
