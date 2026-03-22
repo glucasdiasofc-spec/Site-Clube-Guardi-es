@@ -87,11 +87,16 @@
             cursor: pointer;
         }
 
-        .header-logo { 
-            height: 85px; 
-            transition: all 0.3s ease; 
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-        }
+        .header-logo {
+    display: block !important;
+    max-height: 60px; /* Tamanho no menu */
+    width: auto;
+    object-fit: contain;
+}
+
+header#main-header.initial-splash .header-logo {
+    max-height: 200px; /* Tamanho grande na entrada */
+}
         
         .logo-container:hover .header-logo { transform: scale(1.05) rotate(3deg); }
         
@@ -973,8 +978,8 @@ header#main-header .user-info-header .user-status {
     
 
     <header id="main-header" class="initial-splash">
-      <div class="logo-container" onclick="irParaHome()">
-    <img src="PNGDBV.webp" class="header-logo" alt="Logo">
+     <div class="logo-container" onclick="irParaHome()" style="cursor: pointer;">
+    <img id="header-logo-img" src="" class="header-logo" alt="Logo">
     <div class="scroll-down-msg">
         <i class="fa-solid fa-chevron-down"></i>
         <span>Role para entrar</span>
@@ -2036,8 +2041,8 @@ document.documentElement.style.setProperty('--size-mob-card-txt', (h.sizes.mobCa
             document.documentElement.style.setProperty('--size-mob-header-pad', h.sizes.mobHead + 'px');
             document.documentElement.style.setProperty('--size-mob-logo', h.sizes.mobLogo + 'px');
             
-            const mainLogo = document.getElementById('main-logo-img');
-            if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
+            const mainLogo = document.getElementById('header-logo-img');
+if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
             
             const foot = document.getElementById('main-footer');
             foot.style.backgroundColor = h.colors.fBg; foot.style.color = h.colors.fTxt;
