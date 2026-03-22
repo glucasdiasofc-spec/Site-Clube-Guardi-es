@@ -943,8 +943,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
 
     opacity: 0 !important;           /* 🔥 ESCONDIDO */
     pointer-events: none !important; /* 🔥 BLOQUEADO */
-    /* Adicione dentro da classe do seu botão de três linhas */
-    touch-action: manipulation !important;
+
 }
 
 header#main-header .user-info-header.active {
@@ -6905,7 +6904,7 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
             updateSplashScroll();
         }
         
-        window.addEventListener('load', initUX);
+       document.addEventListener('DOMContentLoaded', initUX);
 
     /* ================================================
            NOVAS FUNÇÕES: ÁREA DE ACESSO DESBRAVADOR
