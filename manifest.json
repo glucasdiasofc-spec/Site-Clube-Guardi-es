@@ -1,7 +1,7 @@
 {
-  "name": "Portal Desbravadores",
-  "short_name": "Portal DBV",
-  "description": "Sistema de Gestão do Clube de Desbravadores - pontos, especialidades e comunicação.",
+  "name": "Portal do Clube Guardiões",
+  "short_name": "Guardiões",
+  "description": "Sistema de Gestão do Clube de Desbravadores Guardiões- pontos, especialidades e comunicação.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
