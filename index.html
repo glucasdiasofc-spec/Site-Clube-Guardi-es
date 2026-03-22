@@ -446,22 +446,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
                 max-width: 44px !important;
             }
 
-            /* BOTÕES DO HEADER MOBILE */
-            /* Aplicado SOMENTE quando NÃO está no splash */
-            body:not(.is-home) header#main-header .user-info-header,
-            body.is-home header#main-header:not(.initial-splash) .user-info-header {
-                position: static !important;
-                right: auto !important;
-                top: auto !important;
-                transform: none !important;
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                align-items: center !important;
-                gap: 6px !important;
-                flex: 1 !important;
-                justify-content: flex-end !important;
-                opacity: 1 !important;
-            }
+        
 
             /* STATUS DO USUÁRIO */
             .user-status {
@@ -565,7 +550,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
 
             /* PAINEL ADMIN MOBILE */
             .panel-layout {
-                display: flex !important;
+             
                 flex-direction: column !important;
                 gap: 16px !important;
             }
@@ -967,17 +952,17 @@ header#main-header .user-info-header.active {
 }
             }
             header#main-header .user-info-header.active { right: 0; }
-            header#main-header .user-info-header button, 
-            header#main-header .user-info-header .user-status { 
-                width: 100% !important; 
-                max-width: none !important; 
-                margin: 0 !important;
-                display: flex !important;
-                justify-content: center !important;
-            }
-            header#main-header .user-info-header .btn-text { display: inline !important; }
-        }
-
+           header#main-header .user-info-header button, 
+header#main-header .user-info-header .user-status { 
+    width: 100% !important; 
+    max-width: none !important; 
+    margin: 0 !important;
+    justify-content: center !important;
+}
+/* Força o botão a não dar override no display none do JS ou do desktop */
+header#main-header .user-info-header button:not([style*="display: none"]) {
+    display: flex !important; 
+}
     </style>
 </head>
 <body>
@@ -8499,7 +8484,7 @@ function gerarRelatorioFrequencia() {
                 align-items: center !important;
             }
 
-            /* Menu Lateral (Dropdown) */
+           /* Menu Lateral (Dropdown) NO FINAL DO ARQUIVO */
             header#main-header .user-info-header {
                 position: fixed !important;
                 top: 0; right: -100%;
@@ -8514,18 +8499,23 @@ function gerarRelatorioFrequencia() {
                 border-left: 2px solid var(--amarelo);
                 z-index: 1050;
                 padding: 60px 20px !important;
-                opacity: 1 !important;
-                pointer-events: all !important;
-            }
+                
+                /* 🔥 CORREÇÃO: Escondendo o menu e bloqueando cliques */
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }           
             header#main-header .user-info-header.active { right: 0; }
-            header#main-header .user-info-header button, 
-            header#main-header .user-info-header .user-status { 
-                width: 100% !important; 
-                max-width: none !important; 
-                margin: 0 !important;
-                display: flex !important;
-                justify-content: center !important;
-            }
+           header#main-header .user-info-header button, 
+header#main-header .user-info-header .user-status { 
+    width: 100% !important; 
+    max-width: none !important; 
+    margin: 0 !important;
+    justify-content: center !important;
+}
+/* Força o botão a não dar override no display none do JS ou do desktop */
+header#main-header .user-info-header button:not([style*="display: none"]) {
+    display: flex !important; 
+}
             header#main-header .user-info-header .btn-text { display: inline !important; }
         }
 
