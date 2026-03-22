@@ -973,7 +973,7 @@ header#main-header .user-info-header .user-status {
     
 
     <header id="main-header" class="initial-splash">
-        <div class="logo-container" onclick="window.location.reload()">
+        <div class="logo-container" onclick="removerSplashManualmente()">
             <img src="PNGDBV.webp" class="header-logo" id="main-logo-img" alt="Logo Desbravadores">
             <div class="scroll-down-msg">Role para baixo <i class="fa-solid fa-chevron-down"></i></div>
         </div>
@@ -8210,6 +8210,22 @@ function gerarRelatorioFrequencia() {
             verificarBannersPWA();
         });
 
+        function removerSplashManualmente() {
+    const header = document.getElementById("main-header");
+    if (header) {
+        header.classList.remove("initial-splash");
+        header.classList.add("scrolled");
+        document.body.classList.remove("splash-active");
+        // Remove o excesso de altura que criamos para o scroll
+        document.body.style.height = "auto";
+    }
+}
+
+// Melhora o sensor de scroll para ser mais sensível no telemóvel
+window.addEventListener("touchmove", () => {
+    if (window.scrollY > 10) removerSplashManualmente();
+}, { passive: true });
+
     </script>
 
     <div id="modal-gerenciar-esp" class="modal-overlay" style="z-index: 9010;">
@@ -8454,7 +8470,11 @@ function gerarRelatorioFrequencia() {
 
             /* Splash screen mobile - corrigido para iOS */
             /* SPLASH: Trava o scroll no body enquanto splash está ativa */
-        body.splash-active { overflow: hidden !important; height: 100vh !important; }
+        /* Força o telemóvel a permitir o movimento de dedo para cima/baixo */
+body.splash-active { 
+    overflow-y: auto !important; 
+    height: 150vh !important; /* Cria um "espaço" virtual para o scroll funcionar */
+}
         
        body.is-home header#main-header.initial-splash {
             background-color: #121212 !important; /* Fundo sólido para iOS */
