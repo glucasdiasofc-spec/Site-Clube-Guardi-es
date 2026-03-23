@@ -8692,29 +8692,40 @@ header#main-header .user-info-header .user-status {
 }
 
 /* =========================================
-       AJUSTES CIRÚRGICOS: MENU E ALTURA
+       NOVA TENTATIVA: MENU E ALTURA
        ========================================= */
 
-    /* 1. Centralizar as 3 linhas (Menu) verticalmente no App e no Site */
-    /* Coloquei as classes mais comuns, uma delas vai "pescar" o seu botão */
-    header#main-header .menu-toggle,
-    header#main-header .btn-menu,
-    header#main-header .icon-menu,
-    header#main-header .hamburger {
-        position: absolute !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
+    /* 1. Alinhamento Vertical Forçado (Flexbox) */
+    /* Isso força o conteúdo do cabeçalho a se alinhar ao centro, independente da classe do botão */
+    header#main-header {
+        display: flex !important;
+        align-items: center !important; 
+        justify-content: space-between !important; /* Mantém a logo no centro e o menu na ponta */
+    }
+
+    /* Remove margens extras de qualquer botão/ícone dentro do header */
+    header#main-header > * {
         margin-top: 0 !important;
         margin-bottom: 0 !important;
     }
 
-    /* 2. Subir (diminuir altura) o cabeçalho SOMENTE no Site Mobile (Navegador) */
-    /* A regra 'display-mode: browser' protege o seu App (PWA) de ser afetado */
-    @media screen and (max-width: 768px) and (display-mode: browser) {
+    /* 2. Reduzir altura no Site Mobile mexendo nos espaçamentos internos */
+    @media screen and (max-width: 768px) {
         header#main-header {
-            height: 65px !important; /* Mude de 65px para um número menor se quiser ainda mais fino */
-            min-height: 65px !important;
-            padding-bottom: 0 !important;
+            padding-top: 5px !important;
+            padding-bottom: 5px !important;
+            min-height: 60px !important; 
+            height: 60px !important;
+        }
+    }
+
+    /* 3. Proteger a altura original EXCLUSIVAMENTE dentro do App (PWA) */
+    @media screen and (display-mode: standalone) {
+        header#main-header {
+            padding-top: 15px !important; /* Preenchimento maior para o App */
+            padding-bottom: 15px !important;
+            min-height: 85px !important; /* Altura original do App */
+            height: 85px !important;
         }
     }
 
