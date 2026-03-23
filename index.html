@@ -8626,13 +8626,16 @@ header#main-header .user-info-header .user-status {
         justify-content: space-between !important;
         align-items: center !important;
         position: fixed !important;
+        height: 60px !important; /* Subir o cabeçalho (reduzir altura) */
     }
+    body { padding-top: 60px !important; } /* Ajustar padding do body */
 
     /* 2. Botão Hambúrguer na Esquerda e User Info na Direita */
     body:not(.is-home) header#main-header #menu-toggle,
     body.is-home header#main-header:not(.initial-splash) #menu-toggle {
         order: -1 !important;
         z-index: 1100 !important; /* Prioridade de clique sobre a logo */
+        margin-top: 15px !important; /* Descer o menu de 3 linhas */
     }
 
     body:not(.is-home) header#main-header .user-info-header,
@@ -8646,8 +8649,8 @@ header#main-header .user-info-header .user-status {
     body.is-home header#main-header:not(.initial-splash) .logo-container {
         position: absolute !important;
         left: 50% !important;
-        /* O translateY (35px) empurra a logo para baixo da linha do cabeçalho */
-        transform: translate(-50%, 35px) !important; 
+        /* O translateY (45px) empurra a logo para baixo da linha do cabeçalho */
+        transform: translate(-50%, 45px) !important; /* Descer a logo */
         top: 0 !important; 
         margin: 0 !important;
         z-index: 1000 !important; 
