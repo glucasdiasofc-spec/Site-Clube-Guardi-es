@@ -8641,15 +8641,24 @@ header#main-header .user-info-header .user-status {
         z-index: 1100 !important; /* Prioridade de clique sobre a logo */
     }
 
-    /* 3. Logo Centralizada e Vazando o Header */
+   /* 3. Ajuste Exato para Descer a Logo do Header */
     body:not(.is-home) header#main-header .logo-container,
     body.is-home header#main-header:not(.initial-splash) .logo-container {
         position: absolute !important;
         left: 50% !important;
-        transform: translateX(-50%) !important;
-        top: 20px !important; /* Ajuste para vazar levemente o limite inferior */
+        /* O transform vai empurrar a logo para baixo, fazendo ela invadir a página */
+        transform: translate(-50%, 45%) !important; 
+        top: 10px !important; 
         margin: 0 !important;
-        z-index: 1000 !important; /* Menor que os botões para não bloquear cliques */
+        z-index: 1000 !important; 
+    }
+
+    /* Nova regra para aumentar o tamanho da imagem da logo */
+    body:not(.is-home) header#main-header .logo-container img,
+    body.is-home header#main-header:not(.initial-splash) .logo-container img {
+        width: 140px !important; /* Aumente ou diminua este valor se achar necessário */
+        height: auto !important;
+        max-height: none !important;
     }
 
     /* 4. Efeito de Chama Animada (Pseudo-elemento isolado) */
