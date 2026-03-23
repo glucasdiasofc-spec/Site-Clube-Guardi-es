@@ -8700,8 +8700,9 @@ header#main-header .user-info-header .user-status {
     /* Posicionamento vertical da Logo no APP - VAZANDO NA LINHA AMARELA */
     html.is-pwa-app body:not(.is-home) header#main-header .logo-container,
     html.is-pwa-app body.is-home header#main-header:not(.initial-splash) .logo-container {
-        top: 55px !important; /* Aumentado para que a logo vaze mais sobre a linha amarela */
-        transform: translate(-50%, -50%) !important; 
+        top: auto !important; 
+        bottom: -40px !important; /* Posiciona a logo para baixo, vazando na linha amarela */
+        transform: translateX(-50%) !important; 
     }
 
     /* 3.1 Quebrar a trava antiga e forçar o tamanho gigante da Logo */
