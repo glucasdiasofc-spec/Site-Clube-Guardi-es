@@ -8636,6 +8636,7 @@ header#main-header .user-info-header .user-status {
         align-items: center !important;
         position: fixed !important;
         height: 80px !important; /* Altura padrão para App */
+        border-bottom: 2px solid var(--amarelo) !important; /* Adiciona a linha amarela no APP */
     }
 
     /* Ajuste de altura APENAS para o SITE MOBILE (não App) */
@@ -8694,6 +8695,13 @@ header#main-header .user-info-header .user-status {
         left: 50% !important;
         transform: translate(-50%, -50%) !important; 
         margin: 0 !important;
+    }
+
+    /* Posicionamento vertical da Logo no APP - VAZANDO NA LINHA AMARELA */
+    html.is-pwa-app body:not(.is-home) header#main-header .logo-container,
+    html.is-pwa-app body.is-home header#main-header:not(.initial-splash) .logo-container {
+        top: 80px !important; /* Alinha o centro da logo com a borda inferior (linha amarela) */
+        transform: translate(-50%, -50%) !important; 
     }
 
     /* 3.1 Quebrar a trava antiga e forçar o tamanho gigante da Logo */
