@@ -977,13 +977,20 @@ header#main-header .user-info-header .user-status {
 
     
 
-    <header id="main-header" class="initial-splash">
-     <div class="logo-container" onclick="irParaHome()" style="cursor: pointer;">
-    <img id="header-logo-img" src="" class="header-logo" alt="Logo">
-    <div class="scroll-down-msg">
-        <i class="fa-solid fa-chevron-down"></i>
-        <span>Role para entrar</span>
+    <header id="main-header">
+    <button id="menu-toggle" class="header-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="logo-flame-container" onclick="irParaHome()">
+        <div class="flame-effect"></div>
+        <img src="PNGDBV.webp" alt="Logo" class="centered-logo">
     </div>
+
+    <div class="user-info-trigger header-btn">
+        <img src="user-icon.png" alt="User" id="user-photo">
+    </div>
+</header>
 </div>
         <div class="user-info-header">
             <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <span class="btn-text">Visitante</span></span>
@@ -8614,6 +8621,87 @@ header#main-header .user-info-header .user-status {
 #menu-toggle span {
     pointer-events: none !important; /* ISSO É O SEGREDO: impede que o ícone roube o clique! */
 }
+
+/* --- ESTILO GERAL DO HEADER (PC E CELULAR) --- */
+header#main-header {
+    background-color: #000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+}
+
+/* Esconder chama no PC por padrão */
+.flame-effect { display: none; }
+
+/* --- AJUSTES EXCLUSIVOS PARA CELULAR --- */
+@media (max-width: 768px) {
+    header#main-header {
+        height: 75px !important; /* Altura do topo no celular */
+        border-bottom: 2px solid #ffcc00 !important;
+    }
+
+    /* Centraliza o container do logo e joga ele para baixo */
+    .logo-flame-container {
+        position: absolute !important;
+        left: 50% !important;
+        top: 65px !important; /* Altura que o logo vai ficar (mais abaixo) */
+        transform: translate(-50%, -50%) !important;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001 !important;
+    }
+
+    .centered-logo {
+        height: 75px !important; /* Tamanho do logo no celular */
+        width: auto !important;
+        z-index: 1010 !important;
+        filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.8));
+    }
+
+    /* O Efeito de Chama (Apenas Mobile) */
+    .flame-effect {
+        display: block !important;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 50% 50%, #ffcc00 0%, #ff6600 40%, transparent 65%);
+        border-radius: 50%;
+        filter: blur(12px);
+        opacity: 0.7;
+        animation: flickerChama 1.2s ease-in-out infinite alternate;
+    }
+
+    .flame-effect::after {
+        content: '';
+        position: absolute;
+        top: -5px; left: -5px; right: -5px; bottom: -5px;
+        background: radial-gradient(circle at 50% 50%, #fff 0%, #ffcc00 30%, transparent 60%);
+        border-radius: 50%;
+        filter: blur(8px);
+        opacity: 0.5;
+        animation: flickerChama 0.8s ease-in-out infinite alternate-reverse;
+    }
+
+    /* Ajuste dos botões laterais para não sumirem */
+    .header-btn {
+        z-index: 1020 !important;
+        position: relative;
+    }
+}
+
+/* Animação da chama */
+@keyframes flickerChama {
+    0% { transform: scale(0.9) translateY(0); opacity: 0.6; }
+    50% { transform: scale(1.1) translateY(-4px); opacity: 0.9; }
+    100% { transform: scale(1) translateY(-2px); opacity: 0.8; }
+}
+
     </style>
 
 </body>
