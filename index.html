@@ -8845,6 +8845,63 @@ header#main-header .user-info-header .user-status {
     }
 }
 
+/* =========================================
+       NOVA CUSTOMIZAÇÃO DO MENU (APENAS MOBILE E APP)
+       ========================================= */
+    
+    /* 1. Esconde a nova logo flutuante no computador para não duplicar ou atrapalhar o layout atual */
+    .logo-flutuante {
+        display: none; 
+    }
+
+    /* 2. Regras aplicadas APENAS em telas de celular (até 768px) e PWA */
+    @media (max-width: 768px), (display-mode: standalone) {
+        
+        /* Força a estrutura em coluna apenas no celular */
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px; 
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Ajusta a largura dos botões para a tela do celular */
+        .menu-container button, 
+        .menu-container .menu-button {
+            width: 90%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        /* Centraliza o nome "Visitante" */
+        .visitante-texto {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Mostra a logo flutuante no celular e aplica a animação */
+        .logo-flutuante {
+            display: block;
+            margin: 0 auto;
+            width: 120px; /* Ajuste o tamanho da imagem enviada aqui */
+            animation: flutuarMenu 3s ease-in-out infinite;
+        }
+
+        /* Efeito de levitação da logo */
+        @keyframes flutuarMenu {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); } /* Sobe 12px */
+            100% { transform: translateY(0px); }
+        }
+    }
+
     </style>
 
 </body>
