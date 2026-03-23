@@ -8636,7 +8636,7 @@ body.splash-active {
     /* 3.1 Animação de saída do menu (desliza para trás) */
     header#main-header .user-info-header.closing {
         right: -100% !important;
-        
+
         pointer-events: none !important;
     }
 }
@@ -8873,17 +8873,29 @@ header#main-header .user-info-header .user-status {
     }
 
     /* 2. Regras aplicadas APENAS em telas de celular (até 768px) e PWA */
-    @media (max-width: 768px), (display-mode: standalone) {
-        
-        /* Força a estrutura em coluna apenas no celular */
+    /* O nome visitante agora fica fixo no topo, separado dos botões */
+        .visitante-texto {
+            position: absolute;
+            top: 30px; /* Distância do topo da tela */
+            left: 0;
+            right: 0;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+        }
+
+        /* O container ocupa a tela toda para os botões descerem para o meio */
         .menu-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 15px; 
+            justify-content: center; /* Agora isso vai centralizar no meio da tela */
+            gap: 40px; /* Aumentei o espaçamento para separá-los bem */
             width: 100%;
-            margin-top: 20px;
+            height: 100vh; /* Força o container a ter a altura exata da tela */
+            margin-top: 0;
         }
 
         /* Ajusta a largura dos botões para a tela do celular */
