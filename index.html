@@ -6909,21 +6909,31 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                 };
             }
 
-            // Fechar menu ao clicar em qualquer botão
+            // Fechar menu ao clicar em qualquer botão com animação de saída
             document.querySelectorAll('.user-info-header button').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    if(menuToggle) menuToggle.classList.remove('active');
-                    if(menuContent) menuContent.classList.remove('active');
+                    if(menuContent) {
+                        menuContent.classList.add('closing');
+                        setTimeout(() => {
+                            if(menuToggle) menuToggle.classList.remove('active');
+                            menuContent.classList.remove('active');
+                            menuContent.classList.remove('closing');
+                        }, 400);
+                    }
                 });
             });
 
-            // Fechar o menu ao clicar fora dele na tela
+            // Fechar o menu ao clicar fora dele na tela com animação de saída
             document.addEventListener('click', (e) => {
                 if (menuContent && menuContent.classList.contains('active') && 
                     !menuContent.contains(e.target) && 
                     !menuToggle.contains(e.target)) {
-                    menuContent.classList.remove('active');
-                    menuToggle.classList.remove('active');
+                    menuContent.classList.add('closing');
+                    setTimeout(() => {
+                        menuContent.classList.remove('active');
+                        menuToggle.classList.remove('active');
+                        menuContent.classList.remove('closing');
+                    }, 400);
                 }
             });
 
@@ -8586,10 +8596,11 @@ body.splash-active {
         height: 100vh !important;
         background: rgba(18, 18, 18, 0.98) !important;
         flex-direction: column !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
         align-items: center !important;
-        gap: 25px !important;
-        transition: right 0.4s ease-in-out, opacity 0.4s ease-in-out !important;
+        gap: 40px !important;
+        padding-top: 80px !important;
+        transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in-out !important;
         z-index: 9000 !important; /* Fica logo abaixo do botão hambúrguer */
         
         /* Estado inativo */
@@ -8603,16 +8614,83 @@ body.splash-active {
         opacity: 1 !important; /* Deixa visível */
         pointer-events: all !important; /* Permite os cliques nos botões */
     }
+
+    /* 3.1 Animação de saída do menu (desliza para trás) */
+    header#main-header .user-info-header.closing {
+        right: -100% !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
 }
             header#main-header .user-info-header.active { right: 0; }
            header#main-header .user-info-header button, 
 header#main-header .user-info-header .user-status { 
-    width: 100% !important; 
-    max-width: none !important; 
-    margin: 0 !important;
+    width: 90% !important; 
+    max-width: 300px !important; 
+    margin: 0 auto !important;
     justify-content: center !important;
+    padding: 16px 20px !important;
 }
             header#main-header .user-info-header .btn-text { display: inline !important; }
+
+    /* Estilo do texto Visitante no menu mobile */
+    header#main-header .user-info-header .user-status {
+        background: transparent !important;
+        border: none !important;
+        color: var(--amarelo) !important;
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: default !important;
+        pointer-events: none !important;
+    }
+
+    /* Separar botões de Liderança e Desbravador */
+    header#main-header .user-info-header .btn-lideranca,
+    header#main-header .user-info-header .btn-desbravador {
+        min-height: 50px !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        animation: fadeInMenu 0.6s ease-out forwards !important;
+    }
+
+    header#main-header .user-info-header .btn-desbravador {
+        animation-delay: 0.1s !important;
+    }
+
+    header#main-header .user-info-header .btn-lideranca {
+        animation-delay: 0.2s !important;
+    }
+
+    /* Animação de entrada dos botões */
+    @keyframes fadeInMenu {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Animação de saída dos botões ao clicar */
+    header#main-header .user-info-header.closing .btn-lideranca,
+    header#main-header .user-info-header.closing .btn-desbravador {
+        animation: fadeOutMenu 0.4s ease-in forwards !important;
+    }
+
+    @keyframes fadeOutMenu {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    }
         }
 /* --- CORREÇÃO DE ÁREA DE CLIQUE DO MENU --- */
 #menu-toggle {
@@ -8671,7 +8749,7 @@ header#main-header .user-info-header .user-status {
         z-index: 1100 !important; /* Prioridade de clique sobre a logo */
     }
 
-   /* 3. Logo Centralizada e Vazando o Header */
+    /* 3. Logo Centralizada e Vazando o Header - COM EFEITO FLUTUANTE NO MENU */
     body:not(.is-home) header#main-header .logo-container,
     body.is-home header#main-header:not(.initial-splash) .logo-container {
         position: absolute !important;
@@ -8681,6 +8759,30 @@ header#main-header .user-info-header .user-status {
         z-index: 1000 !important; 
         /* Força a centralização horizontal absoluta */
         transform: translateX(-50%) !important;
+    }
+
+    /* Logo com efeito flutuante no menu mobile */
+    header#main-header .user-info-header.active .logo-container {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin-bottom: 20px !important;
+        animation: floatLogo 3s ease-in-out infinite !important;
+    }
+
+    @keyframes floatLogo {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    header#main-header .user-info-header.active .header-logo {
+        max-height: 80px !important;
+        filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.4)) !important;
     }
 
     /* Posicionamento vertical da Logo no SITE MOBILE (centralizada na linha de 35px) */
