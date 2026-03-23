@@ -6900,42 +6900,31 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
             const menuToggle = document.getElementById('menu-toggle');
             const menuContent = document.querySelector('.user-info-header');
             
-            if (menuToggle) {
-                menuToggle.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.classList.toggle('active');
-                    menuContent.classList.toggle('active');
-                };
-            }
+           if (menuToggle && menuContent) {
+            menuToggle.addEventListener('click', () => {
+                const isActive = menuContent.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+            });
 
-            // Fechar menu ao clicar em qualquer botão com animação de saída
+            // Fechar menu ao clicar nos botões (com animação de saída)
             document.querySelectorAll('.user-info-header button').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    if(menuContent) {
-                        menuContent.classList.add('closing');
-                        setTimeout(() => {
-                            if(menuToggle) menuToggle.classList.remove('active');
-                            menuContent.classList.remove('active');
-                            menuContent.classList.remove('closing');
-                        }, 400);
-                    }
+                    // Apenas remove a classe; o CSS 'transition' fará o resto deslizando
+                    menuContent.classList.remove('active');
+                    menuToggle.classList.remove('active');
                 });
             });
 
-            // Fechar o menu ao clicar fora dele na tela com animação de saída
+            // Fechar ao clicar fora (com animação de saída)
             document.addEventListener('click', (e) => {
-                if (menuContent && menuContent.classList.contains('active') && 
+                if (menuContent.classList.contains('active') && 
                     !menuContent.contains(e.target) && 
                     !menuToggle.contains(e.target)) {
-                    menuContent.classList.add('closing');
-                    setTimeout(() => {
-                        menuContent.classList.remove('active');
-                        menuToggle.classList.remove('active');
-                        menuContent.classList.remove('closing');
-                    }, 400);
+                    menuContent.classList.remove('active');
+                    menuToggle.classList.remove('active');
                 }
             });
+        }
 
             // Gerenciar trava de scroll no Splash
             const updateSplashScroll = () => {
