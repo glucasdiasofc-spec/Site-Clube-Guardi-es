@@ -914,10 +914,10 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .req-item { margin-bottom: 10px; font-size: 0.95rem; color: #ddd; padding-bottom:10px; border-bottom:1px solid #333;}
         
     
-        /* MENU HAMBÚRGUER E LIMITES DO HEADER */
-        .menu-hamburger { background: none; border: none; cursor: pointer; padding: 10px; z-index: 1100; flex-direction: column; gap: 5px; }
-        .menu-hamburger span { display: block; width: 25px; height: 3px; background: var(--amarelo); border-radius: 3px; transition: 0.3s; }
-        
+            /* MENU HAMBÚRGUER E LIMITES DO HEADER */
+            .menu-hamburger { background: none; border: none; cursor: pointer; padding: 10px; z-index: 1100; flex-direction: column; gap: 5px; }
+            .menu-hamburger span { display: block; width: 25px; height: 3px; background: var(--amarelo); border-radius: 3px; transition: 0.3s; }
+            
         @media (max-width: 768px) {
             .menu-hamburger { display: flex !important; }
             .menu-hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
@@ -8576,53 +8576,30 @@ body.splash-active {
         position: relative;
     }
 
-   /* 2. Configuração do Menu Mobile */
-   header#main-header .user-info-header {
+  /* 2. Configuração do Menu Mobile para cobrir a tela toda */
+    header#main-header .user-info-header {
         position: fixed !important;
         top: 0 !important;
-        right: -100% !important; /* Começa fora da tela */
-        width: 100% !important;
+        right: -100% !important; /* Escondido fora da tela por padrão */
+        width: 100vw !important; /* Cobre 100% da tela */
         height: 100vh !important;
         background: rgba(18, 18, 18, 0.98) !important;
-        
-        /* IMPORTANTE: Mudamos de 'none' para 'flex' e controlamos com o 'right' */
-        display: flex !important; 
+        display: flex !important;
         flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        gap: 25px !important;
-        
-        /* A transição deve estar aqui para funcionar na ida e na volta */
-        transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        z-index: 9000 !important;
-        padding: 0 !important;
-    }
-
-    /* Quando estiver ativo, ele desliza para a posição 0 */
-    header#main-header .user-info-header.active {
-        right: 0 !important;
-    }
-
-    /* Trava o nome Visitante lá no topo */
-    header#main-header .user-info-header .user-status {
-        position: absolute !important;
-        top: 80px !important; /* Distância do topo */
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        background: transparent !important;
-        border: none !important;
-        color: var(--amarelo) !important;
-        font-weight: 700 !important;
-        font-size: 1.3rem !important;
-    }
-
-    /* Estado Ativo (Menu aberto) */
-    header#main-header .user-info-header.active {
-        right: 0 !important;
+        justify-content: center !important; /* Centraliza no meio da tela verticalmente */
+        align-items: center !important; /* Centraliza horizontalmente */
+        gap: 25px !important; /* Espaço entre os botões */
+        padding-top: 0 !important;
+        transition: right 0.4s ease-in-out !important; /* Faz o deslize de ida e volta */
+        z-index: 9000 !important; /* Fica logo abaixo do botão hambúrguer */
     }
 
     /* Estilo do texto Visitante no menu mobile */
     header#main-header .user-info-header .user-status {
+        position: absolute !important; /* Tira do fluxo e trava em cima */
+        top: 80px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
         background: transparent !important;
         border: none !important;
         color: var(--amarelo) !important;
@@ -8632,18 +8609,12 @@ body.splash-active {
         margin: 0 !important;
         cursor: default !important;
         pointer-events: none !important;
-        /* Trava o nome no topo para não descer com os botões */
-        position: absolute !important;
-        top: 80px !important; 
-        left: 50% !important;
-        transform: translateX(-50%) !important;
     }
 
-    /* 3. Quando o botão é clicado (A classe .active entra em ação) */
-    header#main-header .user-info-header.active { 
-        right: 0 !important; /* Puxa para dentro da tela */
-        opacity: 1 !important; /* Deixa visível */
-        pointer-events: all !important; /* Permite os cliques nos botões */
+    /* 3. Animação de entrada do menu (desliza da direita) */
+    header#main-header .user-info-header.active {
+        right: 0 !important;
+        pointer-events: all !important;
     }
 
     /* 3.1 Animação de saída do menu (desliza para trás) */
