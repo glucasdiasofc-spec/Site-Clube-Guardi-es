@@ -8587,25 +8587,40 @@ body.splash-active {
         position: relative;
     }
 
-    /* 2. Configuração do Menu Mobile para cobrir a tela toda */
+   /* 2. Configuração do Menu Mobile */
     header#main-header .user-info-header {
         position: fixed !important;
-        top: 0 !important; 
-        right: -100% !important; /* Escondido fora da tela por padrão */
-        width: 100vw !important; /* Cobre 100% da tela (Esconde a Home) */
+        top: 0 !important;
+        right: -100% !important;
+        width: 100% !important;
         height: 100vh !important;
         background: rgba(18, 18, 18, 0.98) !important;
-        flex-direction: column !important;
-        justify-content: center !important; /* Centraliza os botões na tela */
-        align-items: center !important;
-        gap: 30px !important; /* Separa os botões */
-        padding-top: 0 !important; /* Zera o padding para o center funcionar bem */
-        transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in-out !important;
-        z-index: 9000 !important; /* Fica logo abaixo do botão hambúrguer */
-        
-        /* Estado inativo */
-        opacity: 0 !important;
-        pointer-events: none !important;
+        display: flex !important;
+        flex-direction: column !important; /* Botões um em cima do outro */
+        justify-content: center !important; /* Centraliza no meio da tela verticalmente */
+        align-items: center !important; /* Centraliza horizontalmente */
+        gap: 25px !important; /* Espaço exato entre os botões */
+        transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important; /* O segredo do deslize na volta */
+        z-index: 9000 !important;
+        padding: 0 !important;
+    }
+
+    /* Trava o nome Visitante lá no topo */
+    header#main-header .user-info-header .user-status {
+        position: absolute !important;
+        top: 80px !important; /* Distância do topo */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        background: transparent !important;
+        border: none !important;
+        color: var(--amarelo) !important;
+        font-weight: 700 !important;
+        font-size: 1.3rem !important;
+    }
+
+    /* Estado Ativo (Menu aberto) */
+    header#main-header .user-info-header.active {
+        right: 0 !important;
     }
 
     /* Estilo do texto Visitante no menu mobile */
