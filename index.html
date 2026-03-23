@@ -8659,9 +8659,9 @@ header#main-header .user-info-header .user-status {
     html.is-pwa-app #menu-toggle {
         margin-top: 25px !important; 
     }
-    /* Subir o menu de 3 linhas no SITE MOBILE (remover espaço superior) */
+    /* Descer o menu de 3 linhas no SITE MOBILE (para alinhar com a logo) */
     html:not(.is-pwa-app) #menu-toggle {
-        margin-top: 5px !important;
+        margin-top: 25px !important;
     }
 
     body:not(.is-home) header#main-header .user-info-header,
@@ -8675,11 +8675,19 @@ header#main-header .user-info-header .user-status {
     body.is-home header#main-header:not(.initial-splash) .logo-container {
         position: absolute !important;
         left: 50% !important;
-        /* O translateY (25px) sobe a logo para remover o espaço superior */
-        transform: translate(-50%, 25px) !important; 
         top: 0 !important; 
         margin: 0 !important;
         z-index: 1000 !important; 
+    }
+
+    /* Posicionamento da Logo no SITE MOBILE (centralizada na linha) */
+    html:not(.is-pwa-app) .logo-container {
+        transform: translate(-50%, 18px) !important; 
+    }
+
+    /* Posicionamento da Logo no APP (mais baixa, como original) */
+    html.is-pwa-app .logo-container {
+        transform: translate(-50%, 45px) !important; 
     }
 
     /* 3.1 Quebrar a trava antiga e forçar o tamanho gigante da Logo */
