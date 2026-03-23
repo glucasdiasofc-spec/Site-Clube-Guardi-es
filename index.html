@@ -8616,71 +8616,69 @@ header#main-header .user-info-header .user-status {
 }
 
 /* ============================================================
-   AJUSTE FINAL: LOGO SOBREPOSTA E CHAMA (APENAS MOBILE)
+   NOVO HEADER MOBILE - LOGO CENTRALIZADA E EFEITO DE CHAMA
    ============================================================ */
 @media (max-width: 768px) {
-    /* Força o header a ser um flexbox no mobile */
-    header#main-header {
+    /* 1. Estrutura Flex do Header */
+    body:not(.is-home) header#main-header,
+    body.is-home header#main-header:not(.initial-splash) {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 0 15px !important;
-        height: 70px !important; /* Aumentei um pouco para dar espaço à logo */
-        overflow: visible !important; /* Permite que a logo "vaze" para baixo */
+        position: fixed !important;
     }
 
-    /* 1. Botão Menu (Esquerda) */
-    #menu-toggle {
+    /* 2. Botão Hambúrguer na Esquerda e User Info na Direita */
+    body:not(.is-home) header#main-header #menu-toggle,
+    body.is-home header#main-header:not(.initial-splash) #menu-toggle {
+        order: -1 !important;
+        z-index: 1100 !important; /* Prioridade de clique sobre a logo */
+    }
+
+    body:not(.is-home) header#main-header .user-info-header,
+    body.is-home header#main-header:not(.initial-splash) .user-info-header {
         order: 1 !important;
-        z-index: 20 !important; /* Garante clique */
-        margin: 0 !important;
+        z-index: 1100 !important; /* Prioridade de clique sobre a logo */
     }
 
-    /* 2. Área do Usuário (Direita) */
-    .user-info-trigger, .user-info-header {
-        order: 3 !important;
-        z-index: 20 !important;
-        margin: 0 !important;
-    }
-
-    /* 3. Container da Logo (Centro e por cima de tudo) */
-    .logo-container {
-        order: 2 !important;
+    /* 3. Logo Centralizada e Vazando o Header */
+    body:not(.is-home) header#main-header .logo-container,
+    body.is-home header#main-header:not(.initial-splash) .logo-container {
         position: absolute !important;
         left: 50% !important;
-        top: 15px !important; /* Ajuste aqui para subir ou descer a logo */
         transform: translateX(-50%) !important;
-        z-index: 100 !important; /* Valor alto para ficar na frente de tudo */
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
+        top: 20px !important; /* Ajuste para vazar levemente o limite inferior */
+        margin: 0 !important;
+        z-index: 1000 !important; /* Menor que os botões para não bloquear cliques */
     }
 
-    /* Ajuste da imagem da logo dentro do container */
-    #header-logo {
-        width: 65px !important; /* Ajuste o tamanho conforme sua foto */
-        height: auto !important;
-        filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.5)) !important; /* Dá destaque à logo */
-    }
-
-    /* 4. Efeito de Chama (Atrás da Logo) */
-    .logo-container::before {
+    /* 4. Efeito de Chama Animada (Pseudo-elemento isolado) */
+    body:not(.is-home) header#main-header .logo-container::before,
+    body.is-home header#main-header:not(.initial-splash) .logo-container::before {
         content: '';
         position: absolute;
-        width: 90px;  /* Tamanho da aura de fogo */
-        height: 90px;
-        background: radial-gradient(circle, #ffcc00 10%, #ff6600 50%, transparent 75%);
-        filter: blur(8px);
-        z-index: -1; /* Fica atrás da imagem da logo */
-        animation: chamaEfeito 1s infinite alternate ease-in-out;
-        pointer-events: none;
+        top: 50%;
+        left: 50%;
+        width: 140%;
+        height: 140%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, #ffcc00 15%, #ff6600 55%, transparent 80%);
+        filter: blur(12px);
+        z-index: -1; /* Fica atrás da tag <img> da logo */
+        pointer-events: none; /* Blindagem para não atrapalhar o onclick */
+        animation: chamaAnimada 1.2s infinite alternate ease-in-out;
     }
-}
 
-/* Animação suave da chama */
-@keyframes chamaEfeito {
-    0% { transform: scale(0.9); opacity: 0.6; }
-    100% { transform: scale(1.2); opacity: 0.9; }
+    @keyframes chamaAnimada {
+        0% {
+            transform: translate(-50%, -50%) scale(0.85);
+            opacity: 0.6;
+        }
+        100% {
+            transform: translate(-50%, -50%) scale(1.15);
+            opacity: 0.95;
+        }
+    }
 }
 
     </style>
