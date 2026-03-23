@@ -8661,7 +8661,7 @@ header#main-header .user-info-header .user-status {
         max-width: none !important; /* ISSO AQUI DESTRÓI O BLOQUEIO ANTIGO */
         max-height: none !important;
     }
-    
+
     /* 4. Efeito de Chama Animada (Pseudo-elemento isolado) */
     body:not(.is-home) header#main-header .logo-container::before,
     body.is-home header#main-header:not(.initial-splash) .logo-container::before {
@@ -8690,6 +8690,33 @@ header#main-header .user-info-header .user-status {
         }
     }
 }
+
+/* =========================================
+       AJUSTES CIRÚRGICOS: MENU E ALTURA
+       ========================================= */
+
+    /* 1. Centralizar as 3 linhas (Menu) verticalmente no App e no Site */
+    /* Coloquei as classes mais comuns, uma delas vai "pescar" o seu botão */
+    header#main-header .menu-toggle,
+    header#main-header .btn-menu,
+    header#main-header .icon-menu,
+    header#main-header .hamburger {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* 2. Subir (diminuir altura) o cabeçalho SOMENTE no Site Mobile (Navegador) */
+    /* A regra 'display-mode: browser' protege o seu App (PWA) de ser afetado */
+    @media screen and (max-width: 768px) and (display-mode: browser) {
+        header#main-header {
+            height: 65px !important; /* Mude de 65px para um número menor se quiser ainda mais fino */
+            min-height: 65px !important;
+            padding-bottom: 0 !important;
+        }
+    }
 
     </style>
 
