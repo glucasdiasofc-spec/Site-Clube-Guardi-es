@@ -25,6 +25,15 @@
 
     <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Detectar se é PWA (App)
+        (function() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            if (isStandalone) {
+                document.documentElement.classList.add('is-pwa-app');
+            }
+        })();
+    </script>
     <style>
         
         #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100svh; background: #121212; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
@@ -8626,16 +8635,30 @@ header#main-header .user-info-header .user-status {
         justify-content: space-between !important;
         align-items: center !important;
         position: fixed !important;
-        height: 60px !important; /* Subir o cabeçalho (reduzir altura) */
+        height: 80px !important; /* Altura padrão para App */
     }
-    body { padding-top: 60px !important; } /* Ajustar padding do body */
+
+    /* Ajuste de altura APENAS para o SITE MOBILE (não App) */
+    html:not(.is-pwa-app) body:not(.is-home) header#main-header,
+    html:not(.is-pwa-app) body.is-home header#main-header:not(.initial-splash) {
+        height: 55px !important; /* Subir o cabeçalho no site mobile */
+    }
+    html:not(.is-pwa-app) body { padding-top: 55px !important; }
 
     /* 2. Botão Hambúrguer na Esquerda e User Info na Direita */
     body:not(.is-home) header#main-header #menu-toggle,
     body.is-home header#main-header:not(.initial-splash) #menu-toggle {
         order: -1 !important;
         z-index: 1100 !important; /* Prioridade de clique sobre a logo */
-        margin-top: 15px !important; /* Descer o menu de 3 linhas */
+    }
+
+    /* Descer o menu de 3 linhas no APP */
+    html.is-pwa-app #menu-toggle {
+        margin-top: 25px !important; 
+    }
+    /* Descer o menu de 3 linhas no SITE MOBILE (um pouco menos) */
+    html:not(.is-pwa-app) #menu-toggle {
+        margin-top: 10px !important;
     }
 
     body:not(.is-home) header#main-header .user-info-header,
