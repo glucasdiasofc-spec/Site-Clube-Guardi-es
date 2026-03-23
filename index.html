@@ -8596,16 +8596,34 @@ body.splash-active {
         height: 100vh !important;
         background: rgba(18, 18, 18, 0.98) !important;
         flex-direction: column !important;
-        justify-content: flex-start !important;
+        justify-content: center !important; /* Centraliza os botões na tela */
         align-items: center !important;
-        gap: 40px !important;
-        padding-top: 80px !important;
+        gap: 30px !important; /* Separa os botões */
+        padding-top: 0 !important; /* Zera o padding para o center funcionar bem */
         transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in-out !important;
         z-index: 9000 !important; /* Fica logo abaixo do botão hambúrguer */
         
         /* Estado inativo */
         opacity: 0 !important;
         pointer-events: none !important;
+    }
+
+    /* Estilo do texto Visitante no menu mobile */
+    header#main-header .user-info-header .user-status {
+        background: transparent !important;
+        border: none !important;
+        color: var(--amarelo) !important;
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: default !important;
+        pointer-events: none !important;
+        /* Trava o nome no topo para não descer com os botões */
+        position: absolute !important;
+        top: 80px !important; 
+        left: 50% !important;
+        transform: translateX(-50%) !important;
     }
 
     /* 3. Quando o botão é clicado (A classe .active entra em ação) */
@@ -8618,7 +8636,7 @@ body.splash-active {
     /* 3.1 Animação de saída do menu (desliza para trás) */
     header#main-header .user-info-header.closing {
         right: -100% !important;
-        opacity: 0 !important;
+        
         pointer-events: none !important;
     }
 }
