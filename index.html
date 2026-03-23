@@ -8641,11 +8641,11 @@ header#main-header .user-info-header .user-status {
     /* Ajuste de altura APENAS para o SITE MOBILE (não App) */
     html:not(.is-pwa-app) body:not(.is-home) header#main-header,
     html:not(.is-pwa-app) body.is-home header#main-header:not(.initial-splash) {
-        height: 10px !important; /* Cabeçalho extremamente fino no site mobile */
-        background: transparent !important; /* Fundo transparente para não ocupar espaço visual */
-        border-bottom: none !important;
+        height: 45px !important; /* Cabeçalho fino no site mobile */
+        background: var(--cinza-dark) !important; /* Mantém o fundo sólido */
+        border-bottom: 2px solid var(--amarelo) !important; /* Mantém a borda amarela */
     }
-    html:not(.is-pwa-app) body { padding-top: 10px !important; } /* Conteúdo sobe para o topo */
+    html:not(.is-pwa-app) body { padding-top: 45px !important; } /* Ajusta o conteúdo para a nova altura */
 
     /* 2. Botão Hambúrguer na Esquerda e User Info na Direita */
     body:not(.is-home) header#main-header #menu-toggle,
@@ -8660,7 +8660,7 @@ header#main-header .user-info-header .user-status {
     }
     /* Descer o menu de 3 linhas no SITE MOBILE (para alinhar com a logo) */
     html:not(.is-pwa-app) #menu-toggle {
-        margin-top: 35px !important;
+        margin-top: 25px !important;
     }
 
     body:not(.is-home) header#main-header .user-info-header,
@@ -8674,8 +8674,8 @@ header#main-header .user-info-header .user-status {
     body.is-home header#main-header:not(.initial-splash) .logo-container {
         position: absolute !important;
         left: 50% !important;
-        /* O translateY (55px) empurra a logo para baixo da linha do cabeçalho */
-        transform: translate(-50%, 55px) !important; /* Descer a logo conforme imagem */
+        /* O translateY (45px) empurra a logo para baixo da linha do cabeçalho */
+        transform: translate(-50%, 45px) !important; /* Descer a logo conforme imagem */
         top: 0 !important; 
         margin: 0 !important;
         z-index: 1000 !important; 
