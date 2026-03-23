@@ -969,6 +969,9 @@ header#main-header .user-info-header.active {
             header#main-header .user-info-header.active { right: 0; }
            header#main-header .user-info-header button, 
 header#main-header .user-info-header .user-status { 
+    white-space: nowrap; /* Impede que o texto caia para a linha de baixo */
+    width: 200px;        /* Força os dois botões a terem o mesmo tamanho exato */
+    justify-content: center; /* Mantém o ícone e o texto centralizados dentro do botão */
     width: 100% !important; 
     max-width: none !important; 
     margin: 0 !important;
