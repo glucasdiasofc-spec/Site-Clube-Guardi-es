@@ -8688,9 +8688,12 @@ header#main-header .user-info-header .user-status {
     }
 
     /* Posicionamento vertical da Logo no APP (centralizada na linha de 80px) */
-    html.is-pwa-app .logo-container {
+    html.is-pwa-app body:not(.is-home) header#main-header .logo-container,
+    html.is-pwa-app body.is-home header#main-header:not(.initial-splash) .logo-container {
         top: 50% !important;
+        left: 50% !important;
         transform: translate(-50%, -50%) !important; 
+        margin: 0 !important;
     }
 
     /* 3.1 Quebrar a trava antiga e forçar o tamanho gigante da Logo */
