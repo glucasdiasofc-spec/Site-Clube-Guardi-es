@@ -8577,21 +8577,30 @@ body.splash-active {
     }
 
    /* 2. Configuração do Menu Mobile */
-    header#main-header .user-info-header {
+   header#main-header .user-info-header {
         position: fixed !important;
         top: 0 !important;
-        right: -100% !important;
+        right: -100% !important; /* Começa fora da tela */
         width: 100% !important;
         height: 100vh !important;
         background: rgba(18, 18, 18, 0.98) !important;
-        display: flex !important;
-        flex-direction: column !important; /* Botões um em cima do outro */
-        justify-content: center !important; /* Centraliza no meio da tela verticalmente */
-        align-items: center !important; /* Centraliza horizontalmente */
-        gap: 25px !important; /* Espaço exato entre os botões */
-        transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important; /* O segredo do deslize na volta */
+        
+        /* IMPORTANTE: Mudamos de 'none' para 'flex' e controlamos com o 'right' */
+        display: flex !important; 
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 25px !important;
+        
+        /* A transição deve estar aqui para funcionar na ida e na volta */
+        transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
         z-index: 9000 !important;
         padding: 0 !important;
+    }
+
+    /* Quando estiver ativo, ele desliza para a posição 0 */
+    header#main-header .user-info-header.active {
+        right: 0 !important;
     }
 
     /* Trava o nome Visitante lá no topo */
