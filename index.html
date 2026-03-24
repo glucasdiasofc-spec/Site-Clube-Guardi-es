@@ -8652,51 +8652,31 @@ header#main-header .user-info-header .user-status {
     }
 
     /* Separar botões de Liderança e Desbravador */
+/* Estilo e estado inicial (menu fechado) dos botões */
     header#main-header .user-info-header .btn-lideranca,
     header#main-header .user-info-header .btn-desbravador {
         min-height: 50px !important;
         font-weight: 600 !important;
         font-size: 1rem !important;
-        animation: fadeInMenu 0.6s ease-out forwards !important;
+        opacity: 0 !important;
+        transform: translateY(20px) !important;
+        transition: all 0.4s ease-out !important; /* Deslize suave de volta ao fechar */
     }
 
-    header#main-header .user-info-header .btn-desbravador {
-        animation-delay: 0.1s !important;
+    /* Estado animado (quando o menu ganha a classe .active) */
+    header#main-header .user-info-header.active .btn-desbravador {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        transition-delay: 0.1s !important;
     }
 
-    header#main-header .user-info-header .btn-lideranca {
-        animation-delay: 0.2s !important;
+    header#main-header .user-info-header.active .btn-lideranca {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        transition-delay: 0.2s !important;
     }
-
-    /* Animação de entrada dos botões */
-    @keyframes fadeInMenu {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
     }
-
-    /* Animação de saída dos botões ao clicar */
-    header#main-header .user-info-header.closing .btn-lideranca,
-    header#main-header .user-info-header.closing .btn-desbravador {
-        animation: fadeOutMenu 0.4s ease-in forwards !important;
-    }
-
-    @keyframes fadeOutMenu {
-        from {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        to {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-    }
-        }
+        
 /* --- CORREÇÃO DE ÁREA DE CLIQUE DO MENU --- */
 #menu-toggle {
     padding: 20px !important; /* Aumenta bastante a área de toque do dedo invisível */
