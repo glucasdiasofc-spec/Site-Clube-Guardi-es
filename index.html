@@ -949,20 +949,19 @@ body.is-home header#main-header.initial-splash #menu-toggle {
     align-items: center !important;
     gap: 25px !important;
 
-    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* transition removida para usar animação controlada via JS */
     backdrop-filter: blur(15px);
     border-left: 2px solid var(--amarelo);
     z-index: 1050;
     padding: 60px 20px !important;
 
-    opacity: 0 !important;           /* 🔥 ESCONDIDO */
-    pointer-events: none !important; /* 🔥 BLOQUEADO */
+    display: none !important; /* 🔥 Começa oculto */
+    pointer-events: none !important; 
     
 }
 
 header#main-header .user-info-header.active {
-    right: 0;
-    opacity: 1 !important;
+    display: flex !important;
     pointer-events: all !important;
 }
             }
@@ -979,20 +978,26 @@ header#main-header .user-info-header .user-status {
 }
 
 
-        /* ANIMAÇÕES DE DESLIZE PARA MODAIS DE LOGIN */
-        @keyframes slideInUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        /* ANIMAÇÕES PARA MODAIS E MENU */
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
-        @keyframes slideOutDown {
-            from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(50px); opacity: 0; }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        .menu-animate-in {
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .menu-animate-out {
+            animation: slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
         .modal-animate-in {
-            animation: slideInUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: fadeIn 0.4s ease forwards;
         }
         .modal-animate-out {
-            animation: slideOutDown 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: fadeOut 0.4s ease forwards;
         }
         .modal-overlay-fade-in {
             animation: fadeIn 0.3s ease forwards;
@@ -6955,22 +6960,41 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
 
         // Lógica do Menu Hambúrguer e Splash
         // Lógica do Menu Hambúrguer e Splash
+        function fecharMenuMobile() {
+            const menuContent = document.querySelector('.user-info-header');
+            const menuToggle = document.getElementById('menu-toggle');
+            if (menuContent && (menuContent.classList.contains('active') || menuContent.style.display === 'flex')) {
+                menuContent.classList.remove('menu-animate-in');
+                menuContent.classList.add('menu-animate-out');
+                if(menuToggle) menuToggle.classList.remove('active');
+                setTimeout(() => {
+                    menuContent.classList.remove('active');
+                    menuContent.classList.remove('menu-animate-out');
+                    menuContent.style.display = 'none';
+                }, 400);
+            }
+        }
+
         function initUX() {
             const menuToggle = document.getElementById('menu-toggle');
             const menuContent = document.querySelector('.user-info-header');
             
            if (menuToggle && menuContent) {
             menuToggle.addEventListener('click', () => {
-                const isActive = menuContent.classList.toggle('active');
-                menuToggle.classList.toggle('active');
+                if (menuContent.classList.contains('active')) {
+                    fecharMenuMobile();
+                } else {
+                    menuContent.classList.add('active');
+                    menuContent.classList.remove('menu-animate-out');
+                    menuContent.classList.add('menu-animate-in');
+                    menuToggle.classList.add('active');
+                }
             });
 
             // Fechar menu ao clicar nos botões (com animação de saída)
             document.querySelectorAll('.user-info-header button').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // Apenas remove a classe; o CSS 'transition' fará o resto deslizando
-                    menuContent.classList.remove('active');
-                    menuToggle.classList.remove('active');
+                    fecharMenuMobile();
                 });
             });
 
@@ -6979,8 +7003,7 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                 if (menuContent.classList.contains('active') && 
                     !menuContent.contains(e.target) && 
                     !menuToggle.contains(e.target)) {
-                    menuContent.classList.remove('active');
-                    menuToggle.classList.remove('active');
+                    fecharMenuMobile();
                 }
             });
         }
@@ -7000,6 +7023,8 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                 if (window.scrollY > 50) { 
                     header.classList.remove("initial-splash"); 
                     updateSplashScroll();
+                    // Fechar menu ao rolar para baixo
+                    fecharMenuMobile();
                 }
             });
             
