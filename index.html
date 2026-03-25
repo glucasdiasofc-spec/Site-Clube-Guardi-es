@@ -959,16 +959,20 @@ body.is-home header#main-header.initial-splash #menu-toggle {
     z-index: 1050;
     padding: 60px 20px !important;
 
-    /* No Mobile, começa escondido e fora da tela */
-    display: none !important; 
-    pointer-events: none !important; 
-    transform: translateX(100%); 
-    opacity: 0;
-    transition: none !important; /* Desabilita transições nativas para usar Keyframes */
+    /* No Mobile, usa transição nativa para maior compatibilidade */
+    display: flex !important; 
+    pointer-events: none; 
+    transform: translateX(101%) !important; 
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, visibility 0.4s !important;
+    right: 0 !important; /* Fixa na direita para a transição de transform funcionar */
 }
 
 header#main-header .user-info-header.active {
-    display: flex !important;
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     pointer-events: all !important;
 }
             }
@@ -994,15 +998,7 @@ header#main-header .user-info-header .user-status {
             0% { transform: translateX(0); opacity: 1; }
             100% { transform: translateX(100%); opacity: 0; }
         }
-        /* Aplica animação APENAS no mobile */
-        @media (max-width: 768px) {
-            .menu-animate-in {
-                animation: slideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
-            }
-            .menu-animate-out {
-                animation: slideOutRight 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
-            }
-        }
+        /* Animações removidas para usar transições nativas mais estáveis */
         .modal-animate-in {
             animation: fadeIn 0.4s ease forwards;
         }
@@ -1037,6 +1033,10 @@ header#main-header .user-info-header .user-status {
     </div>
 </div>
         <div class="user-info-header">
+            <!-- Logo Flutuante Mobile -->
+            <div class="menu-logo-mobile" style="display:none; margin-bottom: 20px; flex-direction: column; align-items: center;">
+                <img src="" class="header-logo-clone" style="max-height: 80px; filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.4)); animation: floatLogo 3s ease-in-out infinite;">
+            </div>
             <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <span class="btn-text">Visitante</span></span>
             <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> <span class="btn-text">Customizar</span></button>
             <button class="btn-desbravador" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> <span class="btn-text">Área do Desbravador</span></button>
@@ -1889,20 +1889,16 @@ function abrirMinhasEspecialidadesLider() {
                 modal.style.display = 'flex';
                 modal.classList.remove('modal-overlay-fade-out');
                 modal.classList.add('modal-overlay-fade-in');
-                modal.querySelector('div').classList.remove('modal-animate-out');
-                modal.querySelector('div').classList.add('modal-animate-in');
             }
         }
 
         function fecharLogin(modalId) {
             const modal = document.getElementById(modalId);
-            const content = modal.querySelector('div');
-            content.classList.remove('modal-animate-in');
-            content.classList.add('modal-animate-out');
             modal.classList.remove('modal-overlay-fade-in');
             modal.classList.add('modal-overlay-fade-out');
             setTimeout(() => {
                 modal.style.display = 'none';
+                modal.classList.remove('modal-overlay-fade-out');
             }, 350);
         }
         
@@ -6974,46 +6970,33 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
             const menuContent = document.querySelector('.user-info-header');
             const menuToggle = document.getElementById('menu-toggle');
             
-            // Verifica se é mobile (largura <= 768px)
-            const isMobile = window.innerWidth <= 768;
-            if (!isMobile) return; // Não faz nada no PC
-
-            const isVisible = menuContent && (menuContent.classList.contains('active') || window.getComputedStyle(menuContent).display === 'flex');
-            
-            if (isVisible && !menuContent.classList.contains('menu-animate-out')) {
-                menuContent.classList.remove('menu-animate-in');
-                menuContent.classList.add('menu-animate-out');
+            if (window.innerWidth <= 768 && menuContent && menuContent.classList.contains('active')) {
+                menuContent.classList.remove('active');
                 if(menuToggle) menuToggle.classList.remove('active');
-                
-                setTimeout(() => {
-                    menuContent.classList.remove('active');
-                    menuContent.classList.remove('menu-animate-out');
-                    menuContent.style.display = 'none';
-                    // Resetar estilos para garantir que volte ao normal no PC se redimensionado
-                    menuContent.style.transform = '';
-                    menuContent.style.opacity = '';
-                }, 450); // Tempo compatível com a animação de 0.4s
             }
         }
 
         function initUX() {
             const menuToggle = document.getElementById('menu-toggle');
             const menuContent = document.querySelector('.user-info-header');
+            const menuLogo = document.querySelector('.menu-logo-mobile');
+            const mainLogo = document.getElementById('header-logo-img');
             
            if (menuToggle && menuContent) {
             menuToggle.addEventListener('click', (e) => {
-                const isMobile = window.innerWidth <= 768;
-                if (!isMobile) return; // Comportamento padrão no PC
+                if (window.innerWidth > 768) return;
 
                 e.stopPropagation();
                 if (menuContent.classList.contains('active')) {
                     fecharMenuMobile();
                 } else {
-                    menuContent.style.display = 'flex';
-                    menuContent.classList.remove('menu-animate-out');
-                    void menuContent.offsetWidth;
+                    // Sincroniza a logo do menu com a logo principal
+                    if (menuLogo && mainLogo) {
+                        const cloneImg = menuLogo.querySelector('img');
+                        if (cloneImg) cloneImg.src = mainLogo.src;
+                        menuLogo.style.display = 'flex';
+                    }
                     menuContent.classList.add('active');
-                    menuContent.classList.add('menu-animate-in');
                     menuToggle.classList.add('active');
                 }
             });
@@ -7078,8 +7061,6 @@ updateSplashScroll();
             modal.style.display = 'flex';
             modal.classList.remove('modal-overlay-fade-out');
             modal.classList.add('modal-overlay-fade-in');
-            modal.querySelector('div').classList.remove('modal-animate-out');
-            modal.querySelector('div').classList.add('modal-animate-in');
         }
 
         function tentarLoginDbv() {
@@ -8857,6 +8838,12 @@ header#main-header .user-info-header .user-status {
     }
 
     /* Logo com efeito flutuante no menu mobile */
+    /* Força a exibição da logo no menu lateral */
+    .menu-logo-mobile {
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
     header#main-header .user-info-header.active .logo-container {
         position: relative !important;
         top: auto !important;
