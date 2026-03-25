@@ -978,6 +978,30 @@ header#main-header .user-info-header .user-status {
     justify-content: center !important;
 }
 
+
+        /* ANIMAÇÕES DE DESLIZE PARA MODAIS DE LOGIN */
+        @keyframes slideInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideOutDown {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(50px); opacity: 0; }
+        }
+        .modal-animate-in {
+            animation: slideInUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        .modal-animate-out {
+            animation: slideOutDown 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        .modal-overlay-fade-in {
+            animation: fadeIn 0.3s ease forwards;
+        }
+        .modal-overlay-fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -1336,7 +1360,7 @@ header#main-header .user-info-header .user-status {
             <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-u" placeholder="Nome de Usuário"></div>
             <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-p" placeholder="Senha"></div>
             <button onclick="tentarLogin()" class="btn-save" style="margin-top:25px"><i class="fa-solid fa-right-to-bracket"></i> ENTRAR NO SISTEMA</button>
-            <p onclick="document.getElementById('login-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
+            <p onclick="fecharLogin('login-modal')" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
         </div>
     </section>
 <section id="login-dbv-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
@@ -1346,7 +1370,7 @@ header#main-header .user-info-header .user-status {
             <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-dbv-u" placeholder="Login do Desbravador"></div>
             <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-dbv-p" placeholder="Senha"></div>
             <button onclick="tentarLoginDbv()" class="btn-save" style="margin-top:25px; background:linear-gradient(135deg, #1a6b3c, #0d4a28); color:white;"><i class="fa-solid fa-right-to-bracket"></i> ACESSAR MEU PERFIL</button>
-            <p onclick="document.getElementById('login-dbv-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
+            <p onclick="fecharLogin('login-dbv-modal')" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
         </div>
     </section>
 
@@ -1842,13 +1866,45 @@ function abrirMinhasEspecialidadesLider() {
             window.dispatchEvent(new Event('scroll')); 
         }
         
-        function abrirLogin() { if(user) location.reload(); else document.getElementById('login-modal').style.display = 'flex'; }
+        function abrirLogin() { 
+            if(user) {
+                location.reload(); 
+            } else {
+                const modal = document.getElementById('login-modal');
+                modal.style.display = 'flex';
+                modal.classList.remove('modal-overlay-fade-out');
+                modal.classList.add('modal-overlay-fade-in');
+                modal.querySelector('div').classList.remove('modal-animate-out');
+                modal.querySelector('div').classList.add('modal-animate-in');
+            }
+        }
+
+        function fecharLogin(modalId) {
+            const modal = document.getElementById(modalId);
+            const content = modal.querySelector('div');
+            content.classList.remove('modal-animate-in');
+            content.classList.add('modal-animate-out');
+            modal.classList.remove('modal-overlay-fade-in');
+            modal.classList.add('modal-overlay-fade-out');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 350);
+        }
         
         function tentarLogin() {
             const u = document.getElementById('login-u').value, p = document.getElementById('login-p').value;
             const log = db.usuarios.find(x => x.u === u && x.p === p);
-            if(log) { user = log; document.getElementById('login-modal').style.display = 'none'; navegarPara('admin-page'); save(); iniciarTimer(); } 
-            else alert("Acesso Negado! Verifique usuário e senha.");
+            if(log) { 
+                user = log; 
+                fecharLogin('login-modal');
+                setTimeout(() => {
+                    navegarPara('admin-page'); 
+                    save(); 
+                    iniciarTimer();
+                }, 400);
+            } else {
+                alert("Acesso Negado! Verifique usuário e senha.");
+            }
         }
 
         /* LÓGICA DE CUSTOMIZAÇÃO - MÍDIA */
@@ -6956,23 +7012,30 @@ updateSplashScroll();
            NOVAS FUNÇÕES: ÁREA DE ACESSO DESBRAVADOR
            ================================================ */
         function abrirLoginDbv() {
-            document.getElementById('login-dbv-modal').style.display = 'flex';
+            const modal = document.getElementById('login-dbv-modal');
+            modal.style.display = 'flex';
+            modal.classList.remove('modal-overlay-fade-out');
+            modal.classList.add('modal-overlay-fade-in');
+            modal.querySelector('div').classList.remove('modal-animate-out');
+            modal.querySelector('div').classList.add('modal-animate-in');
         }
 
         function tentarLoginDbv() {
             const u = document.getElementById('login-dbv-u').value;
             const p = document.getElementById('login-dbv-p').value;
             const membro = db.membros.find(x => x.login === u && x.senha === p);
-            
-            if(membro) {
-                document.getElementById('login-dbv-modal').style.display = 'none';
-                navegarPara('dbv-area-page');
-                exibirPerfilDbv(membro.id);
-                // Limpa os campos para o próximo uso
-                document.getElementById('login-dbv-u').value = "";
-                document.getElementById('login-dbv-p').value = "";
+            if (membro) {
+                user = membro;
+                fecharLogin('login-dbv-modal');
+                setTimeout(() => {
+                    navegarPara('dbv-area-page');
+                    save();
+                    iniciarTimer();
+                }, 400);
             } else {
                 alert("Acesso Negado! Login ou senha incorretos.");
+                document.getElementById('login-dbv-u').value = "";
+                document.getElementById('login-dbv-p').value = "";
             }
         }
 
