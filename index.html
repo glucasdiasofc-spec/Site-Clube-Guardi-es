@@ -959,10 +959,12 @@ body.is-home header#main-header.initial-splash #menu-toggle {
     z-index: 1050;
     padding: 60px 20px !important;
 
+    /* No Mobile, começa escondido e fora da tela */
     display: none !important; 
     pointer-events: none !important; 
-    transform: translateX(100%); /* Começa fora da tela */
+    transform: translateX(100%); 
     opacity: 0;
+    transition: none !important; /* Desabilita transições nativas para usar Keyframes */
 }
 
 header#main-header .user-info-header.active {
@@ -992,11 +994,14 @@ header#main-header .user-info-header .user-status {
             0% { transform: translateX(0); opacity: 1; }
             100% { transform: translateX(100%); opacity: 0; }
         }
-        .menu-animate-in {
-            animation: slideInRight 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
-        }
-        .menu-animate-out {
-            animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.6, 1) forwards !important;
+        /* Aplica animação APENAS no mobile */
+        @media (max-width: 768px) {
+            .menu-animate-in {
+                animation: slideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+            }
+            .menu-animate-out {
+                animation: slideOutRight 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+            }
         }
         .modal-animate-in {
             animation: fadeIn 0.4s ease forwards;
@@ -6969,10 +6974,12 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
             const menuContent = document.querySelector('.user-info-header');
             const menuToggle = document.getElementById('menu-toggle');
             
-            // Verifica se o menu está visível (seja pela classe active ou pelo display)
+            // Verifica se é mobile (largura <= 768px)
+            const isMobile = window.innerWidth <= 768;
+            if (!isMobile) return; // Não faz nada no PC
+
             const isVisible = menuContent && (menuContent.classList.contains('active') || window.getComputedStyle(menuContent).display === 'flex');
             
-            // Evita disparar a animação de saída se o menu já estiver fechando ou fechado
             if (isVisible && !menuContent.classList.contains('menu-animate-out')) {
                 menuContent.classList.remove('menu-animate-in');
                 menuContent.classList.add('menu-animate-out');
@@ -6982,7 +6989,10 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                     menuContent.classList.remove('active');
                     menuContent.classList.remove('menu-animate-out');
                     menuContent.style.display = 'none';
-                }, 300); // Tempo ligeiramente menor que a animação CSS para segurança
+                    // Resetar estilos para garantir que volte ao normal no PC se redimensionado
+                    menuContent.style.transform = '';
+                    menuContent.style.opacity = '';
+                }, 450); // Tempo compatível com a animação de 0.4s
             }
         }
 
@@ -6992,14 +7002,15 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
             
            if (menuToggle && menuContent) {
             menuToggle.addEventListener('click', (e) => {
-                e.stopPropagation(); // Evita que o clique no toggle feche o menu imediatamente pelo listener do document
+                const isMobile = window.innerWidth <= 768;
+                if (!isMobile) return; // Comportamento padrão no PC
+
+                e.stopPropagation();
                 if (menuContent.classList.contains('active')) {
                     fecharMenuMobile();
                 } else {
-                    // Prepara o elemento para a animação de entrada
                     menuContent.style.display = 'flex';
                     menuContent.classList.remove('menu-animate-out');
-                    // Força um reflow para garantir que a animação de entrada seja percebida pelo navegador
                     void menuContent.offsetWidth;
                     menuContent.classList.add('active');
                     menuContent.classList.add('menu-animate-in');
@@ -7034,18 +7045,25 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                 }
             };
             
+            let lastScrollY = window.scrollY;
             window.addEventListener('scroll', () => {
                 const header = document.getElementById("main-header");
-                if (window.scrollY > 50) { 
+                const currentScrollY = window.scrollY;
+
+                if (currentScrollY > 50) { 
                     header.classList.remove("initial-splash"); 
                     updateSplashScroll();
-                    // Fechar menu ao rolar para baixo apenas se estiver aberto
+                }
+
+                // Fechar menu ao rolar para baixo (apenas no mobile)
+                if (currentScrollY > lastScrollY + 10) { // Pequena tolerância
                     const menuContent = document.querySelector('.user-info-header');
                     if(menuContent && menuContent.classList.contains('active')) {
                         fecharMenuMobile();
                     }
                 }
-            });
+                lastScrollY = currentScrollY;
+            }, { passive: true });
             
 updateSplashScroll();
         }
