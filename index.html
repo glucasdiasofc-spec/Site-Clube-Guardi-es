@@ -8580,28 +8580,40 @@ body.splash-active {
     }
 
 /* 2. Configuração do Menu Mobile para cobrir a tela toda */
+   @media (max-width: 768px) {
     header#main-header .user-info-header {
         position: fixed !important;
         top: 0 !important;
-        right: 0 !important; /* Deixe fixo no zero... */
-        transform: translateX(100%) !important; /* ...e empurre 100% para fora da tela com transform */
-        opacity: 0 !important;
-        width: 100vw !important; 
+        right: 0 !important; /* Mantemos em 0 e movemos com transform */
+        width: 280px !important;
         height: 100vh !important;
-        background: rgba(18, 18, 18, 0.98) !important;
-        display: flex !important;
+        height: 100dvh !important;
+        background: rgba(18, 18, 18, 0.98) !important; /* Um pouco mais sólido */
         flex-direction: column !important;
-        justify-content: center !important; 
-        align-items: center !important; 
-        gap: 25px !important; 
-        padding-top: 0 !important;
+        justify-content: flex-start !important;
+        gap: 20px !important;
         
-        /* A mágica: Animar o transform garante o deslize de volta sem travar */
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out !important;
+        /* 🔥 A MÁGICA: Movemos 100% para fora da tela à direita */
+        transform: translateX(100%) !important; 
         
-        z-index: 9000 !important;
+        /* Transição suave para transform e opacity */
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease !important;
+        
+        backdrop-filter: blur(15px);
+        border-left: 2px solid var(--amarelo);
+        z-index: 1050;
+        padding: 80px 20px !important; /* Espaço para o ícone de fechar */
+        opacity: 0 !important;
         pointer-events: none !important;
     }
+
+    /* 🔥 ESTADO ATIVO: Quando o menu abre */
+    header#main-header .user-info-header.active {
+        transform: translateX(0) !important; /* Volta para a tela */
+        opacity: 1 !important;
+        pointer-events: all !important;
+    }
+}
 
     /* 3. Animação de entrada do menu (desliza da direita) */
     header#main-header .user-info-header.active {
