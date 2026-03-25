@@ -1000,19 +1000,69 @@ header#main-header .user-info-header .user-status {
         }
         /* Animações removidas para usar transições nativas mais estáveis */
         .modal-animate-in {
-            animation: fadeIn 0.4s ease forwards;
+            animation: fadeIn 0.7s ease forwards;
         }
         .modal-animate-out {
-            animation: fadeOut 0.4s ease forwards;
+            animation: fadeOut 0.7s ease forwards;
         }
         .modal-overlay-fade-in {
-            animation: fadeIn 0.3s ease forwards;
+            animation: fadeIn 0.6s ease forwards;
         }
         .modal-overlay-fade-out {
-            animation: fadeOut 0.3s ease forwards;
+            animation: fadeOut 0.6s ease forwards;
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        /* ============================================================
+           REGRAS CSS MOBILE PARA ANIMAÇÕES DO MENU
+           ============================================================ */
+        @media (max-width: 768px) {
+            /* Menu mobile com animação de entrada/saída */
+            header#main-header .user-info-header {
+                will-change: transform, opacity;
+            }
+            
+            /* Botões com animação de entrada suave */
+            header#main-header .user-info-header button,
+            header#main-header .user-info-header .user-status {
+                will-change: transform, opacity;
+            }
+            
+            /* Logo flutuante no menu mobile com movimento multidirecional */
+            .menu-logo-mobile img {
+                animation: floatLogoMulti 4.5s ease-in-out infinite;
+                will-change: transform;
+            }
+            
+            /* Garantir que modais apareçam com animação suave */
+            .modal-overlay {
+                will-change: opacity, transform;
+            }
+            
+            .modal-overlay.modal-overlay-fade-in {
+                animation: fadeIn 0.6s ease forwards;
+            }
+            
+            .modal-overlay.modal-overlay-fade-out {
+                animation: fadeOut 0.6s ease forwards;
+            }
+        }
+        
+        /* Regras para iOS especificamente */
+        @supports (-webkit-touch-callout: none) {
+            /* iOS Safari */
+            header#main-header .user-info-header {
+                -webkit-transition: -webkit-transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+                transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+            }
+            
+            /* Animações com GPU acceleration para iOS */
+            .menu-logo-mobile img {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1035,7 +1085,7 @@ header#main-header .user-info-header .user-status {
         <div class="user-info-header">
             <!-- Logo Flutuante Mobile -->
             <div class="menu-logo-mobile" style="display:none; margin-bottom: 20px; flex-direction: column; align-items: center;">
-                <img src="" class="header-logo-clone" style="max-height: 80px; filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.4)); animation: floatLogo 3s ease-in-out infinite;">
+                <img src="" class="header-logo-clone" style="max-height: 120px; filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.4)); animation: floatLogoMulti 4.5s ease-in-out infinite; will-change: transform;">
             </div>
             <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <span class="btn-text">Visitante</span></span>
             <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> <span class="btn-text">Customizar</span></button>
@@ -8850,7 +8900,7 @@ header#main-header .user-info-header .user-status {
         left: auto !important;
         transform: none !important;
         margin-bottom: 20px !important;
-        animation: floatLogo 3s ease-in-out infinite !important;
+        animation: floatLogoMulti 4.5s ease-in-out infinite !important;
     }
 
     @keyframes floatLogo {
@@ -8920,6 +8970,89 @@ header#main-header .user-info-header .user-status {
             transform: translate(-50%, -50%) scale(0.85);
             opacity: 0.6;
         }
+        /* ============================================================
+           ANIMAÇÃO DA LOGO FLUTUANTE - MOVIMENTO MULTIDIRECIONAL
+           Aumentado em tamanho e com movimento X e Y simultâneos
+           ============================================================ */
+        @keyframes floatLogoMulti {
+            0%, 100% {
+                transform: translateX(0px) translateY(0px);
+            }
+            25% {
+                transform: translateX(15px) translateY(-20px);
+            }
+            50% {
+                transform: translateX(0px) translateY(-30px);
+            }
+            75% {
+                transform: translateX(-15px) translateY(-20px);
+            }
+        }
+        
+        /* Animação flutuante para menu mobile - movimento suave */
+        @keyframes flutuarMenuMelhorado {
+            0%, 100% {
+                transform: translateX(0px) translateY(0px);
+            }
+            25% {
+                transform: translateX(8px) translateY(-12px);
+            }
+            50% {
+                transform: translateX(0px) translateY(-18px);
+            }
+            75% {
+                transform: translateX(-8px) translateY(-12px);
+            }
+        }
+        
+        /* Animação de entrada do menu com deslize suave */
+        @keyframes menuSlideIn {
+            from {
+                transform: translateX(100%) translateY(0);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Animação de saída do menu com deslize suave */
+        @keyframes menuSlideOut {
+            from {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%) translateY(0);
+                opacity: 0;
+            }
+        }
+        
+        /* Animação de entrada dos botões com stagger */
+        @keyframes buttonSlideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Animação de saída dos botões */
+        @keyframes buttonSlideOut {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+        }
+
         100% {
             transform: translate(-50%, -50%) scale(1.15);
             opacity: 0.95;
@@ -8985,7 +9118,7 @@ header#main-header .user-info-header .user-status {
             display: block;
             margin: 0 auto;
             width: 120px; /* Ajuste o tamanho da imagem enviada aqui */
-            animation: flutuarMenu 3s ease-in-out infinite;
+            animation: flutuarMenuMelhorado 4.5s ease-in-out infinite;
         }
 
         /* Efeito de levitação da logo */
@@ -8996,6 +9129,56 @@ header#main-header .user-info-header .user-status {
         }
     
 
+
+        /* ============================================================
+           REGRAS CSS MOBILE PARA ANIMAÇÕES DO MENU
+           ============================================================ */
+        @media (max-width: 768px) {
+            /* Menu mobile com animação de entrada/saída */
+            header#main-header .user-info-header {
+                will-change: transform, opacity;
+            }
+            
+            /* Botões com animação de entrada suave */
+            header#main-header .user-info-header button,
+            header#main-header .user-info-header .user-status {
+                will-change: transform, opacity;
+            }
+            
+            /* Logo flutuante no menu mobile com movimento multidirecional */
+            .menu-logo-mobile img {
+                animation: floatLogoMulti 4.5s ease-in-out infinite;
+                will-change: transform;
+            }
+            
+            /* Garantir que modais apareçam com animação suave */
+            .modal-overlay {
+                will-change: opacity, transform;
+            }
+            
+            .modal-overlay.modal-overlay-fade-in {
+                animation: fadeIn 0.6s ease forwards;
+            }
+            
+            .modal-overlay.modal-overlay-fade-out {
+                animation: fadeOut 0.6s ease forwards;
+            }
+        }
+        
+        /* Regras para iOS especificamente */
+        @supports (-webkit-touch-callout: none) {
+            /* iOS Safari */
+            header#main-header .user-info-header {
+                -webkit-transition: -webkit-transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+                transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+            }
+            
+            /* Animações com GPU acceleration para iOS */
+            .menu-logo-mobile img {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+        }
     </style>
 
 </body>
