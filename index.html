@@ -978,6 +978,71 @@ header#main-header .user-info-header .user-status {
     justify-content: center !important;
 }
 
+/* ============================================================
+   ULTIMATO: DESLIZE PERFEITO DO MENU MOBILE (ENTRADA E SAÍDA)
+   ============================================================ */
+@media (max-width: 768px) {
+    /* 1. O contêiner do menu desliza inteiro para fora da tela */
+    header#main-header .user-info-header {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        width: 280px !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        background: rgba(18, 18, 18, 0.98) !important;
+        
+        /* O segredo da saída: Menu fica na direita, 100% fora da tela */
+        transform: translateX(100%) !important;
+        opacity: 1 !important; /* Mantemos visível para que o deslize seja visto na saída */
+        
+        /* A transição que garante a ida e a volta na mesma velocidade */
+        transition: transform 0.4s ease-in-out !important;
+        
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        padding: 80px 20px 20px 20px !important;
+        gap: 20px !important;
+        z-index: 1050 !important;
+        border-left: 2px solid var(--amarelo) !important;
+        backdrop-filter: blur(15px) !important;
+        pointer-events: auto !important;
+    }
+
+    /* 2. O estado ativo: O menu volta para a coordenada zero (dentro da tela) */
+    header#main-header .user-info-header.active {
+        transform: translateX(0) !important;
+    }
+
+    /* 3. Comportamento fluido dos botões internos na entrada e saída */
+    header#main-header .user-info-header .btn-lideranca,
+    header#main-header .user-info-header .btn-desbravador {
+        width: 100% !important;
+        min-height: 50px !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        opacity: 0 !important;
+        transform: translateY(20px) !important;
+        transition: all 0.4s ease-out !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    header#main-header .user-info-header.active .btn-desbravador {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        transition-delay: 0.1s !important;
+    }
+
+    header#main-header .user-info-header.active .btn-lideranca {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        transition-delay: 0.2s !important;
+    }
+}
+
     </style>
 </head>
 <body>
