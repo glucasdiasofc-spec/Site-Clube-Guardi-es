@@ -8745,8 +8745,8 @@ body.splash-active {
     header#main-header .user-info-header {
         position: fixed !important;
         top: 0 !important;
-        right: 0 !important; /* Deixe fixo no zero... */
-        transform: translateX(100%) !important; /* ...e empurre 100% para fora da tela com transform */
+        right: 0 !important;
+        transform: translateX(100%) !important;
         opacity: 0 !important;
         width: 100vw !important; 
         height: 100vh !important;
@@ -8758,28 +8758,26 @@ body.splash-active {
         gap: 25px !important; 
         padding-top: 0 !important;
         
-        /* A mágica: Animar o transform garante o deslize de volta sem travar */
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out !important;
-        
         z-index: 9000 !important;
         pointer-events: none !important;
+        visibility: hidden !important;
+        transition: visibility 0.4s !important;
     }
 
     /* 3. Animação de entrada do menu (desliza da direita) */
     header#main-header .user-info-header.active {
-        transform: translateX(0) !important; /* Retorna suavemente para a tela */
-        opacity: 1 !important;
         pointer-events: all !important;
+        visibility: visible !important;
         animation: menuSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
     }
 
     header#main-header .user-info-header.closing {
+        pointer-events: none !important;
+        visibility: visible !important;
         animation: menuSlideOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
     }
     
-    /* Nota: A regra 3.1 (.closing) foi completamente removida pois não é mais necessária! */
     }
-            header#main-header .user-info-header.active { right: 0; }
            header#main-header .user-info-header button, 
 header#main-header .user-info-header .user-status { 
     width: 90% !important; 
@@ -9032,11 +9030,11 @@ header#main-header .user-info-header .user-status {
     /* Animação de entrada do menu com deslize suave */
     @keyframes menuSlideIn {
         from {
-            transform: translateX(100%) translateY(0);
+            transform: translate3d(100%, 0, 0);
             opacity: 0;
         }
         to {
-            transform: translateX(0) translateY(0);
+            transform: translate3d(0, 0, 0);
             opacity: 1;
         }
     }
@@ -9044,11 +9042,11 @@ header#main-header .user-info-header .user-status {
     /* Animação de saída do menu com deslize suave */
     @keyframes menuSlideOut {
         from {
-            transform: translateX(0) translateY(0);
+            transform: translate3d(0, 0, 0);
             opacity: 1;
         }
         to {
-            transform: translateX(100%) translateY(0);
+            transform: translate3d(100%, 0, 0);
             opacity: 0;
         }
     }
