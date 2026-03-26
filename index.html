@@ -949,30 +949,20 @@ body.is-home header#main-header.initial-splash #menu-toggle {
     align-items: center !important;
     gap: 25px !important;
 
-    /* Otimização para animações fluidas */
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-    
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(15px);
     border-left: 2px solid var(--amarelo);
     z-index: 1050;
     padding: 60px 20px !important;
 
-    /* No Mobile, usa transição nativa para maior compatibilidade */
-    display: flex !important; 
-    pointer-events: none; 
-    transform: translateX(101%) !important; 
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, visibility 0.4s !important;
-    right: 0 !important; /* Fixa na direita para a transição de transform funcionar */
+    opacity: 0 !important;           /* 🔥 ESCONDIDO */
+    pointer-events: none !important; /* 🔥 BLOQUEADO */
+    
 }
 
 header#main-header .user-info-header.active {
-    transform: translateX(0) !important;
+    right: 0;
     opacity: 1 !important;
-    visibility: visible !important;
     pointer-events: all !important;
 }
             }
@@ -988,31 +978,6 @@ header#main-header .user-info-header .user-status {
     justify-content: center !important;
 }
 
-
-        /* ANIMAÇÕES PARA MODAIS E MENU - Otimizadas para Fluidez */
-        @keyframes slideInRight {
-            0% { transform: translateX(100%); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOutRight {
-            0% { transform: translateX(0); opacity: 1; }
-            100% { transform: translateX(100%); opacity: 0; }
-        }
-        /* Animações removidas para usar transições nativas mais estáveis */
-        .modal-animate-in {
-            animation: fadeIn 0.4s ease forwards;
-        }
-        .modal-animate-out {
-            animation: fadeOut 0.4s ease forwards;
-        }
-        .modal-overlay-fade-in {
-            animation: fadeIn 0.3s ease forwards;
-        }
-        .modal-overlay-fade-out {
-            animation: fadeOut 0.3s ease forwards;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -1033,10 +998,6 @@ header#main-header .user-info-header .user-status {
     </div>
 </div>
         <div class="user-info-header">
-            <!-- Logo Flutuante Mobile -->
-            <div class="menu-logo-mobile" style="display:none; margin-bottom: 20px; flex-direction: column; align-items: center;">
-                <img src="" class="header-logo-clone" style="max-height: 80px; filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.4)); animation: floatLogo 3s ease-in-out infinite;">
-            </div>
             <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <span class="btn-text">Visitante</span></span>
             <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> <span class="btn-text">Customizar</span></button>
             <button class="btn-desbravador" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> <span class="btn-text">Área do Desbravador</span></button>
@@ -1375,7 +1336,7 @@ header#main-header .user-info-header .user-status {
             <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-u" placeholder="Nome de Usuário"></div>
             <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-p" placeholder="Senha"></div>
             <button onclick="tentarLogin()" class="btn-save" style="margin-top:25px"><i class="fa-solid fa-right-to-bracket"></i> ENTRAR NO SISTEMA</button>
-            <p onclick="fecharLogin('login-modal')" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
+            <p onclick="document.getElementById('login-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
         </div>
     </section>
 <section id="login-dbv-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
@@ -1385,7 +1346,7 @@ header#main-header .user-info-header .user-status {
             <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="login-dbv-u" placeholder="Login do Desbravador"></div>
             <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="login-dbv-p" placeholder="Senha"></div>
             <button onclick="tentarLoginDbv()" class="btn-save" style="margin-top:25px; background:linear-gradient(135deg, #1a6b3c, #0d4a28); color:white;"><i class="fa-solid fa-right-to-bracket"></i> ACESSAR MEU PERFIL</button>
-            <p onclick="fecharLogin('login-dbv-modal')" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
+            <p onclick="document.getElementById('login-dbv-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
         </div>
     </section>
 
@@ -1881,41 +1842,13 @@ function abrirMinhasEspecialidadesLider() {
             window.dispatchEvent(new Event('scroll')); 
         }
         
-        function abrirLogin() { 
-            if(user) {
-                location.reload(); 
-            } else {
-                const modal = document.getElementById('login-modal');
-                modal.style.display = 'flex';
-                modal.classList.remove('modal-overlay-fade-out');
-                modal.classList.add('modal-overlay-fade-in');
-            }
-        }
-
-        function fecharLogin(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('modal-overlay-fade-in');
-            modal.classList.add('modal-overlay-fade-out');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                modal.classList.remove('modal-overlay-fade-out');
-            }, 350);
-        }
+        function abrirLogin() { if(user) location.reload(); else document.getElementById('login-modal').style.display = 'flex'; }
         
         function tentarLogin() {
             const u = document.getElementById('login-u').value, p = document.getElementById('login-p').value;
             const log = db.usuarios.find(x => x.u === u && x.p === p);
-            if(log) { 
-                user = log; 
-                fecharLogin('login-modal');
-                setTimeout(() => {
-                    navegarPara('admin-page'); 
-                    save(); 
-                    iniciarTimer();
-                }, 400);
-            } else {
-                alert("Acesso Negado! Verifique usuário e senha.");
-            }
+            if(log) { user = log; document.getElementById('login-modal').style.display = 'none'; navegarPara('admin-page'); save(); iniciarTimer(); } 
+            else alert("Acesso Negado! Verifique usuário e senha.");
         }
 
         /* LÓGICA DE CUSTOMIZAÇÃO - MÍDIA */
@@ -6966,45 +6899,22 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
 
         // Lógica do Menu Hambúrguer e Splash
         // Lógica do Menu Hambúrguer e Splash
-        function fecharMenuMobile() {
-            const menuContent = document.querySelector('.user-info-header');
-            const menuToggle = document.getElementById('menu-toggle');
-            
-            if (window.innerWidth <= 768 && menuContent && menuContent.classList.contains('active')) {
-                menuContent.classList.remove('active');
-                if(menuToggle) menuToggle.classList.remove('active');
-            }
-        }
-
         function initUX() {
             const menuToggle = document.getElementById('menu-toggle');
             const menuContent = document.querySelector('.user-info-header');
-            const menuLogo = document.querySelector('.menu-logo-mobile');
-            const mainLogo = document.getElementById('header-logo-img');
             
            if (menuToggle && menuContent) {
-            menuToggle.addEventListener('click', (e) => {
-                if (window.innerWidth > 768) return;
-
-                e.stopPropagation();
-                if (menuContent.classList.contains('active')) {
-                    fecharMenuMobile();
-                } else {
-                    // Sincroniza a logo do menu com a logo principal
-                    if (menuLogo && mainLogo) {
-                        const cloneImg = menuLogo.querySelector('img');
-                        if (cloneImg) cloneImg.src = mainLogo.src;
-                        menuLogo.style.display = 'flex';
-                    }
-                    menuContent.classList.add('active');
-                    menuToggle.classList.add('active');
-                }
+            menuToggle.addEventListener('click', () => {
+                const isActive = menuContent.classList.toggle('active');
+                menuToggle.classList.toggle('active');
             });
 
             // Fechar menu ao clicar nos botões (com animação de saída)
             document.querySelectorAll('.user-info-header button').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    fecharMenuMobile();
+                    // Apenas remove a classe; o CSS 'transition' fará o resto deslizando
+                    menuContent.classList.remove('active');
+                    menuToggle.classList.remove('active');
                 });
             });
 
@@ -7013,7 +6923,8 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                 if (menuContent.classList.contains('active') && 
                     !menuContent.contains(e.target) && 
                     !menuToggle.contains(e.target)) {
-                    fecharMenuMobile();
+                    menuContent.classList.remove('active');
+                    menuToggle.classList.remove('active');
                 }
             });
         }
@@ -7028,25 +6939,13 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                 }
             };
             
-            let lastScrollY = window.scrollY;
             window.addEventListener('scroll', () => {
                 const header = document.getElementById("main-header");
-                const currentScrollY = window.scrollY;
-
-                if (currentScrollY > 50) { 
+                if (window.scrollY > 50) { 
                     header.classList.remove("initial-splash"); 
                     updateSplashScroll();
                 }
-
-                // Fechar menu ao rolar para baixo (apenas no mobile)
-                if (currentScrollY > lastScrollY + 10) { // Pequena tolerância
-                    const menuContent = document.querySelector('.user-info-header');
-                    if(menuContent && menuContent.classList.contains('active')) {
-                        fecharMenuMobile();
-                    }
-                }
-                lastScrollY = currentScrollY;
-            }, { passive: true });
+            });
             
 updateSplashScroll();
         }
@@ -7057,28 +6956,23 @@ updateSplashScroll();
            NOVAS FUNÇÕES: ÁREA DE ACESSO DESBRAVADOR
            ================================================ */
         function abrirLoginDbv() {
-            const modal = document.getElementById('login-dbv-modal');
-            modal.style.display = 'flex';
-            modal.classList.remove('modal-overlay-fade-out');
-            modal.classList.add('modal-overlay-fade-in');
+            document.getElementById('login-dbv-modal').style.display = 'flex';
         }
 
         function tentarLoginDbv() {
             const u = document.getElementById('login-dbv-u').value;
             const p = document.getElementById('login-dbv-p').value;
             const membro = db.membros.find(x => x.login === u && x.senha === p);
-            if (membro) {
-                user = membro;
-                fecharLogin('login-dbv-modal');
-                setTimeout(() => {
-                    navegarPara('dbv-area-page');
-                    save();
-                    iniciarTimer();
-                }, 400);
-            } else {
-                alert("Acesso Negado! Login ou senha incorretos.");
+            
+            if(membro) {
+                document.getElementById('login-dbv-modal').style.display = 'none';
+                navegarPara('dbv-area-page');
+                exibirPerfilDbv(membro.id);
+                // Limpa os campos para o próximo uso
                 document.getElementById('login-dbv-u').value = "";
                 document.getElementById('login-dbv-p').value = "";
+            } else {
+                alert("Acesso Negado! Login ou senha incorretos.");
             }
         }
 
@@ -8838,12 +8732,6 @@ header#main-header .user-info-header .user-status {
     }
 
     /* Logo com efeito flutuante no menu mobile */
-    /* Força a exibição da logo no menu lateral */
-    .menu-logo-mobile {
-        display: flex !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
     header#main-header .user-info-header.active .logo-container {
         position: relative !important;
         top: auto !important;
@@ -8996,78 +8884,7 @@ header#main-header .user-info-header .user-status {
         }
     
 
-    
-        /* ============================================================
-           SISTEMA DE FADE IN/OUT E SCROLL ANIMATIONS
-           ============================================================ */
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(20px); }
-        }
-        
-        @keyframes floatSpace {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            25% { transform: translate(30px, -40px) scale(1.05); }
-            50% { transform: translate(-20px, 50px) scale(0.95); }
-            75% { transform: translate(40px, 20px) scale(1.02); }
-            100% { transform: translate(0, 0) scale(1); }
-        }
-        
-        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
-        .fade-out { animation: fadeOut 0.8s ease-out forwards; }
-        
-        .header-logo-clone {
-            animation: floatSpace 12s ease-in-out infinite !important;
-            max-height: 200px !important;
-            filter: drop-shadow(0 0 40px rgba(255, 204, 0, 0.8)) !important;
-        }
-        
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s ease-out;
-        }
-        
-        .scroll-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        button, .btn-custom { transition: all 0.4s ease-out; }
-        button:hover { opacity: 0.8; transform: scale(1.02); }
-        
-        .user-info-header { opacity: 0; visibility: hidden; transition: all 0.6s ease-out; }
-        .user-info-header.active { opacity: 1; visibility: visible; }
-</style>
+    </style>
 
-
-    <script>
-        // Scroll animations
-        function initScrollAnimations() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            document.querySelectorAll('.scroll-animate').forEach(el => {
-                observer.observe(el);
-            });
-        }
-        
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initScrollAnimations);
-        } else {
-            initScrollAnimations();
-        }
-    </script>
 </body>
 </html>
