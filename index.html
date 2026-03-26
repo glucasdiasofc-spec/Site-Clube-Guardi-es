@@ -1013,22 +1013,6 @@ header#main-header .user-info-header .user-status {
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-
-        /* Estados dos modais e logo */
-        #login-modal.active,
-        #login-dbv-modal.active {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-            display: flex !important;
-        }
-        
-        .menu-logo-mobile.active {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-            display: flex !important;
-        }
     </style>
 </head>
 <body>
@@ -1384,7 +1368,7 @@ header#main-header .user-info-header .user-status {
     </div>
 
 
-    <section id="login-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;opacity:0;visibility:hidden;transform:translateY(50px);align-items:center;justify-content:center;transition:all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);">
+    <section id="login-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
         <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid var(--amarelo);text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
             <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: var(--amarelo); margin-bottom: 15px;"></i>
             <h2 style="color:var(--amarelo);margin-bottom:25px;letter-spacing: 1px;">ACESSO LIDERANÇA</h2>
@@ -1394,7 +1378,7 @@ header#main-header .user-info-header .user-status {
             <p onclick="fecharLogin('login-modal')" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
         </div>
     </section>
-<section id="login-dbv-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;opacity:0;visibility:hidden;transform:translateY(50px);align-items:center;justify-content:center;transition:all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);">
+<section id="login-dbv-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
         <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid #1a6b3c;text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
             <i class="fa-solid fa-id-badge" style="font-size: 3rem; color: #1a6b3c; margin-bottom: 15px;"></i>
             <h2 style="color:white;margin-bottom:25px;letter-spacing: 1px;">ÁREA DO DESBRAVADOR</h2>
@@ -1902,17 +1886,20 @@ function abrirMinhasEspecialidadesLider() {
                 location.reload(); 
             } else {
                 const modal = document.getElementById('login-modal');
-                modal.classList.add('active');
                 modal.style.display = 'flex';
+                modal.classList.remove('modal-overlay-fade-out');
+                modal.classList.add('modal-overlay-fade-in');
             }
         }
 
         function fecharLogin(modalId) {
             const modal = document.getElementById(modalId);
-            modal.classList.remove('active');
+            modal.classList.remove('modal-overlay-fade-in');
+            modal.classList.add('modal-overlay-fade-out');
             setTimeout(() => {
                 modal.style.display = 'none';
-            }, 700);
+                modal.classList.remove('modal-overlay-fade-out');
+            }, 350);
         }
         
         function tentarLogin() {
@@ -7071,8 +7058,9 @@ updateSplashScroll();
            ================================================ */
         function abrirLoginDbv() {
             const modal = document.getElementById('login-dbv-modal');
-            modal.classList.add('active');
             modal.style.display = 'flex';
+            modal.classList.remove('modal-overlay-fade-out');
+            modal.classList.add('modal-overlay-fade-in');
         }
 
         function tentarLoginDbv() {
@@ -8701,10 +8689,9 @@ body.splash-active {
     header#main-header .user-info-header {
         position: fixed !important;
         top: 0 !important;
-        right: 0 !important;
-        transform: translateX(100%) !important;
+        right: 0 !important; /* Deixe fixo no zero... */
+        transform: translateX(100%) !important; /* ...e empurre 100% para fora da tela com transform */
         opacity: 0 !important;
-        visibility: hidden !important;
         width: 100vw !important; 
         height: 100vh !important;
         background: rgba(18, 18, 18, 0.98) !important;
@@ -8715,8 +8702,8 @@ body.splash-active {
         gap: 25px !important; 
         padding-top: 0 !important;
         
-        /* Animação suave de deslize: 0.7s para ser bem visível */
-        transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        /* A mágica: Animar o transform garante o deslize de volta sem travar */
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out !important;
         
         z-index: 9000 !important;
         pointer-events: none !important;
@@ -8724,9 +8711,8 @@ body.splash-active {
 
     /* 3. Animação de entrada do menu (desliza da direita) */
     header#main-header .user-info-header.active {
-        transform: translateX(0) !important;
+        transform: translateX(0) !important; /* Retorna suavemente para a tela */
         opacity: 1 !important;
-        visibility: visible !important;
         pointer-events: all !important;
     }
     
@@ -8756,7 +8742,8 @@ header#main-header .user-info-header .user-status {
         pointer-events: none !important;
     }
 
-    /* Separar botões de Liderança e Desbravador    /* Estílo e estado inicial (menu fechado) dos botões */
+    /* Separar botões de Liderança e Desbravador */
+/* Estilo e estado inicial (menu fechado) dos botões */
     header#main-header .user-info-header .btn-lideranca,
     header#main-header .user-info-header .btn-desbravador {
         min-height: 50px !important;
@@ -8764,20 +8751,20 @@ header#main-header .user-info-header .user-status {
         font-size: 1rem !important;
         opacity: 0 !important;
         transform: translateY(20px) !important;
-        transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        transition: all 0.4s ease-out !important; /* Deslize suave de volta ao fechar */
     }
 
     /* Estado animado (quando o menu ganha a classe .active) */
     header#main-header .user-info-header.active .btn-desbravador {
         opacity: 1 !important;
         transform: translateY(0) !important;
-        transition-delay: 0.2s !important;
+        transition-delay: 0.1s !important;
     }
 
     header#main-header .user-info-header.active .btn-lideranca {
         opacity: 1 !important;
         transform: translateY(0) !important;
-        transition-delay: 0.35s !important;
+        transition-delay: 0.2s !important;
     }
     }
         
@@ -9009,23 +8996,78 @@ header#main-header .user-info-header .user-status {
         }
     
 
-
-        /* Estados dos modais e logo */
-        #login-modal.active,
-        #login-dbv-modal.active {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-            display: flex !important;
+    
+        /* ============================================================
+           SISTEMA DE FADE IN/OUT E SCROLL ANIMATIONS
+           ============================================================ */
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .menu-logo-mobile.active {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-            display: flex !important;
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
         }
-    </style>
+        
+        @keyframes floatSpace {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 50px) scale(0.95); }
+            75% { transform: translate(40px, 20px) scale(1.02); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        .fade-out { animation: fadeOut 0.8s ease-out forwards; }
+        
+        .header-logo-clone {
+            animation: floatSpace 12s ease-in-out infinite !important;
+            max-height: 200px !important;
+            filter: drop-shadow(0 0 40px rgba(255, 204, 0, 0.8)) !important;
+        }
+        
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        button, .btn-custom { transition: all 0.4s ease-out; }
+        button:hover { opacity: 0.8; transform: scale(1.02); }
+        
+        .user-info-header { opacity: 0; visibility: hidden; transition: all 0.6s ease-out; }
+        .user-info-header.active { opacity: 1; visibility: visible; }
+</style>
 
+
+    <script>
+        // Scroll animations
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.scroll-animate').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initScrollAnimations);
+        } else {
+            initScrollAnimations();
+        }
+    </script>
 </body>
 </html>
