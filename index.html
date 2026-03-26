@@ -7021,8 +7021,14 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
             const menuToggle = document.getElementById('menu-toggle');
             
             if (window.innerWidth <= 768 && menuContent && menuContent.classList.contains('active')) {
-                menuContent.classList.remove('active');
+                menuContent.classList.add('closing');
                 if(menuToggle) menuToggle.classList.remove('active');
+                
+                // Espera a animação de saída terminar para remover as classes
+                setTimeout(() => {
+                    menuContent.classList.remove('active');
+                    menuContent.classList.remove('closing');
+                }, 400);
             }
         }
 
@@ -8764,6 +8770,11 @@ body.splash-active {
         transform: translateX(0) !important; /* Retorna suavemente para a tela */
         opacity: 1 !important;
         pointer-events: all !important;
+        animation: menuSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    }
+
+    header#main-header .user-info-header.closing {
+        animation: menuSlideOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
     }
     
     /* Nota: A regra 3.1 (.closing) foi completamente removida pois não é mais necessária! */
@@ -8808,13 +8819,20 @@ header#main-header .user-info-header .user-status {
     header#main-header .user-info-header.active .btn-desbravador {
         opacity: 1 !important;
         transform: translateY(0) !important;
-        transition-delay: 0.1s !important;
+        animation: buttonSlideIn 0.4s ease-out forwards !important;
+        animation-delay: 0.1s !important;
     }
 
     header#main-header .user-info-header.active .btn-lideranca {
         opacity: 1 !important;
         transform: translateY(0) !important;
-        transition-delay: 0.2s !important;
+        animation: buttonSlideIn 0.4s ease-out forwards !important;
+        animation-delay: 0.2s !important;
+    }
+
+    header#main-header .user-info-header.closing .btn-desbravador,
+    header#main-header .user-info-header.closing .btn-lideranca {
+        animation: buttonSlideOut 0.3s ease-in forwards !important;
     }
     }
         
@@ -8970,92 +8988,92 @@ header#main-header .user-info-header .user-status {
             transform: translate(-50%, -50%) scale(0.85);
             opacity: 0.6;
         }
-        /* ============================================================
-           ANIMAÇÃO DA LOGO FLUTUANTE - MOVIMENTO MULTIDIRECIONAL
-           Aumentado em tamanho e com movimento X e Y simultâneos
-           ============================================================ */
-        @keyframes floatLogoMulti {
-            0%, 100% {
-                transform: translateX(0px) translateY(0px);
-            }
-            25% {
-                transform: translateX(15px) translateY(-20px);
-            }
-            50% {
-                transform: translateX(0px) translateY(-30px);
-            }
-            75% {
-                transform: translateX(-15px) translateY(-20px);
-            }
-        }
-        
-        /* Animação flutuante para menu mobile - movimento suave */
-        @keyframes flutuarMenuMelhorado {
-            0%, 100% {
-                transform: translateX(0px) translateY(0px);
-            }
-            25% {
-                transform: translateX(8px) translateY(-12px);
-            }
-            50% {
-                transform: translateX(0px) translateY(-18px);
-            }
-            75% {
-                transform: translateX(-8px) translateY(-12px);
-            }
-        }
-        
-        /* Animação de entrada do menu com deslize suave */
-        @keyframes menuSlideIn {
-            from {
-                transform: translateX(100%) translateY(0);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0) translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        /* Animação de saída do menu com deslize suave */
-        @keyframes menuSlideOut {
-            from {
-                transform: translateX(0) translateY(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%) translateY(0);
-                opacity: 0;
-            }
-        }
-        
-        /* Animação de entrada dos botões com stagger */
-        @keyframes buttonSlideIn {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        /* Animação de saída dos botões */
-        @keyframes buttonSlideOut {
-            from {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-        }
-
         100% {
             transform: translate(-50%, -50%) scale(1.15);
             opacity: 0.95;
+        }
+    }
+
+    /* ============================================================
+       ANIMAÇÃO DA LOGO FLUTUANTE - MOVIMENTO MULTIDIRECIONAL
+       Aumentado em tamanho e com movimento X e Y simultâneos
+       ============================================================ */
+    @keyframes floatLogoMulti {
+        0%, 100% {
+            transform: translateX(0px) translateY(0px);
+        }
+        25% {
+            transform: translateX(15px) translateY(-20px);
+        }
+        50% {
+            transform: translateX(0px) translateY(-30px);
+        }
+        75% {
+            transform: translateX(-15px) translateY(-20px);
+        }
+    }
+        
+    /* Animação flutuante para menu mobile - movimento suave */
+    @keyframes flutuarMenuMelhorado {
+        0%, 100% {
+            transform: translateX(0px) translateY(0px);
+        }
+        25% {
+            transform: translateX(8px) translateY(-12px);
+        }
+        50% {
+            transform: translateX(0px) translateY(-18px);
+        }
+        75% {
+            transform: translateX(-8px) translateY(-12px);
+        }
+    }
+    
+    /* Animação de entrada do menu com deslize suave */
+    @keyframes menuSlideIn {
+        from {
+            transform: translateX(100%) translateY(0);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0) translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    /* Animação de saída do menu com deslize suave */
+    @keyframes menuSlideOut {
+        from {
+            transform: translateX(0) translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%) translateY(0);
+            opacity: 0;
+        }
+    }
+    
+    /* Animação de entrada dos botões com stagger */
+    @keyframes buttonSlideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    /* Animação de saída dos botões */
+    @keyframes buttonSlideOut {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(20px);
+            opacity: 0;
         }
     }
 }
