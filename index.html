@@ -7378,8 +7378,7 @@ function enviarClasseParaAvaliacao(idMembro, idClasse) {
 
 function abrirMinhasClassesLider() {
     document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
-    const secao = document.getElementById('minhas-classes-lider-section');
-    secao.style.display = 'block';
+    document.getElementById('minhas-classes-lider-section').style.display = 'block';
     
     let membroLider = db.membros.find(m => m.nome === user.u && m.isLider === true);
     if (!membroLider) {
@@ -7389,9 +7388,6 @@ function abrirMinhasClassesLider() {
     }
     dbvLogadoAtualId = membroLider.id;
     renderizarMinhasClassesLider();
-
-    // Rolagem automática
-    setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 }
 
 function renderizarMinhasClassesLider() {
@@ -7485,12 +7481,8 @@ function toggleReqClasseLider(idClasse, idxReq) {
 
 function abrirAprovacoesClasses() {
     document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
-    const secao = document.getElementById('aprovacoes-classes-section');
-    secao.style.display = 'block';
+    document.getElementById('aprovacoes-classes-section').style.display = 'block';
     renderAprovacoesClasses();
-
-    // Rolagem automática
-    setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 }
 
 function renderAprovacoesClasses() {
@@ -8200,12 +8192,6 @@ function gerarRelatorioFrequencia() {
                 const reader = new FileReader();
                 reader.onload = (e) => resolve(e.target.result);
                 reader.onerror = reject;
-                // Limita a 1MB (1048576 bytes)
-if (file.size > 1048576) {
-    alert("Arquivo muito grande! O limite é 1MB.");
-    event.target.value = ''; // Limpa o input para permitir tentar de novo
-    return; // Para a execução aqui
-}
                 reader.readAsDataURL(file);
             });
         }
