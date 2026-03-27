@@ -67,26 +67,10 @@
             transition: background-color 0.3s ease; 
             overflow-x: hidden;
             padding-top: 80px;
+            /* iOS safe area */
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
             letter-spacing: 0.3px;
-            position: relative;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent), radial-gradient(1px 1px at 60px 70px, rgba(255,255,255,0.5), transparent), radial-gradient(1px 1px at 50px 50px, rgba(200,200,255,0.4), transparent), radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.6), transparent), radial-gradient(1px 1px at 90px 10px, rgba(150,200,255,0.3), transparent);
-            background-repeat: repeat;
-            background-size: 200px 200px;
-            background-attachment: fixed;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.6;
         }
         
         /* HEADER PERSONALIZÁVEL */
@@ -342,7 +326,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .gallery-card.layout-grid { height: 320px; } 
         .gallery-card.layout-full { grid-column: 1 / -1; width: 100%; height: auto; min-height: 400px; }
         .gallery-card.layout-title { grid-column: 1 / -1; background: transparent; border: none; text-align: center; margin: 40px 0 10px 0; box-shadow: none !important; height: auto; }
-        .gallery-card.layout-title h2 { color: var(--amarelo); font-size: clamp(1.5rem, 5vw, 2rem); text-transform: uppercase; text-shadow: 0 0 15px rgba(255,204,0,0.3); font-weight: 700; }
+        .gallery-card.layout-title h2 { color: var(--amarelo); font-size: 2.5rem; text-transform: uppercase; text-shadow: 0 0 15px rgba(255,204,0,0.3); }
         .gallery-card.layout-title p { color: #aaa; font-size: 1.1rem; }
         
         .gallery-text-box { padding: 10px 15px; background: #111; text-align: center; }
@@ -363,7 +347,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
 
         /* CARROSSEIS (GANHADORES E LIDERANÇA) */
         .showcase-section { text-align: center; margin: 60px 0; padding: 40px 20px; background: rgba(0,0,0,0.4); border-radius: 20px; border: 1px solid #333; position: relative; }
-        .showcase-section h2 { color: var(--amarelo); font-size: clamp(1.5rem, 5vw, 2rem); margin-bottom: 30px; font-weight: 700; }
+        .showcase-section h2 { color: var(--amarelo); font-size: 2.2rem; margin-bottom: 30px; }
         .carousel-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; }
         .carousel-track { display: flex; gap: 20px; overflow: hidden; width: 300px; height: 350px; justify-content: center; align-items: center; position: relative; }
         .carousel-item { position: absolute; width: 100%; height: 100%; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: scale(0.9); pointer-events: none; background: #111; border-radius: 15px; border: 2px solid var(--amarelo); padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -1048,17 +1032,6 @@ header#main-header .user-info-header .user-status {
             }
         }
 
-        @keyframes fadeOutDown {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-        }
-
         .fade-in-up {
             animation: fadeInUp 0.6s ease-out forwards;
         }
@@ -1066,10 +1039,6 @@ header#main-header .user-info-header .user-status {
         .scroll-animate {
             opacity: 0;
             transform: translateY(40px);
-        }
-
-        .fade-out {
-            animation: fadeOutDown 0.6s ease-out forwards;
         }
         .modal-overlay.closing { animation: fadeOut 0.6s ease-out; }
         
@@ -1082,60 +1051,6 @@ header#main-header .user-info-header .user-status {
             animation: floatSpace 12s ease-in-out infinite !important;
             max-height: 150px !important;
             filter: drop-shadow(0 0 30px rgba(255, 204, 0, 0.6)) !important;
-        }
-
-        /* Logo flutuante no menu mobile */
-        .menu-logo-floating {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            animation: floatInSpace 6s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.5));
-        }
-
-        @keyframes floatInSpace {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(15px, -20px) rotate(5deg); }
-            50% { transform: translate(-10px, 30px) rotate(-3deg); }
-            75% { transform: translate(20px, -10px) rotate(4deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        /* Logo flutuante no topo do menu */
-        header#main-header .user-info-header::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            width: 100px;
-            height: 100px;
-            background: url('PNGDBV.webp') center/contain no-repeat;
-            animation: floatInSpace 6s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.5));
-        }
-
-        /* Otimização para App Android - Header compacto */
-        html.is-pwa-app body {
-            padding-top: 60px !important;
-        }
-
-        html.is-pwa-app header#main-header {
-            height: 60px !important;
-        }
-
-        html.is-pwa-app .logo-container {
-            top: 50%;
-        }
-
-        html.is-pwa-app .header-logo {
-            max-height: 50px !important;
-        }
-
-        html.is-pwa-app header#main-header.scrolled {
-            height: 50px !important;
-        }
-
-        html.is-pwa-app header#main-header.scrolled .header-logo {
-            max-height: 40px !important;
         }
     </style>
 </head>
@@ -1157,7 +1072,6 @@ header#main-header .user-info-header .user-status {
     </div>
 </div>
         <div class="user-info-header">
-            <img src="PNGDBV.webp" class="menu-logo-floating" alt="Logo Clube">
             <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <span class="btn-text">Visitante</span></span>
             <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> <span class="btn-text">Customizar</span></button>
             <button class="btn-desbravador" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> <span class="btn-text">Área do Desbravador</span></button>
@@ -8747,7 +8661,7 @@ body.splash-active {
         position: fixed !important;
         top: 0 !important;
         right: 0 !important; /* Deixe fixo no zero... */
-        transform: translateX(0) !important; /* Fade em vez de deslize */
+        transform: translateX(100%) !important; /* ...e empurre 100% para fora da tela com transform */
         opacity: 0 !important;
         width: 100vw !important; 
         height: 100vh !important;
@@ -8760,7 +8674,7 @@ body.splash-active {
         padding-top: 0 !important;
         
         /* A mágica: Animar o transform garante o deslize de volta sem travar */
-        transition: opacity 0.4s ease-in-out !important;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out !important;
         
         z-index: 9000 !important;
         pointer-events: none !important;
@@ -8768,7 +8682,7 @@ body.splash-active {
 
     /* 3. Animação de entrada do menu (desliza da direita) */
     header#main-header .user-info-header.active {
-        /* Fade suave */
+        transform: translateX(0) !important; /* Retorna suavemente para a tela */
         opacity: 1 !important;
         pointer-events: all !important;
     }
@@ -9086,17 +9000,6 @@ header#main-header .user-info-header .user-status {
             }
         }
 
-        @keyframes fadeOutDown {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-        }
-
         .fade-in-up {
             animation: fadeInUp 0.6s ease-out forwards;
         }
@@ -9104,10 +9007,6 @@ header#main-header .user-info-header .user-status {
         .scroll-animate {
             opacity: 0;
             transform: translateY(40px);
-        }
-
-        .fade-out {
-            animation: fadeOutDown 0.6s ease-out forwards;
         }
         .modal-overlay.closing { animation: fadeOut 0.6s ease-out; }
         
@@ -9121,60 +9020,6 @@ header#main-header .user-info-header .user-status {
             max-height: 150px !important;
             filter: drop-shadow(0 0 30px rgba(255, 204, 0, 0.6)) !important;
         }
-
-        /* Logo flutuante no menu mobile */
-        .menu-logo-floating {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            animation: floatInSpace 6s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.5));
-        }
-
-        @keyframes floatInSpace {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(15px, -20px) rotate(5deg); }
-            50% { transform: translate(-10px, 30px) rotate(-3deg); }
-            75% { transform: translate(20px, -10px) rotate(4deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        /* Logo flutuante no topo do menu */
-        header#main-header .user-info-header::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            width: 100px;
-            height: 100px;
-            background: url('PNGDBV.webp') center/contain no-repeat;
-            animation: floatInSpace 6s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.5));
-        }
-
-        /* Otimização para App Android - Header compacto */
-        html.is-pwa-app body {
-            padding-top: 60px !important;
-        }
-
-        html.is-pwa-app header#main-header {
-            height: 60px !important;
-        }
-
-        html.is-pwa-app .logo-container {
-            top: 50%;
-        }
-
-        html.is-pwa-app .header-logo {
-            max-height: 50px !important;
-        }
-
-        html.is-pwa-app header#main-header.scrolled {
-            height: 50px !important;
-        }
-
-        html.is-pwa-app header#main-header.scrolled .header-logo {
-            max-height: 40px !important;
-        }
     </style>
 
     <script>
@@ -9182,7 +9027,7 @@ header#main-header .user-info-header .user-status {
            ANIMAÇÕES DE SCROLL - INTERSECTION OBSERVER
            ============================================================ */
         function initScrollAnimations() {
-            // Configurarção do IntersectionObserver - Animações infinitas
+            // Configurarção do IntersectionObserver
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -9191,19 +9036,14 @@ header#main-header .user-info-header .user-status {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Adicionar animação quando entra na viewport
                         entry.target.classList.add('fade-in-up');
-                        entry.target.classList.remove('fade-out');
-                    } else {
-                        // Remover animação quando sai da viewport (para reanimar na próxima vez)
-                        entry.target.classList.remove('fade-in-up');
-                        entry.target.classList.add('fade-out');
+                        observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
 
             // Observar todos os elementos com classe scroll-animate
-            const elementsToAnimate = document.querySelectorAll('.scroll-animate, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer');
+            const elementsToAnimate = document.querySelectorAll('.scroll-animate');
             elementsToAnimate.forEach(element => {
                 observer.observe(element);
             });
