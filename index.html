@@ -9278,16 +9278,18 @@ header#main-header .user-info-header .user-status {
                 rootMargin: '0px 0px -50px 0px'
             };
 
-            const observer = new IntersectionObserver((entries) => {
+           const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.remove('fade-out');
+                        // Quando o elemento entra na tela, a animação acontece
                         entry.target.classList.add('fade-in-up');
-                        observer.unobserve(entry.target);
+                    } else {
+                        // Quando sai da tela, removemos a classe para animar de novo na próxima vez
+                        entry.target.classList.remove('fade-in-up');
                     }
                 });
             }, observerOptions);
-
+            
             // Observar TODOS os elementos que devem animar
             const elementsToAnimate = document.querySelectorAll(
                 'section, header, footer, .input-group, .btn-save, .admin-list-item, .scroll-animate, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer, .gallery-card.layout-title, .showcase-section h2, h1, h2, h3'
