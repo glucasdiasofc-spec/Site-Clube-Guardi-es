@@ -82,13 +82,7 @@
             z-index: 1000; 
             border-bottom: 3px solid transparent; 
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            background: rgba(18, 18, 18, 0.7);
-            /* iOS safe area */
-            padding-top: env(safe-area-inset-top);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
+           
         }
 
         .logo-container {
@@ -300,12 +294,12 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         
         /* CRONÔMETRO */
         .timer { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px; }
-        .unit-timer { background: rgba(20, 20, 20, 0.6); padding: 20px; border-radius: 15px; min-width: 110px; border: 2px solid var(--vermelho); backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(230, 57, 70, 0.2); transition: transform 0.3s; }
+        .unit-timer { background: rgba(20, 20, 20, 0.6); padding: 20px; border-radius: 15px; min-width: 110px; border: 2px solid var(--vermelho); /* /* backdrop-filter: blur(10px); */ */ box-shadow: 0 8px 32px rgba(230, 57, 70, 0.2); transition: transform 0.3s; }
         .unit-timer:hover { transform: translateY(-5px); }
         .unit-timer b { font-size: 3rem; display: block; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
         .unit-timer span { font-size: 0.9rem; color: var(--amarelo); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         .event-date-txt { font-weight: bold; font-size: 1.2rem; text-shadow: 2px 2px 5px #000; margin-top: 15px; display: block; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; width: fit-content; margin-left: auto; margin-right: auto; }
-        .timer-replacement { font-size: 1.8rem; font-weight: bold; background: rgba(0,0,0,0.8); padding: 25px 40px; border-radius: 15px; display: inline-block; border: 2px solid var(--amarelo); backdrop-filter: blur(5px); }
+        .timer-replacement { font-size: 1.8rem; font-weight: bold; background: rgba(0,0,0,0.8); padding: 25px 40px; border-radius: 15px; display: inline-block; border: 2px solid var(--amarelo); /* /* backdrop-filter: blur(5px); */ */ }
 
         
         /* Correção Galeria: Diferenciar Grid Destaque de Secundários */
@@ -368,14 +362,14 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         /* LAYOUT PAINEL */
         .panel-layout { display: grid; grid-template-columns: 320px 1fr 350px; gap: 30px; }
         @media (max-width: 1200px) { .panel-layout { grid-template-columns: 1fr; } }
-        .sidebar, .ranking-column, .form-box { background: rgba(30, 30, 30, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 204, 0, 0.1); height: fit-content; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
+        .sidebar, .ranking-column, .form-box { background: rgba(30, 30, 30, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 204, 0, 0.1); height: fit-content; box-shadow: 0 8px 32px rgba(0,0,0,0.3); /* /* backdrop-filter: blur(10px); */ */ }
         .sidebar-profile { text-align: center; margin-bottom: 20px; }
         .profile-img { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--vermelho); object-fit: cover; margin-bottom: 15px; box-shadow: 0 0 20px rgba(230,57,70,0.4); }
         
         /* INPUTS ESTILIZADOS */
         .input-group { position: relative; margin: 12px 0; width: 100%; }
         .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--amarelo); z-index: 2; font-size: 1.1rem; }
-        .input-group input, .input-group select { width: 100%; padding: 14px 14px 14px 45px; border-radius: 12px; border: 1px solid rgba(255, 204, 0, 0.1); background: rgba(17, 17, 17, 0.6); color: white; font-size: 1rem; transition: all 0.3s ease; backdrop-filter: blur(5px); }
+        .input-group input, .input-group select { width: 100%; padding: 14px 14px 14px 45px; border-radius: 12px; border: 1px solid rgba(255, 204, 0, 0.1); background: rgba(17, 17, 17, 0.6); color: white; font-size: 1rem; transition: all 0.3s ease; /* /* backdrop-filter: blur(5px); */ */ }
         .input-group input:focus, .input-group select:focus { border-color: var(--amarelo); box-shadow: 0 0 15px rgba(255, 204, 0, 0.3); background: rgba(26, 26, 26, 0.8); }
         input:not(.input-group input):not([type="checkbox"]):not([type="color"]), select:not(.input-group select), textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #111; color: white; transition: 0.3s; font-family: inherit; }
         input:focus, select:focus, textarea:focus { border-color: var(--amarelo); }
@@ -393,7 +387,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
 
         /* GRID MEMBROS (DBV) */
         .dbv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .dbv-card { background: rgba(42, 42, 42, 0.4); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid rgba(255, 204, 0, 0.1); border-bottom: 3px solid var(--vermelho); position: relative; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 8px 32px rgba(0,0,0,0.2); backdrop-filter: blur(10px); }
+        .dbv-card { background: rgba(42, 42, 42, 0.4); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid rgba(255, 204, 0, 0.1); border-bottom: 3px solid var(--vermelho); position: relative; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 8px 32px rgba(0,0,0,0.2); /* /* backdrop-filter: blur(10px); */ */ }
         .dbv-card:hover { transform: translateY(-8px); box-shadow: 0 12px 40px rgba(255, 204, 0, 0.15); border-bottom-color: var(--amarelo); border-color: rgba(255, 204, 0, 0.3); }
         .btn-del { position: absolute; top: -10px; right: -10px; background: var(--vermelho); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: 0.2s; }
         .btn-del:hover { background: #ff0000; transform: scale(1.1); }
@@ -416,7 +410,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .perm-grid { display: grid; grid-template-columns: 1fr 1fr; background: #111; padding: 15px; border-radius: 10px; border: 1px solid #333; margin: 15px 0; }
 
         /* MODAIS GERAIS (HISTÓRICO / PONTOS / ALL WINNERS) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 9000; display: none; align-items: center; justify-content: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); /* /* backdrop-filter: blur(10px); */ */ z-index: 9000; display: none; align-items: center; justify-content: center; }
         .modal-box { background: var(--cinza-card); padding: 30px; border-radius: 20px; width: 95%; max-width: 500px; border: 2px solid var(--amarelo); box-shadow: 0 15px 35px rgba(0,0,0,0.8); max-height: 80vh; overflow-y: auto; }
         .close-modal { text-align: right; cursor: pointer; color: #888; font-size: 1.2rem; }
         .close-modal:hover { color: white; }
@@ -453,8 +447,8 @@ body.is-home header#main-header.initial-splash #menu-toggle {
                 z-index: 1000 !important;
                 border-bottom: 2px solid var(--amarelo) !important;
                 background-color: rgba(0,0,0,0.95) !important;
-                backdrop-filter: blur(12px) !important;
-                -webkit-backdrop-filter: blur(12px) !important;
+                /* backdrop-filter: blur(12px) */ !important;
+                -webkit-/* backdrop-filter: blur(12px) */ !important;
             }
 
             /* LOGO MOBILE - aplicado SOMENTE quando NÃO está no splash */
@@ -965,14 +959,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
     gap: 25px !important;
 
     transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(15px);
-    border-left: 2px solid var(--amarelo);
-    z-index: 1050;
-    padding: 60px 20px !important;
-
-    opacity: 0 !important;           /* 🔥 ESCONDIDO */
-    pointer-events: none !important; /* 🔥 BLOQUEADO */
-    
+   
 }
 
 header#main-header .user-info-header.active {
@@ -1054,42 +1041,38 @@ header#main-header .user-info-header .user-status {
         }
 
         /* ============================================================
-           FUNDO CÓSMICO REALISTA
+           FUNDO CÓSMICO FANTASIOSO (MOVIMENTO INFINITO)
            ============================================================ */
         #cosmic-bg {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            width: 100vw;
+            height: 100vh;
+            background-color: #080312; /* Azul/Roxo super escuro místico */
+            background-image: 
+                radial-gradient(circle at 15% 30%, rgba(107, 33, 168, 0.35) 0%, transparent 50%), /* Nebulosa Roxa */
+                radial-gradient(circle at 85% 70%, rgba(14, 165, 233, 0.25) 0%, transparent 50%), /* Nebulosa Azul */
+                url("https://www.transparenttextures.com/patterns/stardust.png"); /* Textura de estrelas contínua */
             z-index: -2;
-            opacity: 0.7;
-            animation: cosmicParallax 60s linear infinite;
+            animation: cosmicScroll 150s linear infinite; /* Rotação infinita e suave */
         }
 
-        @keyframes cosmicParallax {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
+        @keyframes cosmicScroll {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 0, 0 0, -2000px 1000px; } /* Apenas as estrelas viajam pelo espaço */
         }
-
-        /* Glassmorphism para seções da Home Page */
+       /* Transparência das seções para revelar o espaço (Sem Blur) */
         #home-page, .panel-layout, .showcase-section, .gallery-section {
-            background: rgba(18, 18, 18, 0.6) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            background: rgba(18, 18, 18, 0.25) !important;
+            border: 1px solid rgba(255, 204, 0, 0.05) !important;
         }
 
         .gallery-card, .dbv-card, .form-box, .sidebar, .ranking-column {
-            background: rgba(30, 30, 30, 0.6) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(255, 204, 0, 0.1) !important;
+            background: rgba(25, 25, 25, 0.4) !important; /* Fundo levemente visível, mas transparente */
+            border: 1px solid rgba(255, 204, 0, 0.15) !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
         }
-
 
         /* Logo flutuante no menu mobile (apenas mobile) */
         @media (max-width: 768px) {
@@ -1538,7 +1521,7 @@ header#main-header .user-info-header .user-status {
     </div>
 
 
-    <section id="login-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
+    <section id="login-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);/* /* backdrop-filter:blur(10px); */ */z-index:9000;display:none;align-items:center;justify-content:center">
         <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid var(--amarelo);text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
             <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: var(--amarelo); margin-bottom: 15px;"></i>
             <h2 style="color:var(--amarelo);margin-bottom:25px;letter-spacing: 1px;">ACESSO LIDERANÇA</h2>
@@ -1548,7 +1531,7 @@ header#main-header .user-info-header .user-status {
             <p onclick="document.getElementById('login-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
         </div>
     </section>
-<section id="login-dbv-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
+<section id="login-dbv-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);/* /* backdrop-filter:blur(10px); */ */z-index:9000;display:none;align-items:center;justify-content:center">
         <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid #1a6b3c;text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
             <i class="fa-solid fa-id-badge" style="font-size: 3rem; color: #1a6b3c; margin-bottom: 15px;"></i>
             <h2 style="color:white;margin-bottom:25px;letter-spacing: 1px;">ÁREA DO DESBRAVADOR</h2>
@@ -9163,33 +9146,33 @@ header#main-header .user-info-header .user-status {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80');
+            width: 100vw;
+            height: 100vh;
+            background-image: url("https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80");
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
             z-index: -2;
             opacity: 0.7;
             animation: cosmicParallax 60s linear infinite;
         }
 
         @keyframes cosmicParallax {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
+            0% { transform: scale(1.1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(-10px, -10px); }
+            100% { transform: scale(1.1) translate(0, 0); }
         }
 
         /* Glassmorphism para seções da Home Page */
         #home-page, .panel-layout, .showcase-section, .gallery-section {
             background: rgba(18, 18, 18, 0.6) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            /* backdrop-filter: blur(10px) */ !important;
+            /* -webkit-backdrop-filter: blur(10px) */ !important;
         }
 
         .gallery-card, .dbv-card, .form-box, .sidebar, .ranking-column {
             background: rgba(30, 30, 30, 0.6) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            /* backdrop-filter: blur(10px) */ !important;
+            /* -webkit-backdrop-filter: blur(10px) */ !important;
             border: 1px solid rgba(255, 204, 0, 0.1) !important;
         }
 
@@ -9294,19 +9277,16 @@ header#main-header .user-info-header .user-status {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Quando elemento entra na viewport: adicionar fade-in
                         entry.target.classList.remove('fade-out');
                         entry.target.classList.add('fade-in-up');
-                    } else {
-                        // Quando elemento sai da viewport: remover fade-in para poder reanimar
-                        entry.target.classList.remove('fade-in-up');
+                        observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
 
             // Observar TODOS os elementos que devem animar
             const elementsToAnimate = document.querySelectorAll(
-                '.scroll-animate, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer, .gallery-card.layout-title, .showcase-section h2, h1, h2, h3'
+                'section, header, footer, .input-group, .btn-save, .admin-list-item, .scroll-animate, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer, .gallery-card.layout-title, .showcase-section h2, h1, h2, h3'
             );
             elementsToAnimate.forEach(element => {
                 observer.observe(element);
@@ -9340,7 +9320,7 @@ header#main-header .user-info-header .user-status {
                 originalRender.call(this);
                 
                 // Adicionar classe scroll-animate a elementos que devem animar
-                const elementsToAdd = document.querySelectorAll('.dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer');
+                const elementsToAdd = document.querySelectorAll('section, header, footer, .input-group, .btn-save, .admin-list-item, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer');
                 elementsToAdd.forEach(el => {
                     if (!el.classList.contains('fade-in-up')) {
                         el.classList.add('scroll-animate');
