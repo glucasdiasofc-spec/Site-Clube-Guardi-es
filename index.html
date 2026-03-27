@@ -378,12 +378,13 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .panel-layout { display: grid; grid-template-columns: 320px 1fr 350px; gap: 30px; }
         @media (max-width: 1200px) { .panel-layout { grid-template-columns: 1fr; } }
         .sidebar, .ranking-column, .form-box { background: rgba(30, 30, 30, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 204, 0, 0.1); height: fit-content; box-shadow: 0 8px 32px rgba(0,0,0,0.3); /* /* backdrop-filter: blur(10px); */ */ }
-        /* Trava contra vazamento de tela */
+        /* Trava contra vazamento de tela (Corrigido para não travar o scroll vertical) */
         .form-box, .main-content, .panel-layout {
             box-sizing: border-box !important;
             max-width: 100% !important;
             min-width: 0 !important;
-            overflow-x: hidden !important;
+            overflow-wrap: break-word !important;
+            word-wrap: break-word !important;
         }
         .sidebar-profile { text-align: center; margin-bottom: 20px; }
         .profile-img { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--vermelho); object-fit: cover; margin-bottom: 15px; box-shadow: 0 0 20px rgba(230,57,70,0.4); }
@@ -8704,9 +8705,10 @@ body.splash-active {
                 min-height: 44px;
             }
 
-            /* Scroll suave */
-            * {
+           /* Scroll suave APENAS onde tem rolagem interna, para não criar zonas mortas */
+            .admin-list, .req-list, .modal-box, .dbv-grid, #lista-historico-membro, .carousel-track {
                 -webkit-overflow-scrolling: touch;
+                overscroll-behavior-y: contain;
             }
 
             /* Prevenir highlight azul no toque */
