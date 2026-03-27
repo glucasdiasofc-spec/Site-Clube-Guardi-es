@@ -84,8 +84,8 @@
             z-index: 1000; 
             border-bottom: 3px solid transparent; 
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
             background: rgba(18, 18, 18, 0.7);
             /* iOS safe area */
             padding-top: env(safe-area-inset-top);
@@ -223,14 +223,7 @@ header#main-header.initial-splash .header-logo {
         }
 
         /* --- SPLASH: logo com pulso animado --- */
-        body.is-home header#main-header.initial-splash .logo-container .header-logo {
-            /* Resetar tamanho fixado pelo customizador mobile */
-            height: 85px !important;
-            width: auto !important;
-            max-width: none !important;
-
-            animation: pulseSplash 2.5s infinite ease-in-out !important;
-        }
+        body.is-home header#main-header.initial-splash .logo-container .header-logo { width: 25% !important; max-width: 150px !important; height: auto !important; animation: pulseSplash 2.5s infinite ease-in-out !important; }
 
         /* --- SPLASH: mensagem "Role para baixo" --- */
         body.is-home header#main-header.initial-splash .logo-container .scroll-down-msg {
@@ -240,7 +233,7 @@ header#main-header.initial-splash .header-logo {
             gap: 5px !important;
             margin-top: 15px !important;
             color: var(--amarelo) !important;
-            font-size: 0.5rem !important;
+            font-size: 1.2rem !important;
             text-transform: uppercase !important;
             font-weight: bold !important;
             letter-spacing: 2px !important;
@@ -304,7 +297,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         
         /* CRONÔMETRO */
         .timer { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px; }
-        .unit-timer { background: rgba(20, 20, 20, 0.6); padding: 20px; border-radius: 15px; min-width: 110px; border: 2px solid var(--vermelho); backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(230, 57, 70, 0.2); transition: transform 0.3s; }
+        .unit-timer { background: rgba(20, 20, 20, 0.6); padding: 20px; border-radius: 15px; min-width: 110px; border: 2px solid var(--vermelho); backdrop-filter: blur(2px); box-shadow: 0 8px 32px rgba(230, 57, 70, 0.2); transition: transform 0.3s; }
         .unit-timer:hover { transform: translateY(-5px); }
         .unit-timer b { font-size: 3rem; display: block; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
         .unit-timer span { font-size: 0.9rem; color: var(--amarelo); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
@@ -373,7 +366,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         /* LAYOUT PAINEL */
         .panel-layout { display: grid; grid-template-columns: 320px 1fr 350px; gap: 30px; }
         @media (max-width: 1200px) { .panel-layout { grid-template-columns: 1fr; } }
-        .sidebar, .ranking-column, .form-box { background: rgba(30, 30, 30, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 204, 0, 0.1); height: fit-content; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
+        .sidebar, .ranking-column, .form-box { background: rgba(30, 30, 30, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 204, 0, 0.1); height: fit-content; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(2px); }
         .sidebar-profile { text-align: center; margin-bottom: 20px; }
         .profile-img { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--vermelho); object-fit: cover; margin-bottom: 15px; box-shadow: 0 0 20px rgba(230,57,70,0.4); }
         
@@ -398,7 +391,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
 
         /* GRID MEMBROS (DBV) */
         .dbv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .dbv-card { background: rgba(42, 42, 42, 0.4); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid rgba(255, 204, 0, 0.1); border-bottom: 3px solid var(--vermelho); position: relative; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 8px 32px rgba(0,0,0,0.2); backdrop-filter: blur(10px); }
+        .dbv-card { background: rgba(42, 42, 42, 0.4); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid rgba(255, 204, 0, 0.1); border-bottom: 3px solid var(--vermelho); position: relative; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 8px 32px rgba(0,0,0,0.2); backdrop-filter: blur(2px); }
         .dbv-card:hover { transform: translateY(-8px); box-shadow: 0 12px 40px rgba(255, 204, 0, 0.15); border-bottom-color: var(--amarelo); border-color: rgba(255, 204, 0, 0.3); }
         .btn-del { position: absolute; top: -10px; right: -10px; background: var(--vermelho); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: 0.2s; }
         .btn-del:hover { background: #ff0000; transform: scale(1.1); }
@@ -421,7 +414,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .perm-grid { display: grid; grid-template-columns: 1fr 1fr; background: #111; padding: 15px; border-radius: 10px; border: 1px solid #333; margin: 15px 0; }
 
         /* MODAIS GERAIS (HISTÓRICO / PONTOS / ALL WINNERS) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 9000; display: none; align-items: center; justify-content: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(2px); z-index: 9000; display: none; align-items: center; justify-content: center; }
         .modal-box { background: var(--cinza-card); padding: 30px; border-radius: 20px; width: 95%; max-width: 500px; border: 2px solid var(--amarelo); box-shadow: 0 15px 35px rgba(0,0,0,0.8); max-height: 80vh; overflow-y: auto; }
         .close-modal { text-align: right; cursor: pointer; color: #888; font-size: 1.2rem; }
         .close-modal:hover { color: white; }
@@ -979,7 +972,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
     gap: 25px !important;
 
     transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(3px);
     border-left: 2px solid var(--amarelo);
     z-index: 1050;
     padding: 60px 20px !important;
@@ -1048,7 +1041,7 @@ header#main-header .user-info-header .user-status {
 
         .fade-in-up {
             will-change: transform, opacity;
-            animation: fadeInUp 0.6s ease-out forwards;
+            animation: fadeInUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         .scroll-animate {
@@ -1095,14 +1088,14 @@ header#main-header .user-info-header .user-status {
         /* Glassmorphism para seções da Home Page */
         #home-page, .panel-layout, .showcase-section, .gallery-section {
             background: rgba(18, 18, 18, 0.6) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
         }
 
         .gallery-card, .dbv-card, .form-box, .sidebar, .ranking-column {
             background: rgba(30, 30, 30, 0.6) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
             border: 1px solid rgba(255, 204, 0, 0.1) !important;
         }
 
@@ -1196,6 +1189,8 @@ header#main-header .user-info-header .user-status {
     
         /* Ajuste de Carrosséis */
         .carousel-container, .highlights-container, .lideranca-container {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
             display: flex !important;
             flex-wrap: nowrap !important;
             overflow-x: auto !important;
@@ -1265,6 +1260,38 @@ header#main-header .user-info-header .user-status {
             }
         }
     
+    
+        .static-title, .btn-desbravador, .btn-lideranca {
+            animation: none !important;
+            transform: none !important;
+            transition: none !important;
+            opacity: 1 !important;
+        }
+    
+    
+        .carousel-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            opacity: 0;
+            transform: translateX(100%) scale(0.9) !important;
+            pointer-events: none;
+        }
+        .carousel-item.active {
+            opacity: 1;
+            transform: translateX(0) scale(1) !important;
+            pointer-events: auto;
+        }
+        .carousel-item.exit-left {
+            opacity: 0;
+            transform: translateX(-100%) scale(0.9) !important;
+        }
+        .carousel-item.exit-right {
+            opacity: 0;
+            transform: translateX(100%) scale(0.9) !important;
+        }
+    
     </style>
     <script>
         // Detectar Android em modo PWA
@@ -1297,7 +1324,7 @@ header#main-header .user-info-header .user-status {
     </div>
 </div>
         <div class="user-info-header">
-            <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <span class="btn-text">Visitante</span></span>
+            <span class="user-status" id="status-txt"><i class="fa-solid fa-user-shield"></i> <img src="logo-192.png" class="visitor-logo-spatial" alt="Logo" style="width:40px; height:40px; display:block; margin: 0 auto 5px auto; animation: slowFloat 15s ease-in-out infinite;"><span class="btn-text">Visitante</span></span>
             <button id="nav-custom" class="btn-custom" onclick="navegarPara('custom-page')"><i class="fa-solid fa-paint-roller"></i> <span class="btn-text">Customizar</span></button>
             <button class="btn-desbravador static-title" onclick="abrirLoginDbv()"><i class="fa-solid fa-id-badge"></i> <span class="btn-text">Área do Desbravador</span></button>
             <button class="btn-lideranca static-title" onclick="abrirLogin()"><i class="fa-solid fa-lock"></i> <span class="btn-text">Área do Líder</span></button>
@@ -1629,7 +1656,7 @@ header#main-header .user-info-header .user-status {
     </div>
 
 
-    <section id="login-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
+    <section id="login-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(2px);z-index:9000;display:none;align-items:center;justify-content:center">
         <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid var(--amarelo);text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
             <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: var(--amarelo); margin-bottom: 15px;"></i>
             <h2 style="color:var(--amarelo);margin-bottom:25px;letter-spacing: 1px;">ACESSO LIDERANÇA</h2>
@@ -1639,7 +1666,7 @@ header#main-header .user-info-header .user-status {
             <p onclick="document.getElementById('login-modal').style.display='none'" style="margin-top:25px;color:#888;cursor:pointer;font-weight:bold;transition:0.3s;"><i class="fa-solid fa-times"></i> Cancelar / Voltar</p>
         </div>
     </section>
-<section id="login-dbv-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:9000;display:none;align-items:center;justify-content:center">
+<section id="login-dbv-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(2px);z-index:9000;display:none;align-items:center;justify-content:center">
         <div style="background:var(--cinza-card);padding:40px;border-radius:20px;width:95%;max-width:400px;border:2px solid #1a6b3c;text-align:center;box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
             <i class="fa-solid fa-id-badge" style="font-size: 3rem; color: #1a6b3c; margin-bottom: 15px;"></i>
             <h2 style="color:white;margin-bottom:25px;letter-spacing: 1px;">ÁREA DO DESBRAVADOR</h2>
@@ -2561,7 +2588,16 @@ ${!m.isLider ? `
         function atualizarCarrossel(prefix, total, activeIdx) {
             for(let i=0; i<total; i++) {
                 const el = document.getElementById(prefix+i);
-                if(el) { if(i === activeIdx) el.classList.add('active'); else el.classList.remove('active'); }
+                if(el) { 
+                    el.classList.remove('active', 'exit-left', 'exit-right');
+                    if(i === activeIdx) {
+                        el.classList.add('active');
+                    } else if (i < activeIdx) {
+                        el.classList.add('exit-left');
+                    } else {
+                        el.classList.add('exit-right');
+                    }
+                }
             }
         }
         function nextLider() { const t = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral').length; if(t===0)return; liderIdx = (liderIdx + 1) % t; atualizarCarrossel('lid-item-', t, liderIdx); }
@@ -9233,7 +9269,7 @@ header#main-header .user-info-header .user-status {
 
         .fade-in-up {
             will-change: transform, opacity;
-            animation: fadeInUp 0.6s ease-out forwards;
+            animation: fadeInUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         .scroll-animate {
@@ -9280,14 +9316,14 @@ header#main-header .user-info-header .user-status {
         /* Glassmorphism para seções da Home Page */
         #home-page, .panel-layout, .showcase-section, .gallery-section {
             background: rgba(18, 18, 18, 0.6) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
         }
 
         .gallery-card, .dbv-card, .form-box, .sidebar, .ranking-column {
             background: rgba(30, 30, 30, 0.6) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
             border: 1px solid rgba(255, 204, 0, 0.1) !important;
         }
 
