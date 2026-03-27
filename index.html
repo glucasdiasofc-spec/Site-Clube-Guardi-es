@@ -1973,14 +1973,16 @@ const CATALOGO_CARGOS = [
         }
 
 function abrirMinhasEspecialidadesLider() {
-            // Esconde todas as outras seções de forma dinâmica
-            document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
+            // Esconde todas as outras seções
+            document.getElementById('aprovacoes-section').style.display = 'none';
+            if(document.getElementById('admin-only-users')) document.getElementById('admin-only-users').style.display = 'none';
+            if(document.getElementById('hall-section')) document.getElementById('hall-section').style.display = 'none';
+            if(document.getElementById('delete-unid-section')) document.getElementById('delete-unid-section').style.display = 'none';
+            if(document.getElementById('memb-section')) document.getElementById('memb-section').style.display = 'none';
             if(document.getElementById('box-gerenciamento-unid')) document.getElementById('box-gerenciamento-unid').style.display = 'none';
             
-            // Mostra a seção e rola suavemente até ela
-            const secao = document.getElementById('minhas-esp-lider-section');
-            secao.style.display = 'block';
-            setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+            // Mostra a seção de especialidades do líder
+            document.getElementById('minhas-esp-lider-section').style.display = 'block';
             
             // Cria um "perfil" oculto para o líder guardar as especialidades (se ele ainda não tiver)
             let membroLider = db.membros.find(m => m.nome === user.u && m.isLider === true);
@@ -2727,9 +2729,9 @@ ${(m.cargos && m.cargos.includes('Tesoureiro')) ? `
     </div>` : ''}
 
             <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #333; text-align:left;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:nowrap;">
-                    <h4 style="color:white; margin:0; display:flex; align-items:center; gap:8px; white-space:nowrap; font-size:1.1rem;"><i class="fa-solid fa-medal"></i> Especialidades</h4>
-                    <button onclick="abrirCatalogoEspecialidades()" class="btn-save btn-inline" style="width:auto !important; padding:8px 12px !important; font-size:0.75rem !important; margin:0 !important; flex-shrink:0;">+ ADICIONAR</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="color:white; margin:0;"><i class="fa-solid fa-medal"></i> Especialidades</h4>
+                    <button onclick="abrirCatalogoEspecialidades()" class="btn-save" style="width:auto; padding:5px 10px; font-size:0.7rem;">+ ADICIONAR</button>
                 </div>
 
                 <p style="color:var(--amarelo); font-size:0.7rem; font-weight:bold; margin-bottom:10px; text-transform:uppercase;">Concluídas</p>
@@ -2740,9 +2742,9 @@ ${(m.cargos && m.cargos.includes('Tesoureiro')) ? `
             </div>
 
 <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #333; text-align:left;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:nowrap;">
-                    <h4 style="color:white; margin:0; display:flex; align-items:center; gap:8px; white-space:nowrap; font-size:1.1rem;"><i class="fa-solid fa-book-open"></i> Classes</h4>
-                    <button onclick="abrirCatalogoClasses()" class="btn-save btn-inline" style="width:auto !important; padding:8px 12px !important; font-size:0.75rem !important; margin:0 !important; flex-shrink:0;">+ ADICIONAR</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="color:white; margin:0;"><i class="fa-solid fa-book-open"></i> Classes</h4>
+                    <button onclick="abrirCatalogoClasses()" class="btn-save" style="width:auto; padding:5px 10px; font-size:0.7rem;">+ ADICIONAR</button>
                 </div>
                 <div id="lista-minhas-classes" style="display:flex; flex-direction:column; gap:10px;">
                     </div>
@@ -7373,9 +7375,7 @@ function enviarClasseParaAvaliacao(idMembro, idClasse) {
 
 function abrirMinhasClassesLider() {
     document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
-    const secao = document.getElementById('minhas-classes-lider-section');
-    secao.style.display = 'block';
-    setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    document.getElementById('minhas-classes-lider-section').style.display = 'block';
     
     let membroLider = db.membros.find(m => m.nome === user.u && m.isLider === true);
     if (!membroLider) {
@@ -7478,9 +7478,7 @@ function toggleReqClasseLider(idClasse, idxReq) {
 
 function abrirAprovacoesClasses() {
     document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
-    const secao = document.getElementById('aprovacoes-classes-section');
-    secao.style.display = 'block';
-    setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    document.getElementById('aprovacoes-classes-section').style.display = 'block';
     renderAprovacoesClasses();
 }
 
@@ -9131,27 +9129,21 @@ header#main-header .user-info-header .user-status {
         /* Animação de fade para modais */
         .modal-overlay { animation: fadeIn 0.6s ease-out; }
 
-        /* ============================================================
-           ANIMAÇÕES DE SCROLL - FADE IN UP
+       /* ============================================================
+           ANIMAÇÕES DE SCROLL - OTIMIZADAS PARA MOBILE (FADE + BLUR LEVE)
            ============================================================ */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .scroll-animate {
+            opacity: 0.4;
+            filter: blur(3px); /* Blur suave para não travar o mobile */
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, filter 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform; /* Ajuda a placa de vídeo do celular */
         }
 
         .fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(40px);
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0);
         }
         .modal-overlay.closing { animation: fadeOut 0.6s ease-out; }
         
@@ -9246,41 +9238,21 @@ header#main-header .user-info-header .user-status {
         h2 { font-size: clamp(1.4rem, 5vw, 2.2rem) !important; }
         h3 { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
 
-     /* Alinhar botões (COM CORREÇÃO PARA NÃO VAZAR E RESPOSTA IMEDIATA AO TOQUE) */
-        button { touch-action: manipulation; } /* Remove o lag de 300ms do clique no mobile */
-        
-        .modal-box button:not(.btn-inline),
+     /* Alinhar botões e checklist */
+        .modal-box button,
+        .btn-save,
+        .btn-custom,
         button[type="submit"],
         button[type="button"] {
-            max-width: 100% !important; 
-            width: 100%;
-            margin: 8px auto;
-            padding: 12px 15px;
-            box-sizing: border-box;
-            white-space: normal; 
-            word-wrap: break-word;
-            height: auto;
-            font-size: 0.85rem; 
-        }
-        
-        .btn-save, .btn-custom {
-            max-width: 100%;
-            box-sizing: border-box;
-            word-wrap: break-word;
-        }
-        
-        /* Garante que os botões de Checklist não fiquem gigantes e estourem o flexbox */
-        @media (max-width: 768px) {
-            .dbv-profile-card .btn-save, 
-            .lista-classes-lider .btn-save, 
-            .lista-esp-lider .btn-save,
-            #lista-minhas-classes .btn-save,
-            #lista-minhas-esp .btn-save {
-                width: auto !important;
-                min-width: fit-content !important;
-                white-space: nowrap !important;
-                margin: 0 !important;
-            }
+            max-width: 100% !important; /* Adaptável a qualquer tela */
+            width: 100% !important;
+            margin: 8px auto !important;
+            padding: 12px 15px !important;
+            box-sizing: border-box !important;
+            white-space: normal !important; /* Quebra o texto se for muito longo */
+            word-wrap: break-word !important;
+            height: auto !important;
+            font-size: 0.85rem !important; /* Fonte um pouco menor no celular */
         }
 
         .modal-box {
@@ -9315,36 +9287,34 @@ header#main-header .user-info-header .user-status {
     </style>
 
     <script>
-       /* ============================================================
-           ANIMAÇÕES DE SCROLL - EFEITO BLUR OTIMIZADO
+        /* ============================================================
+           ANIMAÇÕES DE SCROLL - INTERSECTION OBSERVER
            ============================================================ */
-        function initScrollAnimations() {
-            // Cria a zona de "foco" no centro da tela
+                function initScrollAnimations() {
+            // Configuração do IntersectionObserver - Animações infinitas (ida e volta)
             const observerOptions = {
-                threshold: 0,
-                rootMargin: '-20% 0px -20% 0px' 
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
             };
 
-            const observer = new IntersectionObserver((entries) => {
+           const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('focused-in');
-                        entry.target.classList.remove('blurred-out');
-                    } else {
-                        entry.target.classList.remove('focused-in');
-                        entry.target.classList.add('blurred-out');
+                        // Quando o elemento entra na tela, a animação acontece
+                        entry.target.classList.add('fade-in-up');
+                    } else if (entry.boundingClientRect.top > 0) {
+                        // SÓ remove a classe se o elemento sair pela parte de BAIXO da tela.
+                        // Isso impede que as palavras pisquem enquanto você está lendo e rolando para baixo.
+                        entry.target.classList.remove('fade-in-up');
                     }
                 });
             }, observerOptions);
 
-            // Seleciona APENAS blocos maiores para evitar o travamento (lag) no mobile
+            // Observar TODOS os elementos que devem animar
             const elementsToAnimate = document.querySelectorAll(
-                'section, .showcase-section, .hero, .form-box, .sidebar, .ranking-column, .gallery-card, .dbv-card'
+                'section, header, footer, .input-group, .btn-save, .admin-list-item, .scroll-animate, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer, .gallery-card.layout-title, .showcase-section h2, h1, h2, h3'
             );
-            
             elementsToAnimate.forEach(element => {
-                element.classList.add('scroll-animate');
-                element.classList.add('blurred-out'); // Inicia embaçado
                 observer.observe(element);
             });
         }
@@ -9369,11 +9339,21 @@ header#main-header .user-info-header .user-status {
             }
         }, { passive: true });
 
-        // Reiniciar as animações quando renderizar coisas novas (Cards de DBV, etc)
+        // Adicionar classe scroll-animate a cards e elementos quando renderizados dinamicamente
         const originalRender = window.render;
         if (originalRender) {
             window.render = function() {
                 originalRender.call(this);
+                
+                // Adicionar classe scroll-animate a elementos que devem animar
+                const elementsToAdd = document.querySelectorAll('section, header, footer, .input-group, .btn-save, .admin-list-item, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer');
+                elementsToAdd.forEach(el => {
+                    if (!el.classList.contains('fade-in-up')) {
+                        el.classList.add('scroll-animate');
+                    }
+                });
+                
+                // Reinicializar observer para novos elementos
                 initScrollAnimations();
             };
         }
