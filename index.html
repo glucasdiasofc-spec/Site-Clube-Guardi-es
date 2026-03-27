@@ -233,7 +233,7 @@ header#main-header.initial-splash .header-logo {
             gap: 5px !important;
             margin-top: 15px !important;
             color: var(--amarelo) !important;
-            font-size:  0.85rem !important;
+            font-size: 1.2rem !important;
             text-transform: uppercase !important;
             font-weight: bold !important;
             letter-spacing: 2px !important;
@@ -291,7 +291,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* HERO DINÂMICO */
-        .hero { text-align: center; margin-bottom: 40px; padding: 80px 20px; border-radius: 20px; border: 1px solid var(--borda-suave); background-position: center; background-size: cover; background-position: center top; transition: background 0.8s ease; box-shadow: inset 0 0 100px rgba(0,0,0,0.8); }
+        .hero { text-align: center; margin-bottom: 40px; padding: 80px 20px; border-radius: 20px; border: 1px solid var(--borda-suave); background-position: center; background-size: cover; transition: background 0.8s ease; box-shadow: inset 0 0 100px rgba(0,0,0,0.8); }
         .hero h1 { font-family: 'Montserrat', sans-serif; font-size: clamp(2rem, 8vw, 4rem); font-weight: 800; text-shadow: 3px 3px 20px rgba(0,0,0,1); margin-bottom: 10px; letter-spacing: 1px; }
         .hero p.subtitle { font-family: 'Poppins', sans-serif; font-size: clamp(1rem, 4vw, 1.5rem); font-weight: 500; text-shadow: 2px 2px 10px rgba(0,0,0,1); margin-bottom: 30px; color: #ddd; }
         
@@ -346,7 +346,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .showcase-section { text-align: center; margin: 60px 0; padding: 40px 20px; background: rgba(0,0,0,0.4); border-radius: 20px; border: 1px solid #333; position: relative; }
         .showcase-section h2 { color: var(--amarelo); font-size: 2.2rem; margin-bottom: 30px; }
         .carousel-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; }
-        .carousel-track { display: flex !important; overflow-x: auto !important; overflow-y: hidden !important; scroll-snap-type: x mandatory !important; -webkit-overflow-scrolling: touch !important; display: flex; gap: 20px; overflow: hidden; width: 300px; height: 350px; justify-content: center; align-items: center; position: relative; }
+        .carousel-track { display: flex; gap: 20px; overflow: hidden; width: 300px; height: 350px; justify-content: center; align-items: center; position: relative; }
         .carousel-item { position: absolute; width: 100%; height: 100%; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: scale(0.9); pointer-events: none; background: #111; border-radius: 15px; border: 2px solid var(--amarelo); padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .carousel-item.active { opacity: 1; transform: scale(1); pointer-events: auto; }
         .carousel-item img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--amarelo); margin-bottom: 15px; }
@@ -433,27 +433,28 @@ body.is-home header#main-header.initial-splash #menu-toggle {
 
             /* HEADER MOBILE - COMPACTO E ELEGANTE */
             /* Aplicado SOMENTE quando NÃO está no splash */
-            
-    body:not(.is-home) header#main-header,
-    body.is-home header#main-header:not(.initial-splash) {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 60px !important; /* Compacto */
-        background: rgba(18, 18, 18, 0.95) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border-bottom: 2px solid var(--amarelo) !important;
-        z-index: 1000 !important;
-        padding: 0 15px !important;
-        padding-top: env(safe-area-inset-top, 0) !important;
-        box-sizing: content-box !important;
-    }
-
+            body:not(.is-home) header#main-header,
+            body.is-home header#main-header:not(.initial-splash) {
+                height: auto !important;
+                padding: 10px 15px !important;
+                padding-top: calc(10px + env(safe-area-inset-top)) !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                flex-wrap: nowrap !important;
+                gap: 8px !important;
+                min-height: 64px !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 1000 !important;
+                border-bottom: 2px solid var(--amarelo) !important;
+                background-color: rgba(0,0,0,0.95) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+            }
 
             /* LOGO MOBILE - aplicado SOMENTE quando NÃO está no splash */
             body:not(.is-home) header#main-header .logo-container,
@@ -649,7 +650,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
             }
 
             /* CARROSSEL */
-            .carousel-track { display: flex !important; overflow-x: auto !important; overflow-y: hidden !important; scroll-snap-type: x mandatory !important; -webkit-overflow-scrolling: touch !important;
+            .carousel-track {
                 width: 260px !important;
             }
 
@@ -830,7 +831,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
             .perm-grid { grid-template-columns: 1fr !important; }
             .hero h1 { font-size: 1.6rem !important; }
             .dbv-area-hero h1 { font-size: 2rem; }
-            .carousel-track { display: flex !important; overflow-x: auto !important; overflow-y: hidden !important; scroll-snap-type: x mandatory !important; -webkit-overflow-scrolling: touch !important; width: 250px !important; }
+            .carousel-track { width: 250px !important; }
             
         }
      /* --- INTEGRAÇÃO COM PAINEL DE TAMANHOS DINÂMICOS --- */
@@ -842,27 +843,12 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         /* Ajustes Mobile controlados pelo painel - SOMENTE fora do splash */
         @media (max-width: 768px) {
             /* Aplicar padding/border do painel somente quando NÃO está no splash */
-            
-    body:not(.is-home) header#main-header,
-    body.is-home header#main-header:not(.initial-splash) {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 60px !important; /* Compacto */
-        background: rgba(18, 18, 18, 0.95) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border-bottom: 2px solid var(--amarelo) !important;
-        z-index: 1000 !important;
-        padding: 0 15px !important;
-        padding-top: env(safe-area-inset-top, 0) !important;
-        box-sizing: content-box !important;
-    }
-
+            body:not(.is-home) header#main-header,
+            body.is-home header#main-header:not(.initial-splash) {
+                padding: var(--size-mob-header-pad, 25px) 15px !important;
+                min-height: auto !important;
+                border-bottom: 3px solid var(--amarelo) !important;
+            }
             /* Tamanho da logo pelo painel somente fora do splash */
             body:not(.is-home) header#main-header .header-logo,
             body.is-home header#main-header:not(.initial-splash) .header-logo {
@@ -1086,12 +1072,12 @@ header#main-header .user-info-header .user-status {
             width: 100%;
             height: 100%;
             background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2048&auto=format&fit=crop');
-            background-size: cover; background-position: center top;
+            background-size: cover;
             background-position: center;
             background-attachment: fixed;
             z-index: -2;
             opacity: 0.7;
-            animation: cosmicParallax 60s linear infinite; will-change: transform;
+            animation: cosmicParallax 60s linear infinite;
         }
 
         @keyframes cosmicParallax {
@@ -1102,14 +1088,14 @@ header#main-header .user-info-header .user-status {
         /* Glassmorphism para seções da Home Page */
         #home-page, .panel-layout, .showcase-section, .gallery-section {
             background: rgba(18, 18, 18, 0.6) !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
         }
 
         .gallery-card, .dbv-card, .form-box, .sidebar, .ranking-column {
             background: rgba(30, 30, 30, 0.6) !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
             border: 1px solid rgba(255, 204, 0, 0.1) !important;
         }
 
@@ -1275,7 +1261,7 @@ header#main-header .user-info-header .user-status {
         }
     
     
-        .static-title, .btn-desbravador, .btn-lideranca, .modal-box h1, .modal-box h3 {
+        .static-title, .btn-desbravador, .btn-lideranca {
             animation: none !important;
             transform: none !important;
             transition: none !important;
@@ -8934,10 +8920,9 @@ body.splash-active {
         position: relative;
     }
 
-
-    /* 2. Configuração do Menu Mobile para cobrir a tela toda */
+/* 2. Configuração do Menu Mobile para cobrir a tela toda */
     header#main-header .user-info-header {
-        padding-top: env(safe-area-inset-top, 20px) !important;
+            padding-top: env(safe-area-inset-top, 0);
         position: fixed !important;
         top: 0 !important;
         right: 0 !important;
@@ -8950,26 +8935,15 @@ body.splash-active {
         flex-direction: column !important;
         justify-content: center !important; 
         align-items: center !important; 
-        gap: 20px !important; 
-        transition: all 0.4s ease-in-out !important;
+        gap: 25px !important; 
+        padding-top: 0 !important;
+        
+        /* A mágica: Animar o transform garante o deslize de volta sem travar */
+        transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out !important;
+        
         z-index: 9000 !important;
         pointer-events: none !important;
     }
-
-    /* Logo no menu mobile explicitamente acima do nome Visitante */
-    header#main-header .user-info-header::before {
-        content: '' !important;
-        position: relative !important;
-        top: 0 !important;
-        display: block !important;
-        width: 120px !important;
-        height: 120px !important;
-        background: url('logo-192.png') center/contain no-repeat !important;
-        margin-bottom: 10px !important;
-        filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.4)) !important;
-        animation: slowFloat 10s ease-in-out infinite !important;
-    }
-
 
     /* 3. Animação de entrada do menu (fade suave) */
     header#main-header .user-info-header.active {
@@ -9045,50 +9019,24 @@ header#main-header .user-info-header .user-status {
    ============================================================ */
 @media (max-width: 768px) {
     /* 1. Estrutura Flex do Header */
-    
     body:not(.is-home) header#main-header,
     body.is-home header#main-header:not(.initial-splash) {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
         position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 60px !important; /* Compacto */
-        background: rgba(18, 18, 18, 0.95) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border-bottom: 2px solid var(--amarelo) !important;
-        z-index: 1000 !important;
-        padding: 0 15px !important;
-        padding-top: env(safe-area-inset-top, 0) !important;
-        box-sizing: content-box !important;
+        height: 80px !important; /* Altura padrão para App */
+        border-bottom: 2px solid var(--amarelo) !important; /* Adiciona a linha amarela no APP */
     }
-
 
     /* Ajuste de altura APENAS para o SITE MOBILE (não App) */
-    html:not(.is-pwa-app) 
-    body:not(.is-home) header#main-header,
-    body.is-home header#main-header:not(.initial-splash) {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 60px !important; /* Compacto */
-        background: rgba(18, 18, 18, 0.95) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
+    html:not(.is-pwa-app) body:not(.is-home) header#main-header,
+    html:not(.is-pwa-app) body.is-home header#main-header:not(.initial-splash) {
+        height: 35px !important; /* Cabeçalho bem mais fino */
+        padding-top: 0 !important; /* Remove o respiro do iOS no site mobile */
+        background: var(--cinza-dark) !important;
         border-bottom: 2px solid var(--amarelo) !important;
-        z-index: 1000 !important;
-        padding: 0 15px !important;
-        padding-top: env(safe-area-inset-top, 0) !important;
-        box-sizing: content-box !important;
     }
-
     html:not(.is-pwa-app) body {
             padding-top: env(safe-area-inset-top, 0); padding-top: 35px !important; } /* Ajusta o conteúdo para a nova altura */
 
@@ -9352,12 +9300,12 @@ header#main-header .user-info-header .user-status {
             width: 100%;
             height: 100%;
             background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2048&auto=format&fit=crop');
-            background-size: cover; background-position: center top;
+            background-size: cover;
             background-position: center;
             background-attachment: fixed;
             z-index: -2;
             opacity: 0.7;
-            animation: cosmicParallax 60s linear infinite; will-change: transform;
+            animation: cosmicParallax 60s linear infinite;
         }
 
         @keyframes cosmicParallax {
@@ -9368,14 +9316,14 @@ header#main-header .user-info-header .user-status {
         /* Glassmorphism para seções da Home Page */
         #home-page, .panel-layout, .showcase-section, .gallery-section {
             background: rgba(18, 18, 18, 0.6) !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
         }
 
         .gallery-card, .dbv-card, .form-box, .sidebar, .ranking-column {
             background: rgba(30, 30, 30, 0.6) !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
             border: 1px solid rgba(255, 204, 0, 0.1) !important;
         }
 
@@ -9487,8 +9435,7 @@ header#main-header .user-info-header .user-status {
                         entry.target.classList.add('fade-in-up');
                     } else {
                         // Quando elemento sai da viewport: remover fade-in para poder reanimar
-                        // Mantém a classe para evitar flickering
-                        // entry.target.classList.remove('fade-in-up');
+                        entry.target.classList.remove('fade-in-up');
                     }
                 });
             }, observerOptions);
