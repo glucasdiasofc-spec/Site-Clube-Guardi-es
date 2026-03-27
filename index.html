@@ -86,9 +86,9 @@
             -webkit-backdrop-filter: blur(15px);
             background: rgba(18, 18, 18, 0.7);
             /* iOS safe area */
-            padding-top: env(safe-area-inset-top);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
+            padding-top: env(safe-area-inset-top, 0);
+            padding-left: env(safe-area-inset-left, 0);
+            padding-right: env(safe-area-inset-right, 0);
         }
 
         .logo-container {
@@ -117,6 +117,27 @@ header#main-header.initial-splash .header-logo {
         .logo-container:hover .header-logo { transform: scale(1.05) rotate(3deg); }
         
         .scroll-down-msg { display: none; }
+
+        /* Android PWA - Header compacto */
+        @media all and (display-mode: standalone) {
+            html.is-android-pwa header {
+                height: 60px !important;
+                padding-top: 0 !important;
+                top: 0 !important;
+            }
+
+            html.is-android-pwa .header-logo {
+                max-height: 55px !important;
+            }
+
+            html.is-android-pwa header.scrolled {
+                height: 50px !important;
+            }
+
+            html.is-android-pwa header.scrolled .header-logo {
+                max-height: 45px !important;
+            }
+        }
 
         .user-info-header { 
             position: absolute;
@@ -1173,6 +1194,114 @@ header#main-header .user-info-header .user-status {
             html.is-android-pwa header#main-header.scrolled .header-logo {
                 max-height: 40px !important;
             }
+        }
+
+
+        /* ============================================================
+           CARROSSÉIS HORIZONTAIS - Liderança e Destaques
+           ============================================================ */
+        .lideranca-track, .destaques-track, [class*="-track"] {
+            display: flex !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            white-space: nowrap !important;
+            -webkit-overflow-scrolling: touch !important;
+            scroll-behavior: smooth;
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        .lideranca-track > *, .destaques-track > *, [class*="-track"] > * {
+            flex: 0 0 auto !important;
+            width: 80% !important;
+            max-width: 300px !important;
+            white-space: normal !important;
+        }
+
+        /* Remover scroll vertical dos carrosséis */
+        .lideranca-track::-webkit-scrollbar, .destaques-track::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .lideranca-track::-webkit-scrollbar-thumb, .destaques-track::-webkit-scrollbar-thumb {
+            background: rgba(255, 204, 0, 0.5);
+            border-radius: 2px;
+        }
+
+        /* ============================================================
+           FUNDO CÓSMICO 4K COM ANIMAÇÃO COSMICDRIFT
+           ============================================================ */
+        #cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=2560&q=90');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -2;
+            opacity: 0.7;
+            animation: cosmicDrift 120s linear infinite;
+        }
+
+        @keyframes cosmicDrift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* ============================================================
+           LOGO FLUTUANTE NO MENU MOBILE - slowFloat
+           ============================================================ */
+        @media (max-width: 768px) {
+            header#main-header .user-info-header::before {
+                content: '';
+                position: absolute;
+                top: 50px;
+                width: 60%;
+                max-width: 250px;
+                height: auto;
+                aspect-ratio: 1;
+                background: url('PNGDBV.webp') center/contain no-repeat;
+                animation: slowFloat 18s ease-in-out infinite;
+                filter: drop-shadow(0 0 30px rgba(255, 204, 0, 0.7));
+            }
+
+            @keyframes slowFloat {
+                0% { transform: translateY(0px); }
+                25% { transform: translateY(-20px); }
+                50% { transform: translateY(0px); }
+                75% { transform: translateY(-15px); }
+                100% { transform: translateY(0px); }
+            }
+        }
+
+        @media (min-width: 769px) {
+            header#main-header .user-info-header::before {
+                display: none !important;
+            }
+        }
+
+        /* ============================================================
+           AJUSTES DE SPLASH SCREEN
+           ============================================================ */
+        body.is-home header#main-header.initial-splash .scroll-down-msg {
+            font-size: 0.5rem !important;
+            letter-spacing: 1px !important;
+        }
+
+        /* Aumentar logo na Splash Screen para Android PWA */
+        @media all and (display-mode: standalone) {
+            html.is-android-pwa body.is-home header#main-header.initial-splash .header-logo {
+                max-height: 220px !important;
+            }
+        }
+
+        /* Remover animação de scroll dos títulos de login */
+        .area-desbravador-title, .area-lideranca-title {
+            animation: none !important;
+            will-change: auto !important;
         }
 
     </style>
@@ -9278,6 +9407,114 @@ header#main-header .user-info-header .user-status {
             }
         }
 
+
+        /* ============================================================
+           CARROSSÉIS HORIZONTAIS - Liderança e Destaques
+           ============================================================ */
+        .lideranca-track, .destaques-track, [class*="-track"] {
+            display: flex !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            white-space: nowrap !important;
+            -webkit-overflow-scrolling: touch !important;
+            scroll-behavior: smooth;
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        .lideranca-track > *, .destaques-track > *, [class*="-track"] > * {
+            flex: 0 0 auto !important;
+            width: 80% !important;
+            max-width: 300px !important;
+            white-space: normal !important;
+        }
+
+        /* Remover scroll vertical dos carrosséis */
+        .lideranca-track::-webkit-scrollbar, .destaques-track::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .lideranca-track::-webkit-scrollbar-thumb, .destaques-track::-webkit-scrollbar-thumb {
+            background: rgba(255, 204, 0, 0.5);
+            border-radius: 2px;
+        }
+
+        /* ============================================================
+           FUNDO CÓSMICO 4K COM ANIMAÇÃO COSMICDRIFT
+           ============================================================ */
+        #cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=2560&q=90');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -2;
+            opacity: 0.7;
+            animation: cosmicDrift 120s linear infinite;
+        }
+
+        @keyframes cosmicDrift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* ============================================================
+           LOGO FLUTUANTE NO MENU MOBILE - slowFloat
+           ============================================================ */
+        @media (max-width: 768px) {
+            header#main-header .user-info-header::before {
+                content: '';
+                position: absolute;
+                top: 50px;
+                width: 60%;
+                max-width: 250px;
+                height: auto;
+                aspect-ratio: 1;
+                background: url('PNGDBV.webp') center/contain no-repeat;
+                animation: slowFloat 18s ease-in-out infinite;
+                filter: drop-shadow(0 0 30px rgba(255, 204, 0, 0.7));
+            }
+
+            @keyframes slowFloat {
+                0% { transform: translateY(0px); }
+                25% { transform: translateY(-20px); }
+                50% { transform: translateY(0px); }
+                75% { transform: translateY(-15px); }
+                100% { transform: translateY(0px); }
+            }
+        }
+
+        @media (min-width: 769px) {
+            header#main-header .user-info-header::before {
+                display: none !important;
+            }
+        }
+
+        /* ============================================================
+           AJUSTES DE SPLASH SCREEN
+           ============================================================ */
+        body.is-home header#main-header.initial-splash .scroll-down-msg {
+            font-size: 0.5rem !important;
+            letter-spacing: 1px !important;
+        }
+
+        /* Aumentar logo na Splash Screen para Android PWA */
+        @media all and (display-mode: standalone) {
+            html.is-android-pwa body.is-home header#main-header.initial-splash .header-logo {
+                max-height: 220px !important;
+            }
+        }
+
+        /* Remover animação de scroll dos títulos de login */
+        .area-desbravador-title, .area-lideranca-title {
+            animation: none !important;
+            will-change: auto !important;
+        }
+
     </style>
 
     <script>
@@ -9285,28 +9522,26 @@ header#main-header .user-info-header .user-status {
            ANIMAÇÕES DE SCROLL - INTERSECTION OBSERVER
            ============================================================ */
                 function initScrollAnimations() {
-            // Configuração do IntersectionObserver - Animações infinitas (ida e volta)
+            // Configuração do IntersectionObserver - Performance extrema
             const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
+                threshold: 0.2,
+                rootMargin: '0px 0px -100px 0px'
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Quando elemento entra na viewport: adicionar fade-in
                         entry.target.classList.remove('fade-out');
                         entry.target.classList.add('fade-in-up');
                     } else {
-                        // Quando elemento sai da viewport: remover fade-in para poder reanimar
                         entry.target.classList.remove('fade-in-up');
                     }
                 });
             }, observerOptions);
 
-            // Observar TODOS os elementos que devem animar
+            // APENAS títulos principais (h2) e cards grandes - performance otimizada
             const elementsToAnimate = document.querySelectorAll(
-                '.scroll-animate, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer, .gallery-card.layout-title, .showcase-section h2, h1, h2, h3'
+                'h2, .gallery-card.layout-title, .dbv-card, .showcase-section'
             );
             elementsToAnimate.forEach(element => {
                 observer.observe(element);
