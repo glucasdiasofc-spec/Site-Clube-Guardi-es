@@ -8269,7 +8269,7 @@ function gerarRelatorioFrequencia() {
                 progressBar.style.width = '50%';
                 progressTxt.textContent = 'Otimizando imagem...';
                 
-                let finalData = base64;
+               let finalData = base64;
                 if (file.type.startsWith('image/')) {
                     // Força uma compressão agressiva para evitar o limite de 1MB do Firestore!
                     finalData = await resizeImage(base64, 600, 600, 0.6);
