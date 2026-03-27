@@ -1982,7 +1982,8 @@ function abrirMinhasEspecialidadesLider() {
             if(document.getElementById('box-gerenciamento-unid')) document.getElementById('box-gerenciamento-unid').style.display = 'none';
             
             // Mostra a seção de especialidades do líder
-            document.getElementById('minhas-esp-lider-section').style.display = 'block';
+            const secao = document.getElementById('minhas-esp-lider-section');
+            secao.style.display = 'block';
             
             // Cria um "perfil" oculto para o líder guardar as especialidades (se ele ainda não tiver)
             let membroLider = db.membros.find(m => m.nome === user.u && m.isLider === true);
@@ -1994,8 +1995,10 @@ function abrirMinhasEspecialidadesLider() {
             
             // Define o usuário atual como o líder
             dbvLogadoAtualId = membroLider.id;
-            
             renderizarMinhasEspecialidadesLider();
+
+            // Rolagem automática suave para mobile
+            setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
         }
 
         function renderizarMinhasEspecialidadesLider() {
@@ -2729,9 +2732,9 @@ ${(m.cargos && m.cargos.includes('Tesoureiro')) ? `
     </div>` : ''}
 
             <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #333; text-align:left;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h4 style="color:white; margin:0;"><i class="fa-solid fa-medal"></i> Especialidades</h4>
-                    <button onclick="abrirCatalogoEspecialidades()" class="btn-save" style="width:auto; padding:5px 10px; font-size:0.7rem;">+ ADICIONAR</button>
+                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="color:white; margin:0; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-medal"></i> Especialidades</h4>
+                    <button onclick="abrirCatalogoEspecialidades()" class="btn-save" style="width:auto !important; padding:8px 12px !important; margin:0 !important; font-size:0.7rem !important;">+ ADICIONAR</button>
                 </div>
 
                 <p style="color:var(--amarelo); font-size:0.7rem; font-weight:bold; margin-bottom:10px; text-transform:uppercase;">Concluídas</p>
@@ -2742,9 +2745,9 @@ ${(m.cargos && m.cargos.includes('Tesoureiro')) ? `
             </div>
 
 <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #333; text-align:left;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h4 style="color:white; margin:0;"><i class="fa-solid fa-book-open"></i> Classes</h4>
-                    <button onclick="abrirCatalogoClasses()" class="btn-save" style="width:auto; padding:5px 10px; font-size:0.7rem;">+ ADICIONAR</button>
+                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h4 style="color:white; margin:0; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-book-open"></i> Classes</h4>
+                    <button onclick="abrirCatalogoClasses()" class="btn-save" style="width:auto !important; padding:8px 12px !important; margin:0 !important; font-size:0.7rem !important;">+ ADICIONAR</button>
                 </div>
                 <div id="lista-minhas-classes" style="display:flex; flex-direction:column; gap:10px;">
                     </div>
@@ -7375,7 +7378,8 @@ function enviarClasseParaAvaliacao(idMembro, idClasse) {
 
 function abrirMinhasClassesLider() {
     document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
-    document.getElementById('minhas-classes-lider-section').style.display = 'block';
+    const secao = document.getElementById('minhas-classes-lider-section');
+    secao.style.display = 'block';
     
     let membroLider = db.membros.find(m => m.nome === user.u && m.isLider === true);
     if (!membroLider) {
@@ -7385,6 +7389,9 @@ function abrirMinhasClassesLider() {
     }
     dbvLogadoAtualId = membroLider.id;
     renderizarMinhasClassesLider();
+
+    // Rolagem automática
+    setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 }
 
 function renderizarMinhasClassesLider() {
@@ -7478,8 +7485,12 @@ function toggleReqClasseLider(idClasse, idxReq) {
 
 function abrirAprovacoesClasses() {
     document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
-    document.getElementById('aprovacoes-classes-section').style.display = 'block';
+    const secao = document.getElementById('aprovacoes-classes-section');
+    secao.style.display = 'block';
     renderAprovacoesClasses();
+
+    // Rolagem automática
+    setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 }
 
 function renderAprovacoesClasses() {
@@ -9238,21 +9249,26 @@ header#main-header .user-info-header .user-status {
         h2 { font-size: clamp(1.4rem, 5vw, 2.2rem) !important; }
         h3 { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
 
-     /* Alinhar botões e checklist */
+    /* Alinhar botões e checklist */
         .modal-box button,
         .btn-save,
         .btn-custom,
         button[type="submit"],
         button[type="button"] {
-            max-width: 100% !important; /* Adaptável a qualquer tela */
+            max-width: 100% !important; 
             width: 100% !important;
             margin: 8px auto !important;
             padding: 12px 15px !important;
             box-sizing: border-box !important;
-            white-space: normal !important; /* Quebra o texto se for muito longo */
+            white-space: normal !important; 
             word-wrap: break-word !important;
             height: auto !important;
-            font-size: 0.85rem !important; /* Fonte um pouco menor no celular */
+            font-size: 0.85rem !important; 
+            flex-shrink: 0 !important; /* Impede que o botão seja esmagado vazando o texto */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
         }
 
         .modal-box {
@@ -9300,11 +9316,10 @@ header#main-header .user-info-header .user-status {
            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Quando o elemento entra na tela, a animação acontece
+                        // Quando entra na tela, foca (tira o blur e aparece)
                         entry.target.classList.add('fade-in-up');
-                    } else if (entry.boundingClientRect.top > 0) {
-                        // SÓ remove a classe se o elemento sair pela parte de BAIXO da tela.
-                        // Isso impede que as palavras pisquem enquanto você está lendo e rolando para baixo.
+                    } else {
+                        // Quando sai da tela, volta a ficar levemente embaçado, sem sumir de vez
                         entry.target.classList.remove('fade-in-up');
                     }
                 });
