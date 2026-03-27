@@ -7378,7 +7378,8 @@ function enviarClasseParaAvaliacao(idMembro, idClasse) {
 
 function abrirMinhasClassesLider() {
     document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
-    document.getElementById('minhas-classes-lider-section').style.display = 'block';
+    const secao = document.getElementById('minhas-classes-lider-section');
+    secao.style.display = 'block';
     
     let membroLider = db.membros.find(m => m.nome === user.u && m.isLider === true);
     if (!membroLider) {
@@ -7388,6 +7389,9 @@ function abrirMinhasClassesLider() {
     }
     dbvLogadoAtualId = membroLider.id;
     renderizarMinhasClassesLider();
+
+    // Rolagem automática
+    setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 }
 
 function renderizarMinhasClassesLider() {
@@ -7481,8 +7485,12 @@ function toggleReqClasseLider(idClasse, idxReq) {
 
 function abrirAprovacoesClasses() {
     document.querySelectorAll('.main-content > .form-box').forEach(el => el.style.display = 'none');
-    document.getElementById('aprovacoes-classes-section').style.display = 'block';
+    const secao = document.getElementById('aprovacoes-classes-section');
+    secao.style.display = 'block';
     renderAprovacoesClasses();
+
+    // Rolagem automática
+    setTimeout(() => secao.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 }
 
 function renderAprovacoesClasses() {
