@@ -8200,6 +8200,12 @@ function gerarRelatorioFrequencia() {
                 const reader = new FileReader();
                 reader.onload = (e) => resolve(e.target.result);
                 reader.onerror = reject;
+                // Limita a 1MB (1048576 bytes)
+if (file.size > 1048576) {
+    alert("Arquivo muito grande! O limite é 1MB.");
+    event.target.value = ''; // Limpa o input para permitir tentar de novo
+    return; // Para a execução aqui
+}
                 reader.readAsDataURL(file);
             });
         }
