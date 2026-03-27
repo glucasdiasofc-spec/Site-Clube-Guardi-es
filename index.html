@@ -105,7 +105,7 @@
 
         .header-logo {
     display: block !important;
-    max-height: 60px; /* Tamanho no menu */
+    max-height: 80px; /* Tamanho padrão */
     width: auto;
     object-fit: contain;
 }
@@ -1052,9 +1052,144 @@ header#main-header .user-info-header .user-status {
             max-height: 150px !important;
             filter: drop-shadow(0 0 30px rgba(255, 204, 0, 0.6)) !important;
         }
+
+        /* ============================================================
+           FUNDO CÓSMICO REALISTA
+           ============================================================ */
+        #cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -2;
+            opacity: 0.7;
+            animation: cosmicParallax 60s linear infinite;
+        }
+
+        @keyframes cosmicParallax {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        /* Glassmorphism para seções da Home Page */
+        #home-page, .panel-layout, .showcase-section, .gallery-section {
+            background: rgba(18, 18, 18, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+
+        .gallery-card, .dbv-card, .form-box, .sidebar, .ranking-column {
+            background: rgba(30, 30, 30, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 204, 0, 0.1) !important;
+        }
+
+
+        /* Logo flutuante no menu mobile (apenas mobile) */
+        @media (max-width: 768px) {
+            header#main-header .user-info-header::before {
+                content: '';
+                position: absolute;
+                top: 80px;
+                width: 140px;
+                height: 140px;
+                background: url('PNGDBV.webp') center/contain no-repeat;
+                animation: floatInMenuSpace 5s ease-in-out infinite;
+                filter: drop-shadow(0 0 25px rgba(255, 204, 0, 0.6));
+            }
+
+            @keyframes floatInMenuSpace {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(20px, -25px) rotate(8deg); }
+                50% { transform: translate(-15px, 35px) rotate(-5deg); }
+                75% { transform: translate(25px, -15px) rotate(6deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+        }
+
+        /* Esconder logo flutuante em desktop */
+        @media (min-width: 769px) {
+            header#main-header .user-info-header::before {
+                display: none !important;
+            }
+        }
+
+        /* Harmonizar títulos com clamp() */
+        .gallery-card.layout-title h2 {
+            font-size: clamp(1.5rem, 5vw, 2.2rem) !important;
+        }
+
+        .showcase-section h2 {
+            font-size: clamp(1.5rem, 5vw, 2rem) !important;
+        }
+
+        h1 { font-size: clamp(1.8rem, 6vw, 2.8rem) !important; }
+        h2 { font-size: clamp(1.4rem, 5vw, 2.2rem) !important; }
+        h3 { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
+
+        /* Alinhar botões e checklist */
+        .modal-box button,
+        .btn-save,
+        .btn-custom,
+        button[type="submit"],
+        button[type="button"] {
+            max-width: 300px !important;
+            width: 100% !important;
+            margin: 8px auto !important;
+            padding: 12px 24px !important;
+            box-sizing: border-box !important;
+        }
+
+        .modal-box {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+        }
+
+        /* Otimização para Android PWA */
+        @media all and (display-mode: standalone) {
+            html.is-android-pwa body {
+                padding-top: 60px !important;
+            }
+
+            html.is-android-pwa header#main-header {
+                height: 60px !important;
+            }
+
+            html.is-android-pwa .header-logo {
+                max-height: 50px !important;
+            }
+
+            html.is-android-pwa header#main-header.scrolled {
+                height: 50px !important;
+            }
+
+            html.is-android-pwa header#main-header.scrolled .header-logo {
+                max-height: 40px !important;
+            }
+        }
+
     </style>
+    <script>
+        // Detectar Android em modo PWA
+        (function() {
+            const isAndroid = /Android/.test(navigator.userAgent);
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (isAndroid && isStandalone) {
+                document.documentElement.classList.add('is-android-pwa');
+            }
+        })();
+    </script>
 </head>
 <body>
+    <div id="cosmic-bg"></div>
+
     
     <div id="loading-overlay">
         <div class="spinner"></div>
@@ -8660,8 +8795,8 @@ body.splash-active {
     header#main-header .user-info-header {
         position: fixed !important;
         top: 0 !important;
-        right: 0 !important; /* Deixe fixo no zero... */
-        transform: translateX(100%) !important; /* ...e empurre 100% para fora da tela com transform */
+        right: 0 !important;
+        visibility: hidden !important;
         opacity: 0 !important;
         width: 100vw !important; 
         height: 100vh !important;
@@ -8674,15 +8809,15 @@ body.splash-active {
         padding-top: 0 !important;
         
         /* A mágica: Animar o transform garante o deslize de volta sem travar */
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out !important;
+        transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out !important;
         
         z-index: 9000 !important;
         pointer-events: none !important;
     }
 
-    /* 3. Animação de entrada do menu (desliza da direita) */
+    /* 3. Animação de entrada do menu (fade suave) */
     header#main-header .user-info-header.active {
-        transform: translateX(0) !important; /* Retorna suavemente para a tela */
+        visibility: visible !important;
         opacity: 1 !important;
         pointer-events: all !important;
     }
@@ -9020,14 +9155,137 @@ header#main-header .user-info-header .user-status {
             max-height: 150px !important;
             filter: drop-shadow(0 0 30px rgba(255, 204, 0, 0.6)) !important;
         }
+
+        /* ============================================================
+           FUNDO CÓSMICO REALISTA
+           ============================================================ */
+        #cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -2;
+            opacity: 0.7;
+            animation: cosmicParallax 60s linear infinite;
+        }
+
+        @keyframes cosmicParallax {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        /* Glassmorphism para seções da Home Page */
+        #home-page, .panel-layout, .showcase-section, .gallery-section {
+            background: rgba(18, 18, 18, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+
+        .gallery-card, .dbv-card, .form-box, .sidebar, .ranking-column {
+            background: rgba(30, 30, 30, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 204, 0, 0.1) !important;
+        }
+
+
+        /* Logo flutuante no menu mobile (apenas mobile) */
+        @media (max-width: 768px) {
+            header#main-header .user-info-header::before {
+                content: '';
+                position: absolute;
+                top: 80px;
+                width: 140px;
+                height: 140px;
+                background: url('PNGDBV.webp') center/contain no-repeat;
+                animation: floatInMenuSpace 5s ease-in-out infinite;
+                filter: drop-shadow(0 0 25px rgba(255, 204, 0, 0.6));
+            }
+
+            @keyframes floatInMenuSpace {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(20px, -25px) rotate(8deg); }
+                50% { transform: translate(-15px, 35px) rotate(-5deg); }
+                75% { transform: translate(25px, -15px) rotate(6deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+        }
+
+        /* Esconder logo flutuante em desktop */
+        @media (min-width: 769px) {
+            header#main-header .user-info-header::before {
+                display: none !important;
+            }
+        }
+
+        /* Harmonizar títulos com clamp() */
+        .gallery-card.layout-title h2 {
+            font-size: clamp(1.5rem, 5vw, 2.2rem) !important;
+        }
+
+        .showcase-section h2 {
+            font-size: clamp(1.5rem, 5vw, 2rem) !important;
+        }
+
+        h1 { font-size: clamp(1.8rem, 6vw, 2.8rem) !important; }
+        h2 { font-size: clamp(1.4rem, 5vw, 2.2rem) !important; }
+        h3 { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
+
+        /* Alinhar botões e checklist */
+        .modal-box button,
+        .btn-save,
+        .btn-custom,
+        button[type="submit"],
+        button[type="button"] {
+            max-width: 300px !important;
+            width: 100% !important;
+            margin: 8px auto !important;
+            padding: 12px 24px !important;
+            box-sizing: border-box !important;
+        }
+
+        .modal-box {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+        }
+
+        /* Otimização para Android PWA */
+        @media all and (display-mode: standalone) {
+            html.is-android-pwa body {
+                padding-top: 60px !important;
+            }
+
+            html.is-android-pwa header#main-header {
+                height: 60px !important;
+            }
+
+            html.is-android-pwa .header-logo {
+                max-height: 50px !important;
+            }
+
+            html.is-android-pwa header#main-header.scrolled {
+                height: 50px !important;
+            }
+
+            html.is-android-pwa header#main-header.scrolled .header-logo {
+                max-height: 40px !important;
+            }
+        }
+
     </style>
 
     <script>
         /* ============================================================
            ANIMAÇÕES DE SCROLL - INTERSECTION OBSERVER
            ============================================================ */
-        function initScrollAnimations() {
-            // Configurarção do IntersectionObserver
+                function initScrollAnimations() {
+            // Configuração do IntersectionObserver - Animações infinitas (ida e volta)
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -9036,14 +9294,20 @@ header#main-header .user-info-header .user-status {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
+                        // Quando elemento entra na viewport: adicionar fade-in
+                        entry.target.classList.remove('fade-out');
                         entry.target.classList.add('fade-in-up');
-                        observer.unobserve(entry.target);
+                    } else {
+                        // Quando elemento sai da viewport: remover fade-in para poder reanimar
+                        entry.target.classList.remove('fade-in-up');
                     }
                 });
             }, observerOptions);
 
-            // Observar todos os elementos com classe scroll-animate
-            const elementsToAnimate = document.querySelectorAll('.scroll-animate');
+            // Observar TODOS os elementos que devem animar
+            const elementsToAnimate = document.querySelectorAll(
+                '.scroll-animate, .dbv-card, .gallery-card, .form-box, .sidebar, .ranking-column, .hero, .unit-timer, .gallery-card.layout-title, .showcase-section h2, h1, h2, h3'
+            );
             elementsToAnimate.forEach(element => {
                 observer.observe(element);
             });
