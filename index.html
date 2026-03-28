@@ -1190,6 +1190,33 @@ header#main-header .user-info-header .user-status {
             }
         })();
     </script>
+<style>
+        /* Remove o espaço extra no topo e diminui a altura do cabeçalho no App Android */
+        html.android-pwa-fix header {
+            padding-top: 10px !important; /* Reduz o espaço acima do cabeçalho */
+            margin-top: 0 !important;
+            height: auto !important; 
+            min-height: 70px !important; /* Ajuste este valor se quiser o cabeçalho mais fino ou mais grosso */
+        }
+
+        /* Ajusta o tamanho da logo no estado normal dentro do App Android */
+        html.android-pwa-fix header .logo-container img {
+            max-height: 50px !important; /* Ajuste para o tamanho ideal da sua logo */
+            transform: scale(1) !important;
+        }
+
+        /* Mantém a logo num tamanho decente quando rolar para baixo (scrolled) no App Android */
+        html.android-pwa-fix header.scrolled .logo-container img {
+            max-height: 40px !important; /* Ajuste para não diminuir tanto no scroll */
+            transform: scale(1) !important;
+        }
+    </style>
+    ```
+
+Faça essas duas adições, limpe o cache do app no seu Android e faça o teste. Se a altura ainda não estiver exatamente do seu gosto, basta alterar os valores de `10px` e `50px` direto nesse bloco de estilo que acabamos de adicionar.
+
+Quer que eu te ajude a ajustar os valores em pixels caso ele ainda fique um pouco fora do lugar no seu aparelho?
+
 </head>
 <body>
     <div id="cosmic-bg"></div>
@@ -9432,6 +9459,24 @@ header#main-header .user-info-header .user-status {
             };
         }
     </script>
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            
+            if (isAndroid && isStandalone) {
+                document.documentElement.classList.add('android-pwa-fix');
+            }
+        });
+    </script>
+    ```
+
+### Passo 2: Ajustar o visual do Cabeçalho e da Logo apenas no Android
+Agora vamos aplicar o CSS que vai consertar o espaço excessivo e o comportamento da logo, valendo **apenas** quando a classe `android-pwa-fix` estiver ativa (ou seja, apenas no app Android).
+
+**Use o `Ctrl F` para procurar por:**
+```html
+</head>
 
 </body>
 </html>
