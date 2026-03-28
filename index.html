@@ -7410,7 +7410,7 @@ function renderizarMinhasClassesLider() {
         
         let acoesHtml = '';
         if (cData.tipo === 'agrupada' && mc.status === 'andamento') {
-            acoesHtml = `<button onclick="abrirChecklistClasseLider(${cData.id})" class="btn-save" style="padding:8px; font-size:0.75rem; width:auto;"><i class="fa-solid fa-list-check"></i> CHECKLIST E EVOLUÇÃO</button>`;
+            acoesHtml = `<button onclick="abrirChecklistClasseLider(${cData.id})" class="btn-save" style="padding:8px; font-size:0.75rem; width:auto;"><i class="fa-solid fa-list-check"></i> CHECKLIST</button>`;
         } else if (mc.status === 'andamento') {
             acoesHtml = `<button onclick="enviarClasseParaAvaliacao(${membroLider.id}, ${cData.id})" class="btn-save" style="padding:8px; font-size:0.75rem; width:auto;"><i class="fa-solid fa-paper-plane"></i> ENVIAR PARA ADMIN</button>`;
         } else if (mc.status === 'aguardando_lider') {
