@@ -1921,7 +1921,7 @@ const CATALOGO_CARGOS = [
                                             <span style="color:var(--amarelo); font-size:0.85rem;"><i class="fa-solid fa-star"></i> ${espData.nome}</span>
                                         </div>
                                     </div>
-                                    <div style="display:flex; gap:8px; width:100%; justify-content:space-between; flex-wrap:nowrap;">
+                                    <div style="display:flex; gap:8px; width:100%; justify-content:center; flex-wrap:wrap;">
                                         <button onclick="recusarEspecialidade(${m.id}, ${espData.id})" class="btn-custom" style="flex:1; padding:10px 5px; margin:0; font-size:0.8rem; background:#444;"><i class="fa-solid fa-rotate-left"></i> DEVOLVER</button>
                                         <button onclick="aprovarEspecialidade(${m.id}, ${espData.id})" class="btn-save" style="flex:1; padding:10px 5px; margin:0; font-size:0.8rem; background:#00cc66; color:white;"><i class="fa-solid fa-check"></i> APROVAR</button>
                                     </div>
@@ -7511,7 +7511,7 @@ function renderAprovacoesClasses() {
                     pendentes++;
                     html += `<div class="admin-list-item" style="border-left-color:#ff9900; flex-wrap:wrap; background:#111;">
                         <div style="flex:1;"><strong style="color:white;">${m.nome}</strong> enviou o caderno de <span style="color:#ff9900;">${cData.nome}</span></div>
-                        <div style="display:flex; gap:8px; width:100%; justify-content:space-between; flex-wrap:nowrap; margin-top:10px;">
+                        <div style="display:flex; gap:8px; width:100%; justify-content:center; flex-wrap:wrap; margin-top:10px;">
                             <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'andamento')" class="btn-custom" style="flex:1; margin:0; padding:10px 5px; background:#444; font-size:0.75rem;">REPROVAR</button>
                             <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'aguardando_investidura')" class="btn-save" style="flex:1; margin:0; padding:10px 5px; font-size:0.75rem; background:#00cc66; color:white;">APROVAR CADERNO</button>
                         </div>
@@ -9252,7 +9252,7 @@ header#main-header .user-info-header .user-status {
         h3 { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
 
     /* Alinhar botões e checklist */
-        /* Alinhar botões e checklist (CORRIGIDO) */
+       /* Alinhar botões e checklist (CORRIGIDO) */
         .modal-box button,
         .btn-save,
         .btn-custom,
@@ -9267,7 +9267,7 @@ header#main-header .user-info-header .user-status {
             word-wrap: break-word;
             height: auto;
             font-size: 0.85rem; 
-            flex-shrink: 0;
+            flex-shrink: 1;
             justify-content: center;
             align-items: center;
             text-align: center;
