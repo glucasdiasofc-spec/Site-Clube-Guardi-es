@@ -1174,26 +1174,26 @@ header#main-header .user-info-header .user-status {
                 background-color: rgba(10, 10, 15, 0.95) !important;
             }
 
-            /* Sobe um pouquinho o menu hambúrguer (3 linhas) */
-            html.is-android-pwa #menu-toggle {
-                margin-top: 25px !important; /* Antes era 40px. Diminuindo, ele sobe. */
-            }
+            /* Sobe o menu hambúrguer (3 linhas) para afastar da linha amarela */
+        html.is-android-pwa #menu-toggle {
+            margin-top: 12px !important; /* Reduzido para subir mais o menu */
+        }
 
-            /* Centraliza a logo EXATAMENTE na linha amarela (fundo do cabeçalho) */
-            html.is-android-pwa body:not(.is-home) header#main-header .logo-container,
-            html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .logo-container {
-                top: 100% !important; /* Joga o eixo para o limite inferior (linha amarela) */
-                bottom: auto !important;
-                transform: translate(-50%, -50%) scale(1) !important; /* O centro exato da logo fica sobre a linha */
-            }
+            /* Centraliza a logo na linha amarela (ajustado eixo Y para subir mais) */
+        html.is-android-pwa body:not(.is-home) header#main-header .logo-container,
+        html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .logo-container {
+            top: 100% !important; 
+            bottom: auto !important;
+            transform: translate(-50%, -62%) scale(1) !important; /* -62% puxa a logo mais para cima */
+        }
 
-            /* Cresce a logo um pouco mais */
-            html.is-android-pwa body:not(.is-home) header#main-header .header-logo,
-            html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .header-logo {
-                max-height: 70px !important; /* Aumentado de 55px para 70px */
-                height: 70px !important;
-                width: auto !important;
-            }
+        /* Cresce a logo ainda mais para destacar no App */
+        html.is-android-pwa body:not(.is-home) header#main-header .header-logo,
+        html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .header-logo {
+            max-height: 90px !important; /* Aumentado para 90px */
+            height: 90px !important;
+            width: auto !important;
+        }
 
             /* ========================================================= */
             /* ESTADOS AO ROLAR A TELA (SCROLLED) - MANTÉM TUDO TRAVADO  */
@@ -1208,16 +1208,16 @@ header#main-header .user-info-header .user-status {
             }
 
             /* Mantém a logo centralizada na linha amarela ao rolar */
-            html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
-                top: 100% !important; 
-                transform: translate(-50%, -50%) scale(1) !important;
-            }
+        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
+            top: 100% !important; 
+            transform: translate(-50%, -62%) scale(1) !important; /* Acompanha a subida da posição original */
+        }
 
-            /* Mantém o tamanho maior da logo ao rolar */
-            html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
-                max-height: 70px !important; 
-                height: 70px !important;
-            }
+        /* Mantém o tamanho maior da logo ao rolar */
+        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
+            max-height: 90px !important; /* Mantém os 90px durante o scroll */
+            height: 90px !important;
+        }
         }
 
     </style>
@@ -9326,28 +9326,7 @@ header#main-header .user-info-header .user-status {
             align-items: center !important;
         }
 
-        /* Otimização para Android PWA */
-        @media all and (display-mode: standalone) {
-            html.is-android-pwa body {
-                padding-top: 60px !important;
-            }
-
-            html.is-android-pwa header#main-header {
-                height: 60px !important;
-            }
-
-            html.is-android-pwa .header-logo {
-                max-height: 50px !important;
-            }
-
-            html.is-android-pwa header#main-header.scrolled {
-                height: 50px !important;
-            }
-
-            html.is-android-pwa header#main-header.scrolled .header-logo {
-                max-height: 40px !important;
-            }
-        }
+        
 
         /* Ajuste dos botões do perfil para mobile */
         .profile-action-buttons {
