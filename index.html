@@ -881,7 +881,7 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         #login-dbv-modal .btn-custom {
             display: none !important;
         }
-        #admin-page .btn-custom { display: inline-flex !important; }
+        /* Regra removida para respeitar a permissão de quem pode customizar */
         /* --- NOVAS REGRAS DE CUSTOMIZAÇÃO DINÂMICA --- */
 
 /* Aplica na Galeria "Grande e Centralizada" e no Subtítulo (PC) */
@@ -1921,9 +1921,9 @@ const CATALOGO_CARGOS = [
                                             <span style="color:var(--amarelo); font-size:0.85rem;"><i class="fa-solid fa-star"></i> ${espData.nome}</span>
                                         </div>
                                     </div>
-                                    <div style="display:flex; gap:10px; width:100%; justify-content:flex-end;">
-                                        <button onclick="recusarEspecialidade(${m.id}, ${espData.id})" class="btn-custom" style="display:inline-flex; padding:8px 15px; font-size:0.85rem; background:#444;"><i class="fa-solid fa-rotate-left"></i> DEVOLVER</button>
-                                        <button onclick="aprovarEspecialidade(${m.id}, ${espData.id})" class="btn-save" style="width:auto; padding:8px 15px; font-size:0.85rem; background:#00cc66; color:white;"><i class="fa-solid fa-check"></i> APROVAR</button>
+                                    <div style="display:flex; gap:8px; width:100%; justify-content:space-between; flex-wrap:nowrap;">
+                                        <button onclick="recusarEspecialidade(${m.id}, ${espData.id})" class="btn-custom" style="flex:1; padding:10px 5px; margin:0; font-size:0.8rem; background:#444;"><i class="fa-solid fa-rotate-left"></i> DEVOLVER</button>
+                                        <button onclick="aprovarEspecialidade(${m.id}, ${espData.id})" class="btn-save" style="flex:1; padding:10px 5px; margin:0; font-size:0.8rem; background:#00cc66; color:white;"><i class="fa-solid fa-check"></i> APROVAR</button>
                                     </div>
                                 </div>
                                 `;
@@ -7511,9 +7511,9 @@ function renderAprovacoesClasses() {
                     pendentes++;
                     html += `<div class="admin-list-item" style="border-left-color:#ff9900; flex-wrap:wrap; background:#111;">
                         <div style="flex:1;"><strong style="color:white;">${m.nome}</strong> enviou o caderno de <span style="color:#ff9900;">${cData.nome}</span></div>
-                        <div style="display:flex; gap:10px;">
-                            <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'andamento')" class="btn-custom" style="display:inline-flex; background:#444; font-size:0.75rem;">REPROVAR</button>
-                            <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'aguardando_investidura')" class="btn-save" style="width:auto; font-size:0.75rem;">APROVAR CADERNO</button>
+                        <div style="display:flex; gap:8px; width:100%; justify-content:space-between; flex-wrap:nowrap; margin-top:10px;">
+                            <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'andamento')" class="btn-custom" style="flex:1; margin:0; padding:10px 5px; background:#444; font-size:0.75rem;">REPROVAR</button>
+                            <button onclick="mudarStatusClasse(${m.id}, ${c.idClasse}, 'aguardando_investidura')" class="btn-save" style="flex:1; margin:0; padding:10px 5px; font-size:0.75rem; background:#00cc66; color:white;">APROVAR CADERNO</button>
                         </div>
                     </div>`;
                 } else if (c.status === 'aguardando_investidura') {
@@ -9252,25 +9252,31 @@ header#main-header .user-info-header .user-status {
         h3 { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
 
     /* Alinhar botões e checklist */
+        /* Alinhar botões e checklist (CORRIGIDO) */
         .modal-box button,
         .btn-save,
         .btn-custom,
         button[type="submit"],
         button[type="button"] {
-            max-width: 100% !important; 
-            width: 100% !important;
-            margin: 8px auto !important;
-            padding: 12px 15px !important;
-            box-sizing: border-box !important;
-            white-space: normal !important; 
-            word-wrap: break-word !important;
-            height: auto !important;
-            font-size: 0.85rem !important; 
-            flex-shrink: 0 !important; /* Impede que o botão seja esmagado vazando o texto */
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            text-align: center !important;
+            max-width: 300px; 
+            width: 100%;
+            margin: 8px auto;
+            padding: 12px 15px;
+            box-sizing: border-box;
+            white-space: normal; 
+            word-wrap: break-word;
+            height: auto;
+            font-size: 0.85rem; 
+            flex-shrink: 0;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .btn-save, .btn-custom, .modal-box button {
+                max-width: 100%; /* Garante que fique bom no celular sem vazar */
+            }
         }
 
         .modal-box {
