@@ -9337,7 +9337,27 @@ header#main-header .user-info-header .user-status {
         padding-top: 10px;
         padding-bottom: 10px;
     }
-    /* --- FIM DA CORREÇÃO --- */
+   /* --- FIM DA CORREÇÃO --- */
+
+    /* --- QUEBRA DE LINHA DOS BOTÕES DE CHECKLIST (APENAS MOBILE) --- */
+    @media (max-width: 768px) {
+        #lista-minhas-esp > div,
+        #lista-minhas-classes > div,
+        #lista-esp-lider > div,
+        #lista-classes-lider > div {
+            flex-wrap: wrap !important;
+        }
+        
+        #lista-minhas-esp > div button,
+        #lista-minhas-classes > div button,
+        #lista-esp-lider > div button,
+        #lista-classes-lider > div button {
+            width: 100% !important;
+            margin-top: 8px !important;
+            text-align: center !important;
+            justify-content: center !important;
+        }
+    }
 
     </style>
 
