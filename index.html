@@ -9321,6 +9321,24 @@ header#main-header .user-info-header .user-status {
             }
         }
 
+        /* --- CORREÇÃO: BOTÕES DO CHECKLIST DE ESPECIALIDADES E CLASSES --- */
+    .checklist-container button,
+    .specialties-list button,
+    .classes-list button,
+    .modal-body button {
+        white-space: normal !important; /* Força o texto longo a ir para a linha de baixo */
+        word-wrap: break-word !important; /* Permite quebrar palavras muito longas se necessário */
+        word-break: break-word !important;
+        height: auto !important; /* Permite que o botão cresça em altura para acomodar o texto */
+        min-height: 44px; /* Mantém uma área de toque confortável para telemóveis */
+        max-width: 100% !important; /* Garante que o botão nunca ultrapassa a largura do contentor */
+        text-align: left; /* Alinha o texto à esquerda para facilitar a leitura em várias linhas */
+        line-height: 1.4; /* Dá um pequeno espaçamento entre as linhas do texto */
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    /* --- FIM DA CORREÇÃO --- */
+
     </style>
 
     <script>
