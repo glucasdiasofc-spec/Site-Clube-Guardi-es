@@ -1158,24 +1158,59 @@ header#main-header .user-info-header .user-status {
 
         /* Otimização para Android PWA */
         @media all and (display-mode: standalone) {
+            /* Ajuste do corpo da página para não sumir atrás do cabeçalho */
             html.is-android-pwa body {
-                padding-top: 60px !important;
+                padding-top: 80px !important;
             }
 
-            html.is-android-pwa header#main-header {
-                height: 60px !important;
+            /* Trava o cabeçalho no topo, tira os espaços gigantes e deixa fino */
+            html.is-android-pwa body:not(.is-home) header#main-header,
+            html.is-android-pwa body.is-home header#main-header:not(.initial-splash) {
+                top: 0 !important;
+                height: 70px !important;
+                min-height: 70px !important;
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
+                background-color: rgba(10, 10, 15, 0.95) !important;
             }
 
-            html.is-android-pwa .header-logo {
-                max-height: 50px !important;
+            /* Centraliza a logo e remove a regra que a empurrava muito para baixo (-40px) */
+            html.is-android-pwa body:not(.is-home) header#main-header .logo-container,
+            html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .logo-container {
+                top: 50% !important;
+                bottom: auto !important;
+                transform: translate(-50%, -50%) scale(1) !important;
             }
 
-            html.is-android-pwa header#main-header.scrolled {
-                height: 50px !important;
+            /* Tamanho fixo e ideal da logo no estado normal */
+            html.is-android-pwa body:not(.is-home) header#main-header .header-logo,
+            html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .header-logo {
+                max-height: 55px !important;
+                height: 55px !important;
+                width: auto !important;
             }
 
-            html.is-android-pwa header#main-header.scrolled .header-logo {
-                max-height: 40px !important;
+            /* ========================================================= */
+            /* ESTADOS AO ROLAR A TELA (SCROLLED) - IMPEDE DE DIMINUIR   */
+            /* ========================================================= */
+            
+            /* Impede que o cabeçalho mude de tamanho ao rolar */
+            html.is-android-pwa header#main-header.scrolled:not(.initial-splash) {
+                height: 70px !important;
+                min-height: 70px !important;
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
+            }
+
+            /* Trava a logo para não diminuir nem sair do centro ao rolar */
+            html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
+                transform: translate(-50%, -50%) scale(1) !important;
+            }
+
+            /* Mantém a altura da logo intacta no scroll */
+            html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
+                max-height: 55px !important;
+                height: 55px !important;
             }
         }
 
