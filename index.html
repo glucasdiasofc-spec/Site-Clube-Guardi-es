@@ -45,79 +45,73 @@
         .spinner { width: 60px; height: 60px; border: 5px solid #333; border-top-color: #ffcc00; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- SEÇÃO DE APRESENTAÇÃO LIMPA --- */
+        /* --- APRESENTAÇÃO COM ÓRBITA PERFEITA --- */
 .presentation-container {
     position: relative;
     width: 100%;
-    min-height: 550px;
+    min-height: 700px;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    padding: 60px 20px;
-    background: transparent;
+    overflow: visible; /* Permite que as caixas saiam um pouco sem cortar */
+    padding: 80px 20px;
+    perspective: 1000px;
 }
 .central-box {
-    z-index: 10;
+    z-index: 20; /* Fica SEMPRE à frente das caixas */
     text-align: center;
     background: transparent;
-    padding: 20px;
-    max-width: 700px;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.pres-logo-big {
+    max-height: 250px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(255,204,0,0.3));
+    margin-bottom: 10px;
 }
 .central-box h1 {
-    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-size: clamp(2rem, 7vw, 3.5rem);
     color: var(--amarelo);
-    margin-bottom: 10px;
-    text-transform: uppercase;
     font-weight: 900;
-    line-height: 1;
+    margin: 0;
+    text-transform: uppercase;
 }
 .central-box p {
-    font-size: 1.2rem;
-    color: #fff;
-    margin-bottom: 30px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-.inscription-badge {
-    display: inline-block;
-    background: var(--vermelho);
-    color: white;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: 800;
     font-size: 1.1rem;
-    animation: pulseBadge 2s infinite;
-    cursor: pointer;
-    border: none;
-    text-transform: uppercase;
-}
-@keyframes pulseBadge {
-    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); }
-    70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); }
-    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); }
+    color: #fff;
+    max-width: 450px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
 }
 .floating-box {
     position: absolute;
-    padding: 12px 18px;
-    border-radius: 12px;
+    padding: 10px 15px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     font-weight: 700;
     color: white;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     white-space: nowrap;
-    z-index: 5;
-    animation: orbit 25s linear infinite;
+    z-index: 10; /* Fica atrás do conteúdo central */
+    animation: orbit 30s linear infinite;
+    pointer-events: none;
 }
 @keyframes orbit {
     from { transform: rotate(0deg) translateX(var(--orbit-radius)) rotate(0deg); }
     to { transform: rotate(360deg) translateX(var(--orbit-radius)) rotate(-360deg); }
 }
 @media (max-width: 768px) {
-    .presentation-container { min-height: 450px; }
-    .floating-box { padding: 8px 12px; font-size: 0.85rem; }
+    .presentation-container { min-height: 550px; }
+    .pres-logo-big { max-height: 150px; }
+    .floating-box { padding: 6px 10px; font-size: 0.75rem; }
 }
+
         /* RESET E CORES DINÂMICAS */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         :root { 
@@ -1379,12 +1373,13 @@ header#main-header .user-info-header .user-status {
 
     <main id="home-page" class="page active">
 
-                <!-- APRESENTAÇÃO NO TOPO -->
+                       <!-- SEÇÃO DE APRESENTAÇÃO -->
         <section id="clube-presentation" class="presentation-container">
             <div id="floating-boxes-wrapper"></div>
             <div class="central-box">
+                <img id="pres-logo-display" src="" class="pres-logo-big">
                 <h1 id="pres-title">CLUBE GUARDIÕES</h1>
-                <p id="pres-text">Onde a aventura encontra o propósito.</p>
+                <p id="pres-text">Viva o propósito!</p>
                 <div id="inscription-area" style="display: none;">
                     <button class="inscription-badge" id="pres-inscription-btn">Inscrições Abertas</button>
                 </div>
@@ -1477,6 +1472,13 @@ header#main-header .user-info-header .user-status {
                         <h4><i class="fa-solid fa-heading"></i> Cabeçalho e Títulos</h4>
                                                 <div class="config-sec" style="background: rgba(255,204,0,0.05); padding: 15px; border-radius: 10px; border: 1px solid var(--amarelo); margin-bottom: 20px;">
                             <h4 style="color:var(--amarelo);"><i class="fa-solid fa-star"></i> Apresentação do Topo</h4>
+                            
+                            <label class="upload-btn-label" style="margin-bottom:10px;">
+                                <i class="fa-solid fa-upload"></i> Logo Grande do Topo
+                                <input type="file" accept="image/*" style="display:none;" onchange="uploadLogoTopo(this)">
+                            </label>
+                            <input type="text" id="cfg-pres-logo" placeholder="URL da Logo (ou use upload)" style="width:100%; margin-bottom:10px; background:#111; border:1px solid #333; color:white; padding:8px; border-radius:5px;">
+
                             <input type="text" id="cfg-pres-title" placeholder="Nome do Clube" style="width:100%; margin-bottom:10px; background:#111; border:1px solid #333; color:white; padding:8px; border-radius:5px;">
                             <textarea id="cfg-pres-text" placeholder="Frase de efeito" style="width:100%; margin-bottom:10px; background:#111; border:1px solid #333; color:white; padding:8px; border-radius:5px;"></textarea>
                             
@@ -2270,6 +2272,7 @@ function abrirMinhasEspecialidadesLider() {
 
         function salvarConfigHome() {
                         if(!db.home.presentation) db.home.presentation = {};
+            db.home.presentation.logo = document.getElementById('cfg-pres-logo').value;
             db.home.presentation.title = document.getElementById('cfg-pres-title').value;
             db.home.presentation.text = document.getElementById('cfg-pres-text').value;
             db.home.presentation.showInscription = document.getElementById('cfg-pres-ins-on').checked;
@@ -2389,15 +2392,17 @@ function renderHeroes() {
         /* RENDERIZAÇÃO DA PÁGINA HOME E ADMIN */
         function render() {
                         const pres = db.home.presentation || { 
-                title: "CLUBE GUARDIÕES", text: "Viva o propósito!", showInscription: true, inscriptionText: "Inscrições Abertas",
+                logo: "", title: "CLUBE GUARDIÕES", text: "Viva o propósito!", showInscription: true, inscriptionText: "Inscrições Abertas",
                 floats: "fa-bible|Bíblia|#ffcc00,fa-campground|Acampamento|#e63946"
             };
+            document.getElementById('pres-logo-display').src = pres.logo || (db.home.logoUrl || 'PNGDBV.webp');
             document.getElementById('pres-title').innerText = pres.title;
             document.getElementById('pres-text').innerText = pres.text;
             document.getElementById('inscription-area').style.display = pres.showInscription ? 'block' : 'none';
             document.getElementById('pres-inscription-btn').innerText = pres.inscriptionText;
             
-            if(document.getElementById('cfg-pres-title')) {
+            if(document.getElementById('cfg-pres-logo')) {
+                document.getElementById('cfg-pres-logo').value = pres.logo;
                 document.getElementById('cfg-pres-title').value = pres.title;
                 document.getElementById('cfg-pres-text').value = pres.text;
                 document.getElementById('cfg-pres-ins-on').checked = pres.showInscription;
@@ -2410,14 +2415,14 @@ function renderHeroes() {
             if(wrapper) {
                 wrapper.innerHTML = '';
                 const items = pres.floats.split(',').filter(i => i.trim() !== "");
-                const radius = window.innerWidth > 768 ? 280 : 160;
+                const radius = window.innerWidth > 768 ? 320 : 180; // Órbita ajustada para não bater no texto
                 items.forEach((item, index) => {
                     const [icon, label, color] = item.split('|');
                     const box = document.createElement('div');
                     box.className = 'floating-box';
                     box.style.backgroundColor = color || 'var(--amarelo)';
                     box.style.setProperty('--orbit-radius', radius + 'px');
-                    box.style.animationDelay = `-${(index * (25 / items.length))}s`;
+                    box.style.animationDelay = `-${(index * (30 / items.length))}s`; // Rotação suave
                     box.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${label}</span>`;
                     wrapper.appendChild(box);
                 });
@@ -9605,7 +9610,18 @@ header#main-header .user-info-header .user-status {
                 initScrollAnimations();
             };
         }
-                function addFloatingBoxManual() {
+                function uploadLogoTopo(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('cfg-pres-logo').value = e.target.result;
+                    alert("Logo carregada! Clique em SALVAR SITE para aplicar.");
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function addFloatingBoxManual() {
             const icon = document.getElementById('add-float-icon').value;
             const text = document.getElementById('add-float-text').value;
             const color = document.getElementById('add-float-color').value;
