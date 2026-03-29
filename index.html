@@ -45,91 +45,90 @@
         .spinner { width: 60px; height: 60px; border: 5px solid #333; border-top-color: #ffcc00; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- APRESENTAÇÃO COM ÓRBITA PERFEITA --- */
+       /* --- APRESENTAÇÃO COM ÓRBITA PERFEITA --- */
 .presentation-container {
     position: relative;
     width: 100%;
-    min-height: 750px;
+    min-height: 700px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: visible; 
-    padding: 100px 0;
-    margin: 0 auto;
+    padding: 80px 0;
 }
 .central-box {
-    z-index: 50; /* Sempre à frente */
+    z-index: 50;
     text-align: center;
     background: transparent;
     width: 95%;
-    max-width: 900px; /* Aumentado para o título não quebrar */
+    max-width: 900px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
 }
 .pres-logo-big {
-    max-height: 280px;
+    max-height: 250px;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 0 25px rgba(255,204,0,0.4));
+    filter: drop-shadow(0 0 20px rgba(255,204,0,0.3));
 }
 .central-box h1 {
-    font-size: clamp(2.5rem, 10vw, 5rem); /* Título maior e mais largo */
+    font-size: clamp(2.5rem, 9vw, 4.5rem);
     color: var(--amarelo);
     font-weight: 900;
     margin: 0;
     text-transform: uppercase;
-    line-height: 1.1;
-    width: 100%;
+    line-height: 1;
 }
 .central-box p {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: #fff;
-    max-width: 650px;
-    text-shadow: 0 2px 15px rgba(0,0,0,0.9);
+    max-width: 600px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
 }
 
-/* Estilo Original da Caixa de Inscrições */
+/* Estilo de Inscrições Original (Mais Retangular) */
 .inscription-badge {
     display: inline-block;
     background: var(--vermelho);
     color: white;
-    padding: 15px 40px;
-    border-radius: 15px; /* Formato de caixinha mais quadrada como antes */
+    padding: 12px 35px;
+    border-radius: 8px; /* Mais quadradinho como antes */
     font-weight: 800;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     animation: pulseBadge 2s infinite;
     cursor: pointer;
-    border: 3px solid rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
     text-transform: uppercase;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
 }
 
 .floating-box {
     position: absolute;
-    left: 50%; /* Centralização absoluta baseada no container */
+    left: 50%;
     top: 50%;
-    padding: 12px 20px;
-    border-radius: 12px;
+    padding: 8px 14px; /* Caixas menores */
+    border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     font-weight: 700;
+    font-size: 0.85rem; /* Texto menor */
     color: white;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     white-space: nowrap;
     z-index: 10;
     animation: orbit 35s linear infinite;
     pointer-events: none;
     transform-origin: center;
 }
+.floating-box i { font-size: 1rem; }
 
 @keyframes orbit {
     from { transform: translate(-50%, -50%) rotate(0deg) translateX(var(--orbit-radius)) rotate(0deg); }
     to { transform: translate(-50%, -50%) rotate(360deg) translateX(var(--orbit-radius)) rotate(-360deg); }
 }
-
         /* RESET E CORES DINÂMICAS */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         :root { 
@@ -2288,9 +2287,12 @@ function abrirMinhasEspecialidadesLider() {
             });
         }
 
-        function salvarConfigHome() {
-                        if(!db.home.presentation) db.home.presentation = {};
-            db.home.presentation.logo = document.getElementById('cfg-pres-logo').value;
+                function salvarConfigHome() {
+            if(!db.home.presentation) db.home.presentation = {};
+            // Garante que o campo existe antes de ler o valor
+            const logoInput = document.getElementById('cfg-pres-logo');
+            if(logoInput) db.home.presentation.logo = logoInput.value;
+            
             db.home.presentation.title = document.getElementById('cfg-pres-title').value;
             db.home.presentation.text = document.getElementById('cfg-pres-text').value;
             db.home.presentation.showInscription = document.getElementById('cfg-pres-ins-on').checked;
@@ -2433,7 +2435,7 @@ function renderHeroes() {
             if(wrapper) {
                 wrapper.innerHTML = '';
                 const items = pres.floats.split(',').filter(i => i.trim() !== "");
-                                const radius = window.innerWidth > 768 ? 420 : 200; // Raio aumentado para orbitar FORA do título largo
+                                               const radius = window.innerWidth > 768 ? 380 : 180; // Raio ideal para não fugir da tela
                 items.forEach((item, index) => {
                     const [icon, label, color] = item.split('|');
                     const box = document.createElement('div');
@@ -9628,14 +9630,21 @@ header#main-header .user-info-header .user-status {
                 initScrollAnimations();
             };
         }
-                function uploadLogoTopo(input) {
+                        function uploadLogoTopo(input) {
             if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if(file.size > 500000) { // Alerta se a imagem for muito pesada (>500kb)
+                    alert("A imagem é muito grande! Tente uma imagem menor para não travar o site.");
+                }
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('cfg-pres-logo').value = e.target.result;
-                    alert("Logo carregada! Clique em SALVAR SITE para aplicar.");
+                    const base64 = e.target.result;
+                    document.getElementById('cfg-pres-logo').value = base64;
+                    // Atualiza a logo na hora para visualização
+                    document.getElementById('pres-logo-display').src = base64;
+                    alert("Logo carregada com sucesso!");
                 };
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
