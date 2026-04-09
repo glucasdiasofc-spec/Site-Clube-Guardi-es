@@ -1289,18 +1289,19 @@ header#main-header .user-info-header .user-status {
                 padding-top: 10px !important;
                 padding-bottom: 10px !important;
             }
+    /* Trava a logo no centro do cabeçalho durante o scroll */
+    html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
+        top: 50% !important;
+        transform: translate(-50%, -50%) scale(1) !important; 
+    }
 
-            /* Mantém a logo centralizada na linha amarela ao rolar */
-        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
-            top: 100% !important; 
-            transform: translate(-50%, -62%) scale(1) !important; /* Acompanha a subida da posição original */
-        }
 
-        /* Mantém o tamanho maior da logo ao rolar */
-        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
-            max-height: 90px !important; /* Mantém os 90px durante o scroll */
-            height: 90px !important;
-        }
+            /* Tamanho ajustado para não vazar durante o scroll */
+    html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
+        max-height: 60px !important; 
+        height: 60px !important;
+    }
+
         }
 
     </style>
