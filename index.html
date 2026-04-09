@@ -30,13 +30,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
-        // Detectar se é PWA (App)
+               // Detectar se é PWA (App) e Android
         (function() {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-            if (isStandalone) {
+            const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            if (isPWA) {
                 document.documentElement.classList.add('is-pwa-app');
+                if (isAndroid) {
+                    document.documentElement.classList.add('is-android-pwa');
+                }
             }
         })();
+
     </script>
     <style>
         
@@ -1290,31 +1295,33 @@ header#main-header .user-info-header .user-status {
                 padding-bottom: 10px !important;
             }
 
-            /* FORÇA A LOGO NA LINHA AMARELA EM TODAS AS PÁGINAS (INCLUINDO LIDERANÇA E DESBRAVADOR) */
-        /* --- INICIO DA CORREÇÃO DEFINITIVA --- */
-html.is-android-pwa body:not(.is-home) header#main-header.scrolled .logo-container,
-html.is-android-pwa body.is-lideranca header#main-header.scrolled .logo-container,
-html.is-android-pwa body.is-desbravador header#main-header.scrolled .logo-container {
-    position: absolute !important;
-    top: 100% !important; 
-    left: 50% !important;
-    bottom: auto !important;
-    margin: 0 !important;
-    transform: translate(-50%, -50%) scale(1) !important;
-    z-index: 9999 !important;
-}
+                        /* CORREÇÃO DEFINITIVA: TRAVA A LOGO NA LINHA AMARELA NO APP ANDROID */
+            html.is-android-pwa body header#main-header.scrolled .logo-container {
+                position: absolute !important;
+                top: 100% !important; /* Centraliza exatamente sobre a linha amarela */
+                left: 50% !important;
+                transform: translate(-50%, -50%) scale(1) !important;
+                margin: 0 !important;
+                z-index: 9999 !important;
+                display: flex !important;
+                bottom: auto !important;
+            }
 
-html.is-android-pwa body:not(.is-home) header#main-header.scrolled .header-logo,
-html.is-android-pwa body.is-lideranca header#main-header.scrolled .header-logo,
-html.is-android-pwa body.is-desbravador header#main-header.scrolled .header-logo {
-    display: block !important;
-    max-height: 80px !important;
-    height: 80px !important;
-    width: auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-/* --- FIM DA CORREÇÃO --- */
+            html.is-android-pwa body header#main-header.scrolled .header-logo {
+                display: block !important;
+                max-height: 70px !important; /* Tamanho ideal para o scroll */
+                height: 70px !important;
+                width: auto !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+
+            /* Esconde info do usuário no scroll para destacar a logo no App */
+            html.is-android-pwa body header#main-header.scrolled .user-info-header {
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+
         }
 
     </style>
