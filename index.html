@@ -35,7 +35,6 @@
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
             if (isStandalone) {
                 document.documentElement.classList.add('is-pwa-app');
-                if (/android/i.test(navigator.userAgent)) document.documentElement.classList.add('is-android-pwa');
             }
         })();
     </script>
@@ -1291,21 +1290,16 @@ header#main-header .user-info-header .user-status {
                 padding-bottom: 10px !important;
             }
 
-          /* TRAVA A LOGO NO CENTRO PARA NÃO DESCER NAS PÁGINAS INTERNAS */
-        html.is-android-pwa header#main-header.scrolled .logo-container {
-            top: 50% !important; 
-            bottom: auto !important;
-            left: 50% !important;
-            margin: 0 !important;
-            /* O segredo: -50% no Y mantém ela no centro exato da altura do header */
-            transform: translate(-50%, -50%) scale(1) !important; 
+            /* Mantém a logo centralizada na linha amarela ao rolar */
+        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
+            top: 100% !important; 
+            transform: translate(-50%, -62%) scale(1) !important; /* Acompanha a subida da posição original */
         }
 
-        html.is-android-pwa header#main-header.scrolled .header-logo {
-            max-height: 75px !important; 
-            height: 75px !important;
-            width: auto !important;
-            object-fit: contain !important;
+        /* Mantém o tamanho maior da logo ao rolar */
+        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
+            max-height: 90px !important; /* Mantém os 90px durante o scroll */
+            height: 90px !important;
         }
         }
 
