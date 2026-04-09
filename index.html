@@ -9258,12 +9258,13 @@ header#main-header .user-info-header .user-status {
 
     /* 3.1 Quebrar a trava antiga e forçar o tamanho gigante da Logo */
     body:not(.is-home) header#main-header .header-logo,
-    body.is-home header#main-header:not(.initial-splash) .header-logo {
-        height: 110px !important; /* Mude aqui para deixar ainda maior se quiser (ex: 130px) */
+    body.is-home header#main-header:not(.initial-splash) .header-logo     {
+        height: 70px !important; /* Ajustado para caber perfeitamente no cabeçalho de 80px */
         width: auto !important;
-        max-width: none !important; /* ISSO AQUI DESTRÓI O BLOQUEIO ANTIGO */
-        max-height: none !important;
+        max-width: 100% !important;
+        max-height: 70px !important;
     }
+
     
     /* 4. Efeito de Chama Animada (Pseudo-elemento isolado) */
     body:not(.is-home) header#main-header .logo-container::before,
