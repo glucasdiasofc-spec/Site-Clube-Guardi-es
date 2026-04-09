@@ -1290,16 +1290,28 @@ header#main-header .user-info-header .user-status {
                 padding-bottom: 10px !important;
             }
 
-            /* Mantém a logo centralizada na linha amarela ao rolar */
-        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
+            /* Mantém a logo centralizada na linha amarela ao rolar (BLINDADO E RESOLVIDO) */
+        html.is-android-pwa body:not(.is-home) header#main-header.scrolled .logo-container,
+        html.is-android-pwa body.is-home header#main-header.scrolled:not(.initial-splash) .logo-container {
+            position: absolute !important;
             top: 100% !important; 
-            transform: translate(-50%, -62%) scale(1) !important; /* Acompanha a subida da posição original */
+            bottom: auto !important;
+            left: 50% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            transform: translate(-50%, -62%) scale(1) !important;
         }
 
-        /* Mantém o tamanho maior da logo ao rolar */
-        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
-            max-height: 90px !important; /* Mantém os 90px durante o scroll */
+        /* Mantém o tamanho maior da logo ao rolar (BLINDADO E RESOLVIDO) */
+        html.is-android-pwa body:not(.is-home) header#main-header.scrolled .header-logo,
+        html.is-android-pwa body.is-home header#main-header.scrolled:not(.initial-splash) .header-logo {
+            display: block !important;
+            max-height: 90px !important;
             height: 90px !important;
+            width: auto !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         }
 
