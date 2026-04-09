@@ -1289,19 +1289,18 @@ header#main-header .user-info-header .user-status {
                 padding-top: 10px !important;
                 padding-bottom: 10px !important;
             }
-    /* Trava a logo no centro do cabeçalho durante o scroll */
-    html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
-        top: 50% !important;
-        transform: translate(-50%, -50%) scale(1) !important; 
-    }
 
+            /* Mantém a logo centralizada na linha amarela ao rolar */
+        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .logo-container {
+            top: 100% !important; 
+            transform: translate(-50%, -62%) scale(1) !important; /* Acompanha a subida da posição original */
+        }
 
-            /* Tamanho ajustado para não vazar durante o scroll */
-    html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
-        max-height: 60px !important; 
-        height: 60px !important;
-    }
-
+        /* Mantém o tamanho maior da logo ao rolar */
+        html.is-android-pwa header#main-header.scrolled:not(.initial-splash) .header-logo {
+            max-height: 90px !important; /* Mantém os 90px durante o scroll */
+            height: 90px !important;
+        }
         }
 
     </style>
@@ -9247,27 +9246,22 @@ header#main-header .user-info-header .user-status {
         margin: 0 !important;
     }
 
-        /* Posicionamento vertical da Logo no APP - FIXA NO CENTRO */
+    /* Posicionamento vertical da Logo no APP - VAZANDO NA LINHA AMARELA */
     html.is-pwa-app body:not(.is-home) header#main-header .logo-container,
     html.is-pwa-app body.is-home header#main-header:not(.initial-splash) .logo-container {
-        top: 50% !important;
-        bottom: auto !important;
-        transform: translate(-50%, -50%) !important; 
-        margin: 0 !important;
+        top: auto !important; 
+        bottom: -40px !important; /* Posiciona a logo para baixo, vazando na linha amarela */
+        transform: translateX(-50%) !important; 
     }
 
-
-
-        /* Tamanho ajustado para caber no cabeçalho fixo do Android */
+    /* 3.1 Quebrar a trava antiga e forçar o tamanho gigante da Logo */
     body:not(.is-home) header#main-header .header-logo,
     body.is-home header#main-header:not(.initial-splash) .header-logo {
-        height: 65px !important; 
+        height: 110px !important; /* Mude aqui para deixar ainda maior se quiser (ex: 130px) */
         width: auto !important;
-        max-width: 100% !important;
-        max-height: 65px !important;
+        max-width: none !important; /* ISSO AQUI DESTRÓI O BLOQUEIO ANTIGO */
+        max-height: none !important;
     }
-
-
     
     /* 4. Efeito de Chama Animada (Pseudo-elemento isolado) */
     body:not(.is-home) header#main-header .logo-container::before,
