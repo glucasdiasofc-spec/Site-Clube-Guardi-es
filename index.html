@@ -1291,17 +1291,20 @@ header#main-header .user-info-header .user-status {
                 padding-bottom: 10px !important;
             }
 
-           /* TRAVA A LOGO NO CENTRO PARA NÃO DESCER NAS PÁGINAS INTERNAS */
+          /* TRAVA A LOGO NO CENTRO PARA NÃO DESCER NAS PÁGINAS INTERNAS */
         html.is-android-pwa header#main-header.scrolled .logo-container {
             top: 50% !important; 
             bottom: auto !important;
-            transform: translate(-50%, -50%) scale(0.9) !important;
-            margin-top: 0 !important;
+            left: 50% !important;
+            margin: 0 !important;
+            /* O segredo: -50% no Y mantém ela no centro exato da altura do header */
+            transform: translate(-50%, -50%) scale(1) !important; 
         }
 
         html.is-android-pwa header#main-header.scrolled .header-logo {
-            max-height: 70px !important; 
-            height: 70px !important;
+            max-height: 75px !important; 
+            height: 75px !important;
+            width: auto !important;
             object-fit: contain !important;
         }
         }
