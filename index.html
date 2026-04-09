@@ -1290,24 +1290,28 @@ header#main-header .user-info-header .user-status {
                 padding-bottom: 10px !important;
             }
 
-            /* Mantém a logo centralizada na linha amarela ao rolar (BLINDADO E RESOLVIDO) */
-        html.is-android-pwa body:not(.is-home) header#main-header.scrolled .logo-container,
-        html.is-android-pwa body.is-home header#main-header.scrolled:not(.initial-splash) .logo-container {
+            /* FORÇA A LOGO NA LINHA AMARELA EM TODAS AS PÁGINAS (INCLUINDO LIDERANÇA E DESBRAVADOR) */
+        html.is-android-pwa body header#main-header.scrolled .logo-container,
+        html.is-android-pwa body.is-lideranca header#main-header.scrolled .logo-container,
+        html.is-android-pwa body.is-desbravador header#main-header.scrolled .logo-container,
+        html.is-android-pwa body:not(.is-home) header#main-header.scrolled .logo-container {
             position: absolute !important;
             top: 100% !important; 
             bottom: auto !important;
             left: 50% !important;
             margin: 0 !important;
             padding: 0 !important;
-            transform: translate(-50%, -62%) scale(1) !important;
+            /* -50% no Y crava o centro da logo exatamente em cima da linha amarela */
+            transform: translate(-50%, -50%) scale(1) !important; 
         }
 
-        /* Mantém o tamanho maior da logo ao rolar (BLINDADO E RESOLVIDO) */
-        html.is-android-pwa body:not(.is-home) header#main-header.scrolled .header-logo,
-        html.is-android-pwa body.is-home header#main-header.scrolled:not(.initial-splash) .header-logo {
+        html.is-android-pwa body header#main-header.scrolled .header-logo,
+        html.is-android-pwa body.is-lideranca header#main-header.scrolled .header-logo,
+        html.is-android-pwa body.is-desbravador header#main-header.scrolled .header-logo,
+        html.is-android-pwa body:not(.is-home) header#main-header.scrolled .header-logo {
             display: block !important;
-            max-height: 90px !important;
-            height: 90px !important;
+            max-height: 80px !important; /* Ajustado para 80px para evitar que bata em outros elementos */
+            height: 80px !important;
             width: auto !important;
             max-width: none !important;
             margin: 0 !important;
