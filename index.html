@@ -9246,13 +9246,15 @@ header#main-header .user-info-header .user-status {
         margin: 0 !important;
     }
 
-    /* Posicionamento vertical da Logo no APP - VAZANDO NA LINHA AMARELA */
+    /* Posicionamento vertical da Logo no APP - FIXA NO CENTRO */
     html.is-pwa-app body:not(.is-home) header#main-header .logo-container,
     html.is-pwa-app body.is-home header#main-header:not(.initial-splash) .logo-container {
-        top: auto !important; 
-        bottom: -40px !important; /* Posiciona a logo para baixo, vazando na linha amarela */
-        transform: translateX(-50%) !important; 
+        top: 50% !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) !important; 
+        margin: 0 !important;
     }
+
 
     /* 3.1 Quebrar a trava antiga e forçar o tamanho gigante da Logo */
     body:not(.is-home) header#main-header .header-logo,
