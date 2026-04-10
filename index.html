@@ -9600,53 +9600,33 @@ header#main-header .user-info-header .user-status {
                 transform: none !important;
                 animation: none !important;
             }
-/* ============================================================
-   TRAVA DEFINITIVA APP ANDROID - LOGO FIXA (NÃO SAI DO TOPO)
-   ============================================================ */
-html.is-android-pwa body:not(.is-home) header#main-header,
-html.is-android-pwa body:not(.is-home) header#main-header.scrolled,
-html.is-android-pwa body.is-lideranca header#main-header,
-html.is-android-pwa body.is-desbravador header#main-header {
-    height: 80px !important;
-    min-height: 80px !important;
-    background: #080312 !important; /* Cor sólida da Home */
-    border-bottom: 3px solid var(--amarelo) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: none !important;
-}
-
-/* Mantém a logo centralizada e GIGANTE (como na Home), mas sem se mexer */
-html.is-android-pwa body:not(.is-home) header#main-header .logo-container,
-html.is-android-pwa body:not(.is-home) header#main-header.scrolled .logo-container {
+/* =========================================================
+   TRAVA ABSOLUTA DO LOGO PWA (CORREÇÃO DA DESCIDA)
+========================================================= */
+html.is-android-pwa body header#main-header .logo-container,
+html.is-android-pwa body header#main-header.scrolled .logo-container,
+html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .logo-container {
     position: absolute !important;
+    top: 50% !important;
     left: 50% !important;
-    top: 50% !important; 
-    margin: 0 !important;
-    z-index: 1000 !important; 
+    bottom: auto !important;
     transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    animation: none !important;
     transition: none !important;
 }
 
-/* Força o tamanho da logo a ser sempre o mesmo da Home Page */
-html.is-android-pwa body:not(.is-home) header#main-header .header-logo,
-html.is-android-pwa body:not(.is-home) header#main-header.scrolled .header-logo {
-    height: 110px !important; /* Tamanho que você gosta (vazando um pouco) */
+html.is-android-pwa body header#main-header .header-logo,
+html.is-android-pwa body header#main-header.scrolled .header-logo,
+html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .header-logo {
+    height: 110px !important; /* Mantém o tamanho grande */
     max-height: 110px !important;
     width: auto !important;
     transform: none !important;
     animation: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
+    transition: none !important;
+    margin: 0 !important;
 }
-
-/* Esconde info do usuário para não poluir o cabeçalho no App */
-html.is-android-pwa body header#main-header .user-info-header {
-    display: none !important;
-}
-
-header.scrolled
     </style>
 
     <script>
