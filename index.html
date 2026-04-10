@@ -9621,12 +9621,11 @@ html.is-android-pwa body.is-desbravador header#main-header {
 html.is-android-pwa body:not(.is-home) header#main-header .logo-container,
 html.is-android-pwa body:not(.is-home) header#main-header.scrolled .logo-container {
     position: absolute !important;
-    top: 50% !important;
     left: 50% !important;
-    bottom: auto !important; /* Mata o 'bottom: -40px' que fazia descer */
-    transform: translate(-50%, -50%) !important;
+    top: 50% !important; 
     margin: 0 !important;
-    z-index: 99999 !important;
+    z-index: 1000 !important; 
+    transform: translate(-50%, -50%) !important;
     transition: none !important;
 }
 
