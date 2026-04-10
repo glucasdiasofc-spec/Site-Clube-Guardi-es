@@ -30,17 +30,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
-               // Detectar se é PWA (App) e Android
-        (function() {
-            const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-            const isAndroid = /Android/i.test(navigator.userAgent);
-            if (isPWA) {
-                document.documentElement.classList.add('is-pwa-app');
-                if (isAndroid) {
-                    document.documentElement.classList.add('is-android-pwa');
-                }
-            }
-        })();
 
     </script>
     <style>
@@ -1295,49 +1284,43 @@ header#main-header .user-info-header .user-status {
                 padding-bottom: 10px !important;
             }
 
-                        /* CORREÇÃO DEFINITIVA: TRAVA A LOGO NA LINHA AMARELA NO APP ANDROID */
+                                    /* CORREÇÃO DEFINITIVA: TRAVA A LOGO NA LINHA AMARELA NO APP ANDROID */
+            /* Esta regra anula o 'position: static' que estava quebrando a centralização */
+            html.is-android-pwa body header#main-header .logo-container,
             html.is-android-pwa body header#main-header.scrolled .logo-container {
                 position: absolute !important;
-                top: 100% !important; /* Centraliza exatamente sobre a linha amarela */
+                top: 100% !important; 
                 left: 50% !important;
-                transform: translate(-50%, -50%) scale(1) !important;
+                transform: translate(-50%, -62%) scale(1) !important;
                 margin: 0 !important;
                 z-index: 9999 !important;
                 display: flex !important;
                 bottom: auto !important;
+                right: auto !important;
             }
 
+            html.is-android-pwa body header#main-header .header-logo,
             html.is-android-pwa body header#main-header.scrolled .header-logo {
                 display: block !important;
-                max-height: 70px !important; /* Tamanho ideal para o scroll */
-                height: 70px !important;
+                max-height: 85px !important; 
+                height: 85px !important;
                 width: auto !important;
                 visibility: visible !important;
                 opacity: 1 !important;
             }
 
-            /* Esconde info do usuário no scroll para destacar a logo no App */
+            /* Garante que a logo do scroll não seja minúscula */
+            html.is-android-pwa header.scrolled .header-logo {
+                max-height: 75px !important;
+                height: 75px !important;
+            }
+
+            /* Esconde info do usuário no scroll para não poluir o topo */
             html.is-android-pwa body header#main-header.scrolled .user-info-header {
                 opacity: 0 !important;
                 pointer-events: none !important;
             }
 
-        }
-
-    </style>
-    <script>
-        // Detetar se é PWA (App) e se é Android
-        (function() {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-            const isAndroid = /android/i.test(navigator.userAgent);
-            if (isStandalone) {
-                document.documentElement.classList.add('is-pwa-app');
-                // Esta é a classe que faltava para o CSS funcionar!
-                if (isAndroid) {
-                    document.documentElement.classList.add('is-android-pwa');
-                }
-            }
-        })();
     </script>
 </head>
 <body>
@@ -9733,6 +9716,21 @@ header#main-header .user-info-header .user-status {
             document.getElementById('cfg-pres-floats').value = items.join(',');
             renderFloatsAdmin();
         }
+    </script>
+    <script>
+        // DETECÇÃO BLINDADA: Executa após o carregamento completo
+        (function() {
+            const checkPWA = () => {
+                const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+                const isAndroid = /Android/i.test(navigator.userAgent);
+                if (isPWA) {
+                    document.documentElement.classList.add('is-pwa-app');
+                    if (isAndroid) document.documentElement.classList.add('is-android-pwa');
+                }
+            };
+            if (document.readyState === 'complete') checkPWA();
+            else window.addEventListener('load', checkPWA);
+        })();
     </script>
 
 </body>
