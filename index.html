@@ -1256,30 +1256,33 @@ header#main-header .user-info-header .user-status {
             margin-top: 12px !important; /* Reduzido para subir mais o menu */
         }
 
-                        /* LOGO TRAVADA NO CENTRO DO CABEÇALHO (APP ANDROID) */
+                                    /* LOGO TRAVADA E SUBIDA (APP ANDROID) */
             html.is-android-pwa body header#main-header .logo-container,
             html.is-android-pwa body header#main-header.scrolled .logo-container {
                 position: absolute !important;
-                top: 50% !important; /* TRAVADO NO CENTRO VERTICAL */
+                top: 35px !important; /* Fixa no topo (metade de 70px) */
                 left: 50% !important;
-                transform: translate(-50%, -50%) scale(1) !important;
+                transform: translate(-50%, -50%) !important; /* Centraliza sem inventar moda */
                 margin: 0 !important;
-                z-index: 9999 !important;
+                z-index: 99999 !important;
                 display: flex !important;
+                transition: none !important; /* MATA QUALQUER ANIMAÇÃO DE MOVIMENTO */
                 bottom: auto !important;
-                right: auto !important;
             }
 
-            /* TAMANHO DA LOGO (APP ANDROID) */
+
+                        /* FORÇA A LOGO A FICAR NO TOPO (APP ANDROID) */
             html.is-android-pwa body header#main-header .header-logo,
             html.is-android-pwa body header#main-header.scrolled .header-logo {
                 display: block !important;
-                max-height: 55px !important; /* Tamanho perfeito para caber no header de 70px */
-                height: 55px !important;
+                max-height: 50px !important;
+                height: 50px !important;
                 width: auto !important;
                 visibility: visible !important;
                 opacity: 1 !important;
+                transform: none !important; /* Evita que ela balance ou suba/desça */
             }
+
 
             /* Esconde info do usuário para não poluir o topo no App */
             html.is-android-pwa body header#main-header .user-info-header {
@@ -7386,13 +7389,15 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                 }
             };
             
-            window.addEventListener('scroll', () => {
+                       window.addEventListener('scroll', () => {
                 const header = document.getElementById("main-header");
-                if (window.scrollY > 50) { 
+                // Se for Android PWA, não removemos a splash via scroll para não bugar a logo
+                if (window.scrollY > 50 && !document.documentElement.classList.contains('is-android-pwa')) { 
                     header.classList.remove("initial-splash"); 
                     updateSplashScroll();
                 }
             });
+
             
 updateSplashScroll();
         }
