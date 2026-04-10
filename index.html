@@ -1243,12 +1243,12 @@ header#main-header .user-info-header .user-status {
             /* Cabeçalho: Altura INTACTA de 70px, como você pediu */
             html.is-android-pwa body:not(.is-home) header#main-header,
             html.is-android-pwa body.is-home header#main-header:not(.initial-splash) {
-                top: 0 !important;
-                height: 70px !important;
+                                height: 70px !important;
                 min-height: 70px !important;
-                padding-top: 10px !important;
-                padding-bottom: 10px !important;
-                background-color: rgba(10, 10, 15, 0.95) !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                background-color: rgba(10, 10, 15, 0.98) !important;
+
             }
 
             /* Sobe o menu hambúrguer (3 linhas) para afastar da linha amarela */
@@ -1256,42 +1256,13 @@ header#main-header .user-info-header .user-status {
             margin-top: 12px !important; /* Reduzido para subir mais o menu */
         }
 
-            /* Centraliza a logo na linha amarela (ajustado eixo Y para subir mais) */
-        html.is-android-pwa body:not(.is-home) header#main-header .logo-container,
-        html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .logo-container {
-            top: 100% !important; 
-            bottom: auto !important;
-            transform: translate(-50%, -62%) scale(1) !important; /* -62% puxa a logo mais para cima */
-        }
-
-        /* Cresce a logo ainda mais para destacar no App */
-        html.is-android-pwa body:not(.is-home) header#main-header .header-logo,
-        html.is-android-pwa body.is-home header#main-header:not(.initial-splash) .header-logo {
-            max-height: 90px !important; /* Aumentado para 90px */
-            height: 90px !important;
-            width: auto !important;
-        }
-
-            /* ========================================================= */
-            /* ESTADOS AO ROLAR A TELA (SCROLLED) - MANTÉM TUDO TRAVADO  */
-            /* ========================================================= */
-            
-            /* Impede que o cabeçalho mude de tamanho ao rolar */
-            html.is-android-pwa header#main-header.scrolled:not(.initial-splash) {
-                height: 70px !important;
-                min-height: 70px !important;
-                padding-top: 10px !important;
-                padding-bottom: 10px !important;
-            }
-
-                                    /* CORREÇÃO DEFINITIVA: TRAVA A LOGO NA LINHA AMARELA NO APP ANDROID */
-            /* Esta regra anula o 'position: static' que estava quebrando a centralização */
+                        /* LOGO TRAVADA NO CENTRO DO CABEÇALHO (APP ANDROID) */
             html.is-android-pwa body header#main-header .logo-container,
             html.is-android-pwa body header#main-header.scrolled .logo-container {
                 position: absolute !important;
-                top: 100% !important; 
+                top: 50% !important; /* TRAVADO NO CENTRO VERTICAL */
                 left: 50% !important;
-                transform: translate(-50%, -62%) scale(1) !important;
+                transform: translate(-50%, -50%) scale(1) !important;
                 margin: 0 !important;
                 z-index: 9999 !important;
                 display: flex !important;
@@ -1299,27 +1270,23 @@ header#main-header .user-info-header .user-status {
                 right: auto !important;
             }
 
+            /* TAMANHO DA LOGO (APP ANDROID) */
             html.is-android-pwa body header#main-header .header-logo,
             html.is-android-pwa body header#main-header.scrolled .header-logo {
                 display: block !important;
-                max-height: 85px !important; 
-                height: 85px !important;
+                max-height: 55px !important; /* Tamanho perfeito para caber no header de 70px */
+                height: 55px !important;
                 width: auto !important;
                 visibility: visible !important;
                 opacity: 1 !important;
             }
 
-            /* Garante que a logo do scroll não seja minúscula */
-            html.is-android-pwa header.scrolled .header-logo {
-                max-height: 75px !important;
-                height: 75px !important;
-            }
-
-            /* Esconde info do usuário no scroll para não poluir o topo */
-            html.is-android-pwa body header#main-header.scrolled .user-info-header {
+            /* Esconde info do usuário para não poluir o topo no App */
+            html.is-android-pwa body header#main-header .user-info-header {
                 opacity: 0 !important;
                 pointer-events: none !important;
             }
+
 
     </script>
 </head>
