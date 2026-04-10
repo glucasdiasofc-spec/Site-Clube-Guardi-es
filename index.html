@@ -9247,13 +9247,6 @@ header#main-header .user-info-header .user-status {
         margin: 0 !important;
     }
 
-    /* Posicionamento vertical da Logo no APP - VAZANDO NA LINHA AMARELA */
-    html.is-pwa-app body:not(.is-home) header#main-header .logo-container,
-    html.is-pwa-app body.is-home header#main-header:not(.initial-splash) .logo-container {
-        top: auto !important; 
-        bottom: -40px !important; /* Posiciona a logo para baixo, vazando na linha amarela */
-        transform: translateX(-50%) !important; 
-    }
 
     /* 3.1 Quebrar a trava antiga e forçar o tamanho gigante da Logo */
     body:not(.is-home) header#main-header .header-logo,
@@ -9582,6 +9575,33 @@ header#main-header .user-info-header .user-status {
             justify-content: center !important;
         }
     }
+
+                /* TRAVA NUCLEAR APP ANDROID - NÃO MEXER */
+            html.is-android-pwa #main-header, 
+            html.is-android-pwa #main-header.scrolled {
+                height: 70px !important;
+                background: #080312 !important;
+            }
+
+            html.is-android-pwa #main-header .logo-container,
+            html.is-android-pwa #main-header.scrolled .logo-container {
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                bottom: auto !important; /* ANULA O -40px */
+                transform: translate(-50%, -50%) !important;
+                margin: 0 !important;
+                transition: none !important;
+            }
+
+            html.is-android-pwa #main-header .header-logo,
+            html.is-android-pwa #main-header.scrolled .header-logo {
+                height: 50px !important;
+                max-height: 50px !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
 
     </style>
 
