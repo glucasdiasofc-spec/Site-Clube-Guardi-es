@@ -9601,6 +9601,40 @@ header#main-header .user-info-header .user-status {
                 transform: none !important;
                 animation: none !important;
             }
+            /* TRAVA DA LOGO VAZADA - APP ANDROID */
+            /* Mantém a logo grande e na mesma posição, rolando ou não */
+            html.is-android-pwa body header#main-header .logo-container,
+            html.is-android-pwa body header#main-header.scrolled .logo-container {
+                position: absolute !important;
+                top: auto !important;
+                bottom: -40px !important; /* Mantém ela vazando na linha amarela */
+                left: 50% !important;
+                transform: translateX(-50%) !important; /* Centraliza horizontalmente */
+                margin: 0 !important;
+                z-index: 99999 !important;
+                display: flex !important;
+                transition: none !important; /* MATA QUALQUER MOVIMENTO AO ROLAR */
+            }
+
+            /* Mantém o tamanho gigante da logo sempre igual */
+            html.is-android-pwa body header#main-header .header-logo,
+            html.is-android-pwa body header#main-header.scrolled .header-logo {
+                height: 110px !important; /* O tamanho que você gosta */
+                max-height: 110px !important;
+                width: auto !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: none !important;
+                animation: none !important; /* Remove pulso se houver */
+            }
+
+            /* Garante que o cabeçalho não mude de cor ou altura no Android */
+            html.is-android-pwa #main-header,
+            html.is-android-pwa #main-header.scrolled {
+                height: 70px !important;
+                background: #080312 !important;
+                transition: none !important;
+            }
 
 
     </style>
