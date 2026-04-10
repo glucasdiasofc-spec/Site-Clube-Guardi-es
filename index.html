@@ -1256,39 +1256,52 @@ header#main-header .user-info-header .user-status {
             margin-top: 12px !important; /* Reduzido para subir mais o menu */
         }
 
-                                    /* LOGO TRAVADA E SUBIDA (APP ANDROID) */
+                                                /* COMPORTAMENTO IDÊNTICO À HOME PAGE (APP ANDROID) */
+            /* Força o cabeçalho a ser fixo, preto e sem mudar de tamanho */
+            html.is-android-pwa body header#main-header,
+            html.is-android-pwa body header#main-header.scrolled {
+                height: 80px !important;
+                min-height: 80px !important;
+                background: #080312 !important; /* Cor da Home */
+                border-bottom: 3px solid var(--amarelo) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 0 !important;
+                transition: none !important;
+            }
+
+            /* Centraliza a logo exatamente como na Home, mas no tamanho do header */
             html.is-android-pwa body header#main-header .logo-container,
             html.is-android-pwa body header#main-header.scrolled .logo-container {
-                position: absolute !important;
-                top: 35px !important; /* Fixa no topo (metade de 70px) */
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important; /* Centraliza sem inventar moda */
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                transform: none !important;
                 margin: 0 !important;
-                z-index: 99999 !important;
                 display: flex !important;
-                transition: none !important; /* MATA QUALQUER ANIMAÇÃO DE MOVIMENTO */
-                bottom: auto !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                transition: none !important;
             }
 
-
-                        /* FORÇA A LOGO A FICAR NO TOPO (APP ANDROID) */
+            /* Tamanho da logo estático */
             html.is-android-pwa body header#main-header .header-logo,
             html.is-android-pwa body header#main-header.scrolled .header-logo {
-                display: block !important;
-                max-height: 50px !important;
-                height: 50px !important;
+                height: 55px !important;
                 width: auto !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                transform: none !important; /* Evita que ela balance ou suba/desça */
+                max-height: 55px !important;
+                animation: none !important; /* Remove qualquer pulso ou movimento */
+                transform: none !important;
             }
 
-
-            /* Esconde info do usuário para não poluir o topo no App */
-            html.is-android-pwa body header#main-header .user-info-header {
-                opacity: 0 !important;
-                pointer-events: none !important;
+            /* Esconde info do usuário e mensagens de scroll para ficar limpo */
+            html.is-android-pwa body header#main-header .user-info-header,
+            html.is-android-pwa body header#main-header .scroll-down-msg {
+                display: none !important;
             }
+
 
 
     </script>
@@ -7389,14 +7402,17 @@ db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoH
                 }
             };
             
-                       window.addEventListener('scroll', () => {
+                                   window.addEventListener('scroll', () => {
                 const header = document.getElementById("main-header");
-                // Se for Android PWA, não removemos a splash via scroll para não bugar a logo
-                if (window.scrollY > 50 && !document.documentElement.classList.contains('is-android-pwa')) { 
-                    header.classList.remove("initial-splash"); 
+                // No Android PWA, mantemos a classe ou o estilo fixo para não bugar a logo
+                if (window.scrollY > 50) { 
+                    if (!document.documentElement.classList.contains('is-android-pwa')) {
+                        header.classList.remove("initial-splash"); 
+                    }
                     updateSplashScroll();
                 }
             });
+
 
             
 updateSplashScroll();
