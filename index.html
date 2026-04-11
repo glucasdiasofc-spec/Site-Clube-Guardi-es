@@ -1319,13 +1319,23 @@ header#main-header .user-info-header .user-status {
                 padding-bottom: 10px !important;
             }
 
+        /* TRAVA O LOGO: Impede qualquer transformação ou redução de tamanho ao rolar no Android PWA */
+        html.is-android-pwa body header#main-header.scrolled .logo-container,
+        html.is-android-pwa body.is-lideranca header#main-header.scrolled .logo-container,
+        html.is-android-pwa body.is-desbravador header#main-header.scrolled .logo-container,
+        html.is-android-pwa body:not(.is-home) header#main-header.scrolled .logo-container {
+            transform: translate(-50%, -50%) scale(1) !important;
+            top: 50% !important;
+            left: 50% !important;
+        }
+
         html.is-android-pwa body header#main-header.scrolled .header-logo,
         html.is-android-pwa body.is-lideranca header#main-header.scrolled .header-logo,
         html.is-android-pwa body.is-desbravador header#main-header.scrolled .header-logo,
         html.is-android-pwa body:not(.is-home) header#main-header.scrolled .header-logo {
             display: block !important;
-            max-height: 80px !important; 
-            height: 80px !important;
+            max-height: 90px !important; 
+            height: 90px !important;
             width: auto !important;
             max-width: none !important;
             margin: 0 !important;
