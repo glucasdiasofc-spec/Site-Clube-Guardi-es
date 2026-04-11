@@ -1267,13 +1267,16 @@ header#main-header .user-info-header .user-status {
 
             /* Cabeçalho: Altura INTACTA de 70px, como você pediu */
             html.is-android-pwa body:not(.is-home) header#main-header,
-            html.is-android-pwa body.is-home header#main-header:not(.initial-splash) {
+            html.is-android-pwa body.is-home header#main-header:not(.initial-splash),
+            html.is-android-pwa header#main-header.scrolled {
                 top: 0 !important;
                 height: 70px !important;
                 min-height: 70px !important;
                 padding-top: 10px !important;
                 padding-bottom: 10px !important;
                 background-color: rgba(10, 10, 15, 0.95) !important;
+                transform: none !important;
+                transition: none !important;
             }
 
             /* Sobe o menu hambúrguer (3 linhas) para afastar da linha amarela */
@@ -1320,6 +1323,7 @@ header#main-header .user-info-header .user-status {
             }
 
         /* TRAVA O LOGO: Impede qualquer transformação ou redução de tamanho ao rolar no Android PWA */
+        html.is-android-pwa body header#main-header .logo-container,
         html.is-android-pwa body header#main-header.scrolled .logo-container,
         html.is-android-pwa body.is-lideranca header#main-header.scrolled .logo-container,
         html.is-android-pwa body.is-desbravador header#main-header.scrolled .logo-container,
@@ -1327,6 +1331,8 @@ header#main-header .user-info-header .user-status {
             transform: translate(-50%, -50%) scale(1) !important;
             top: 50% !important;
             left: 50% !important;
+            margin: 0 !important;
+            transition: none !important;
         }
 
         html.is-android-pwa body header#main-header.scrolled .header-logo,
