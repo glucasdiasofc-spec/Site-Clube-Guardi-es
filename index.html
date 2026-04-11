@@ -442,14 +442,25 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .showcase-section { text-align: center; margin: 60px 0; padding: 40px 20px; background: rgba(0,0,0,0.4); border-radius: 20px; border: 1px solid #333; position: relative; }
         .showcase-section h2 { color: var(--amarelo); font-size: 2.2rem; margin-bottom: 30px; }
         .carousel-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; }
-        .carousel-track { display: flex; gap: 20px; overflow: hidden; width: 300px; height: 350px; justify-content: center; align-items: center; position: relative; }
-        .carousel-item { position: absolute; width: 100%; height: 100%; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: scale(0.9); pointer-events: none; background: #111; border-radius: 15px; border: 2px solid var(--amarelo); padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .carousel-item.active { opacity: 1; transform: scale(1); pointer-events: auto; }
+        .carousel-track { display: flex; gap: 10px; overflow: visible; width: 300px; height: 350px; justify-content: center; align-items: center; position: relative; perspective: 1000px; }
+        .carousel-item { position: absolute; width: 100%; height: 100%; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: scale(0.7) translateX(0) translateZ(-200px); pointer-events: none; background: #111; border-radius: 15px; border: 2px solid var(--amarelo); padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .carousel-item.active { opacity: 1; transform: scale(1) translateX(0) translateZ(0); pointer-events: auto; z-index: 5; }
+        .carousel-item.prev { opacity: 0.4; transform: scale(0.8) translateX(-110%) translateZ(-100px); pointer-events: none; z-index: 1; }
+        .carousel-item.next { opacity: 0.4; transform: scale(0.8) translateX(110%) translateZ(-100px); pointer-events: none; z-index: 1; }
         .carousel-item img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--amarelo); margin-bottom: 15px; }
         .carousel-item h3 { color: white; margin-bottom: 5px; font-size: 1.4rem; }
         .carousel-item p { color: var(--amarelo); font-weight: bold; }
         .carousel-btn { background: #333; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: 0.3s; z-index: 10; }
         .carousel-btn:hover { background: var(--amarelo); color: black; }
+
+        /* PIRÂMIDE HIERÁRQUICA */
+        .pyramid-container { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 40px 10px; width: 100%; overflow-x: auto; }
+        .pyramid-level { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; width: 100%; }
+        .pyramid-item { background: #111; border: 2px solid var(--vermelho); border-radius: 15px; padding: 15px; width: 180px; text-align: center; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
+        .pyramid-item:hover { transform: translateY(-5px); border-color: var(--amarelo); }
+        .pyramid-item img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--vermelho); margin-bottom: 10px; }
+        .pyramid-item .name { font-weight: bold; color: white; font-size: 0.9rem; display: block; }
+        .pyramid-item .role { font-size: 0.75rem; color: var(--amarelo); font-weight: 600; margin-top: 5px; display: block; }
         
         /* UNIDADES NA HOME */
         .units-home-wrap { display: flex; flex-direction: column; gap: 50px; margin-top: 50px; }
@@ -1402,8 +1413,8 @@ header#main-header .user-info-header .user-status {
     <div id="modal-all-leaders" class="modal-overlay">
         <div class="modal-box" style="max-width: 700px;">
             <div class="close-modal" onclick="document.getElementById('modal-all-leaders').style.display='none'"><i class="fa-solid fa-times"></i></div>
-            <h3 style="color:var(--vermelho); margin-bottom: 20px; text-align: center;"><i class="fa-solid fa-user-tie"></i> Nossa Liderança</h3>
-            <div id="grid-all-leaders" class="dbv-grid"></div>
+            <h3 style="color:var(--amarelo); margin-bottom: 20px; text-align: center;"><i class="fa-solid fa-sitemap"></i> Pirâmide de Liderança</h3>
+            <div id="grid-all-leaders"></div>
         </div>
     </div>
 
@@ -1719,9 +1730,11 @@ header#main-header .user-info-header .user-status {
             <label class="input-label">Unidade:</label>
             <div class="input-group"><i class="fa-solid fa-campground"></i><select id="edit-user-unid"></select></div>
             <label class="input-label">Cargo (Opcional):</label>
+            <div class="input-group"><i class="fa-solid fa-briefcase"></i><input type="text" id="edit-user-cargo" placeholder="Ex: Diretor(a), Instrutor(a), etc."></div>
+            <label class="input-label">Nível na Pirâmide (1=Topo, 2=Meio, 3=Base):</label>
+            <div class="input-group"><i class="fa-solid fa-layer-group"></i><input type="number" id="edit-user-nivel" min="1" max="5" placeholder="Nível (1 a 5)"></div>
             <label class="input-label" style="color: var(--amarelo);"><i class="fa-solid fa-eye-slash"></i> Visibilidade:</label>
             <label style="background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333;"><input type="checkbox" id="edit-user-oculto"> Ocultar este líder do carrossel da Home Page</label>
-            <div class="input-group"><i class="fa-solid fa-briefcase"></i><input type="text" id="edit-user-cargo" placeholder="Ex: Diretor(a), Instrutor(a), etc."></div>
             <label class="input-label">Permissões:</label>
             <div class="perm-grid">
                 <label><input type="checkbox" id="edit-perm-h"> 🏠 Editar Home</label>
@@ -2692,7 +2705,8 @@ ${!m.isLider ? `
 
                     return `<div class="carousel-item" id="lid-item-${i}"><img src="${l.foto||'https://via.placeholder.com/150'}"><h3>${l.u}</h3><p style="font-size:0.85rem;">${cargosTxt}</p></div>`;
                 }).join('');
-                liderIdx = 0; atualizarCarrossel('lid-item-', lideres.length, liderIdx);
+                liderIdx = 0; 
+                setTimeout(() => atualizarCarrossel('lid-item-', lideres.length, liderIdx), 100);
                 if(carrosselLiderId) clearInterval(carrosselLiderId);
                 if(lideres.length > 1) carrosselLiderId = setInterval(nextLider, 3000);
             } else secLid.style.display = 'none';
@@ -2704,9 +2718,10 @@ ${!m.isLider ? `
                 document.getElementById('ganhadores-title-display').innerHTML = `<i class="fa-solid fa-trophy"></i> ${h.ganhadoresTitulo}`;
                 const g = db.home.ganhadores;
                 document.getElementById('ganhadores-track').innerHTML = g.map((x, i) => `<div class="carousel-item" id="gan-item-${i}"><img src="${x.foto||'https://via.placeholder.com/150'}"><h3>${x.nome}</h3><p>${x.edicao}</p></div>`).join('');
-                ganhadorIdx = 0; atualizarCarrossel('gan-item-', g.length, ganhadorIdx);
+                ganhadorIdx = 0; 
+                setTimeout(() => atualizarCarrossel('gan-item-', g.length, ganhadorIdx), 100);
                 if(carrosselGanhadorId) clearInterval(carrosselGanhadorId);
-                if(g.length > 1) carrosselGanhadorId = setInterval(nextGanhador, 2000);
+                if(g.length > 1) carrosselGanhadorId = setInterval(nextGanhador, 3000);
             } else secGanh.style.display = 'none';
 
             // UNIDADES
@@ -2744,11 +2759,32 @@ ${!m.isLider ? `
         function atualizarCarrossel(prefix, total, activeIdx) {
             for(let i=0; i<total; i++) {
                 const el = document.getElementById(prefix+i);
-                if(el) { if(i === activeIdx) el.classList.add('active'); else el.classList.remove('active'); }
+                if(el) { 
+                    el.classList.remove('active', 'prev', 'next');
+                    if(i === activeIdx) {
+                        el.classList.add('active');
+                    } else if(i === (activeIdx - 1 + total) % total) {
+                        el.classList.add('prev');
+                    } else if(i === (activeIdx + 1) % total) {
+                        el.classList.add('next');
+                    }
+                }
             }
         }
-        function nextLider() { const t = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral').length; if(t===0)return; liderIdx = (liderIdx + 1) % t; atualizarCarrossel('lid-item-', t, liderIdx); }
-        function prevLider() { const t = db.usuarios.filter(u => u.tipo === 'lider' || u.tipo === 'geral').length; if(t===0)return; liderIdx = (liderIdx - 1 + t) % t; atualizarCarrossel('lid-item-', t, liderIdx); }
+        function nextLider() { 
+            const lideres = db.usuarios.filter(u => (u.tipo === 'lider' || u.tipo === 'geral') && !u.ocultoHome);
+            const t = lideres.length; 
+            if(t===0) return; 
+            liderIdx = (liderIdx + 1) % t; 
+            atualizarCarrossel('lid-item-', t, liderIdx); 
+        }
+        function prevLider() { 
+            const lideres = db.usuarios.filter(u => (u.tipo === 'lider' || u.tipo === 'geral') && !u.ocultoHome);
+            const t = lideres.length; 
+            if(t===0) return; 
+            liderIdx = (liderIdx - 1 + t) % t; 
+            atualizarCarrossel('lid-item-', t, liderIdx); 
+        }
         function nextGanhador() { const t = db.home.ganhadores.length; if(t===0)return; ganhadorIdx = (ganhadorIdx + 1) % t; atualizarCarrossel('gan-item-', t, ganhadorIdx); }
         function prevGanhador() { const t = db.home.ganhadores.length; if(t===0)return; ganhadorIdx = (ganhadorIdx - 1 + t) % t; atualizarCarrossel('gan-item-', t, ganhadorIdx); }
 
@@ -2763,16 +2799,32 @@ function verTodosLideres() {
     // Puxa todos que não estão ocultos
     const lideres = db.usuarios.filter(u => (u.tipo === 'lider' || u.tipo === 'geral') && !u.ocultoHome);
     
-    document.getElementById('grid-all-leaders').innerHTML = lideres.map(l => {
-        let cargosTxt = l.cargo || l.unid;
-        if (l.tipo === 'geral') { cargosTxt = "Administração Geral"; }
-        return `
-        <div class="dbv-card" style="border-bottom-color: var(--vermelho);">
-            <img src="${l.foto||'https://via.placeholder.com/100'}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--vermelho);object-fit:cover;">
-            <div style="font-weight:bold; margin-top:10px; font-size:1.1rem;">${l.u}</div>
-            <div style="color:var(--amarelo); font-size:0.85rem; font-weight:bold; background:#111; padding:5px; border-radius:8px; margin-top: 5px;">${cargosTxt}</div>
-        </div>`;
-    }).join('');
+    // Organizar por níveis para a pirâmide
+    const niveis = {};
+    lideres.forEach(l => {
+        const n = l.nivel || 3;
+        if(!niveis[n]) niveis[n] = [];
+        niveis[n].push(l);
+    });
+
+    let pyramidHtml = '<div class="pyramid-container">';
+    Object.keys(niveis).sort().forEach(n => {
+        pyramidHtml += `<div class="pyramid-level">`;
+        niveis[n].forEach(l => {
+            let cargosTxt = l.cargo || l.unid;
+            if (l.tipo === 'geral') { cargosTxt = "Administração Geral"; }
+            pyramidHtml += `
+            <div class="pyramid-item">
+                <img src="${l.foto||'https://via.placeholder.com/100'}">
+                <span class="name">${l.u}</span>
+                <span class="role">${cargosTxt}</span>
+            </div>`;
+        });
+        pyramidHtml += `</div>`;
+    });
+    pyramidHtml += '</div>';
+    
+    document.getElementById('grid-all-leaders').innerHTML = pyramidHtml;
 }
         /* SISTEMA DE PONTOS E HISTÓRICO */
         function abrirModalPontos(id, val) {
@@ -7254,8 +7306,9 @@ const lote_oficial = [
             
             // Permissões
             const perms = u.perms || {};
-            document.getElementById('edit-perm-h').checked = perms.h || false;
-            document.getElementById('edit-perm-u').checked = perms.u || false;
+            document.getElementById('edit-user-cargo').value = u.cargo || '';
+            document.getElementById('edit-user-nivel').value = u.nivel || 3;
+            document.getElementById('edit-perm-h').checked = perms.h || false;;
             document.getElementById('edit-perm-m').checked = perms.m || false;
             document.getElementById('edit-perm-w').checked = perms.w || false;
             document.getElementById('edit-perm-t').checked = perms.t || false;
@@ -7285,6 +7338,7 @@ const lote_oficial = [
             if (novaP) db.usuarios[idx].p = novaP;
             db.usuarios[idx].unid = novaUnid;
             db.usuarios[idx].cargo = novoCargo || '';
+            db.usuarios[idx].nivel = parseInt(document.getElementById('edit-user-nivel').value) || 3;
             db.usuarios[idx].ocultoHome = document.getElementById('edit-user-oculto').checked;
             db.usuarios[idx].perms = {
                 h: document.getElementById('edit-perm-h').checked,
