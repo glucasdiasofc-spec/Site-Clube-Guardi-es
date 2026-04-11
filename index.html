@@ -1324,8 +1324,8 @@ header#main-header .user-info-header .user-status {
         html.is-android-pwa body.is-desbravador header#main-header.scrolled .header-logo,
         html.is-android-pwa body:not(.is-home) header#main-header.scrolled .header-logo {
             display: block !important;
-            max-height: 80px !important; 
-            height: 80px !important;
+            max-height: 90px !important; 
+            height: 90px !important;
             width: auto !important;
             max-width: none !important;
             margin: 0 !important;
@@ -2269,12 +2269,19 @@ function abrirMinhasEspecialidadesLider() {
             document.getElementById(id).classList.add('active'); 
             window.scrollTo(0, 0); 
             
+            // Gerenciar classes de página para CSS específico
+            document.body.classList.remove('is-home', 'is-lideranca', 'is-desbravador');
+
             if (id === 'home-page') {
                 document.body.classList.add('is-home');
                 document.getElementById('main-header').classList.add('initial-splash'); 
             } else {
-                document.body.classList.remove('is-home');
                 document.getElementById('main-header').classList.remove('initial-splash');
+                if (id === 'admin-page') {
+                    document.body.classList.add('is-lideranca');
+                } else if (id === 'dbv-area-page') {
+                    document.body.classList.add('is-desbravador');
+                }
             }
             window.dispatchEvent(new Event('scroll')); 
         }
