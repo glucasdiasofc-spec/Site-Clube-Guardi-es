@@ -461,7 +461,20 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .carousel-btn:hover { background: var(--amarelo); color: black; }
 
         /* PIRÂMIDE HIERÁRQUICA */
-        .pyramid-container { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 40px 10px; width: 100%; overflow-x: auto; }
+        .pyramid-container { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 30px; 
+    padding: 40px 10px; 
+    width: 100%; 
+    overflow-x: hidden; /* Esconde a barra de rolagem horizontal */
+}
+@media (max-width: 768px) {
+    .pyramid-container {
+        padding: 20px 5px; /* Reduz o padding em telas menores */
+    }
+}
         .pyramid-level { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; width: 100%; }
         .pyramid-item { background: #111; border: 2px solid var(--vermelho); border-radius: 15px; padding: 15px; width: 180px; text-align: center; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
         .pyramid-item:hover { transform: translateY(-5px); border-color: var(--amarelo); }
