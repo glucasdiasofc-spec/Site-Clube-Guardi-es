@@ -1993,7 +1993,11 @@ header#main-header .user-info-header .user-status {
                 <div id="create-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid #1a6b3c;">
                     <h3 style="color:#1a6b3c; margin-bottom: 15px;"><i class="fa-solid fa-campground"></i> Criar Nova Unidade</h3>
                     <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="new-unid-nome-input" placeholder="Nome da Nova Unidade"></div>
-                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="new-unid-logo-input" placeholder="URL da Logo (Opcional)"></div>
+                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="new-unid-logo-input" placeholder="URL da Logo (ou use o upload abaixo)"></div>
+                    <label class="upload-btn-label" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'" style="margin-bottom:15px;">
+                        <i class="fa-solid fa-upload" style="color:var(--amarelo);"></i> Upload Logo da Nova Unidade
+                        <input type="file" accept="image/*" style="display:none;" onchange="uploadLogoNovaUnidade(this)">
+                    </label>
                     <button onclick="criarNovaUnidadeApp()" class="btn-save" style="background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; margin-bottom: 15px;"><i class="fa-solid fa-plus"></i> CADASTRAR UNIDADE</button>
                 </div>
 
@@ -2720,6 +2724,14 @@ if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
             document.getElementById('m-unid-dest').innerHTML = htmlUnid; document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
             
             if(canEditAll) { document.getElementById('container-m-unid-dest').style.display = 'block'; document.getElementById('container-edit-unid-sel').style.display = 'block'; }
+            
+            // Inicializa os dados da caixa Editar Unidades na barra lateral
+            if (user.perms.u || user.tipo === 'geral') {
+                if (!canEditAll && user.unid) {
+                    document.getElementById('edit-unid-sel').value = user.unid;
+                }
+                carregarDadosUnidade();
+            }
 
 const meusM = db.membros.filter(m => (canEditAll || m.unid === user.unid) && m.isLider !== true);
             document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
@@ -8809,6 +8821,76 @@ function gerarRelatorioFrequencia() {
                 alert('Logo salva na nuvem! Clique em "Salvar Unidade" para aplicar.');
             } catch (err) {
                 alert('Erro no upload: ' + err.message);
+            }
+        }
+
+        async function uploadLogoNovaUnidade(input) {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+                const imageUrl = await uploadToCloudinary(file);
+                document.getElementById('new-unid-logo-input').value = imageUrl;
+                alert('Logo salva na nuvem! Clique em "CADASTRAR UNIDADE" para criar.');
+            } catch (err) {
+                alert('Erro no upload: ' + err.message);
+            }
+        }
+
+        function carregarDadosUnidade() {
+            const sel = document.getElementById('edit-unid-sel');
+            let nomeUnid = sel.value;
+            if(!nomeUnid || (user.tipo !== 'geral' && !user.perms.t)) {
+                nomeUnid = user.unid; // Trava para quem não é admin editar apenas a sua
+            }
+            
+            const unid = db.unidades.find(u => u.nome === nomeUnid);
+            if(unid) {
+                document.getElementById('edit-unid-nome').value = unid.nome;
+                document.getElementById('edit-unid-logo').value = unid.logo || '';
+            }
+        }
+
+        function atualizarMinhaUnidade() {
+            const sel = document.getElementById('edit-unid-sel');
+            let nomeAntigo = sel.value;
+            
+            if(user.tipo !== 'geral' && !user.perms.t) {
+                nomeAntigo = user.unid;
+            }
+
+            const novoNome = document.getElementById('edit-unid-nome').value.trim();
+            const novaLogo = document.getElementById('edit-unid-logo').value.trim();
+
+            if(!novoNome) return alert("O nome da unidade não pode ficar vazio.");
+
+            // Impede nomes duplicados
+            if(novoNome.toLowerCase() !== nomeAntigo.toLowerCase() && db.unidades.find(u => u.nome.toLowerCase() === novoNome.toLowerCase())) {
+                return alert("Já existe uma unidade com esse nome!");
+            }
+
+            const unidIdx = db.unidades.findIndex(u => u.nome === nomeAntigo);
+            if(unidIdx > -1) {
+                db.unidades[unidIdx].nome = novoNome;
+                db.unidades[unidIdx].logo = novaLogo;
+
+                // Cascata: Se mudar o nome da unidade, muda no perfil de todos os membros e líderes dela
+                if(novoNome !== nomeAntigo) {
+                    db.membros.forEach(m => { if(m.unid === nomeAntigo) m.unid = novoNome; });
+                    db.usuarios.forEach(u => { if(u.unid === nomeAntigo) u.unid = novoNome; });
+                    if(user.unid === nomeAntigo) user.unid = novoNome;
+                }
+
+                save();
+                alert("Unidade atualizada com sucesso!");
+                
+                // Atualiza todas as caixas de seleção na tela
+                const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
+                if(document.getElementById('new-unid-sel')) document.getElementById('new-unid-sel').innerHTML = htmlUnid;
+                if(document.getElementById('m-unid-dest')) document.getElementById('m-unid-dest').innerHTML = htmlUnid;
+                if(document.getElementById('edit-unid-sel')) document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
+                if(document.getElementById('del-unid-sel')) document.getElementById('del-unid-sel').innerHTML = htmlUnid;
+                
+                render();
             }
         }
 
