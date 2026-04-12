@@ -1993,19 +1993,27 @@ header#main-header .user-info-header .user-status {
                 <div id="create-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid #1a6b3c;">
                     <h3 style="color:#1a6b3c; margin-bottom: 15px;"><i class="fa-solid fa-campground"></i> Criar Nova Unidade</h3>
                     <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="new-unid-nome-input" placeholder="Nome da Nova Unidade"></div>
-                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="new-unid-logo-input" placeholder="URL da Logo (ou use o upload abaixo)"></div>
-                    <label class="upload-btn-label" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'" style="margin-bottom:15px;">
-                        <i class="fa-solid fa-upload" style="color:var(--amarelo);"></i> Upload Logo da Nova Unidade
-                        <input type="file" accept="image/*" style="display:none;" onchange="uploadLogoNovaUnidade(this)">
-                    </label>
-                    <button onclick="criarNovaUnidadeApp()" class="btn-save" style="background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; margin-bottom: 15px;"><i class="fa-solid fa-plus"></i> CADASTRAR UNIDADE</button>
+                    
+                    <label class="input-label">Logo da Unidade (Upload):</label>
+                    <div class="input-group"><i class="fa-solid fa-upload"></i><input type="file" id="new-unid-file" accept="image/*"></div>
+                    
+                    <button onclick="criarNovaUnidadeApp()" class="btn-save" style="background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; margin-top: 10px;"><i class="fa-solid fa-plus"></i> CADASTRAR UNIDADE</button>
+                </div>
+
+                <div id="edit-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid var(--amarelo);">
+                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-pen-to-square"></i> Editar Unidade</h3>
+                    <label class="input-label">Selecione a Unidade:</label>
+                    <select id="edit-unid-select" class="input-group" style="width:100%; margin-bottom:15px; background:#222; color:white; border:1px solid #444; padding:10px; border-radius:5px;"></select>
+                    
+                    <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="edit-unid-nome-input" placeholder="Novo nome (opcional)"></div>
+                    
+                    <label class="input-label">Alterar Logo (Upload):</label>
+                    <div class="input-group"><i class="fa-solid fa-upload"></i><input type="file" id="edit-unid-file" accept="image/*"></div>
+                    
+                    <button onclick="salvarEdicaoUnidade()" class="btn-save" style="background: var(--amarelo); color: black; font-weight:bold; margin-top: 10px;"><i class="fa-solid fa-floppy-disk"></i> SALVAR ALTERAÇÕES</button>
                 </div>
 
                 <div id="delete-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border: 1px solid var(--vermelho);">
-                    <h3 style="color:var(--vermelho); margin-bottom: 15px;"><i class="fa-solid fa-trash-can"></i> Apagar Unidades</h3>
-                    <div class="input-group"><i class="fa-solid fa-campground"></i><select id="del-unid-sel"></select></div>
-                    <button onclick="apagarUnidade()" class="btn-save" style="background:var(--vermelho); color:white; box-shadow: 0 4px 15px rgba(230,57,70,0.4);"><i class="fa-solid fa-triangle-exclamation"></i> EXCLUIR UNIDADE</button>
-                </div>
 
                 <div id="memb-section" class="form-box" style="display:none">
                     <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-users"></i> Gerenciar Membros (Desbravadores)</h3>
@@ -2703,6 +2711,7 @@ if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
             document.getElementById('admin-only-users').style.display = isGeral ? 'block' : 'none';
             if(document.getElementById('create-unid-section')) document.getElementById('create-unid-section').style.display = isGeral ? 'block' : 'none';
             document.getElementById('delete-unid-section').style.display = isGeral ? 'block' : 'none';
+            document.getElementById('edit-unid-section').style.display = isGeral ? 'block' : 'none';
             // Mostra os botões críticos apenas para o Admin Geral
             if(document.getElementById('btn-gerir-esp-admin')) document.getElementById('btn-gerir-esp-admin').style.display = isGeral ? 'flex' : 'none';
             if(document.getElementById('btn-gerir-classes-admin')) document.getElementById('btn-gerir-classes-admin').style.display = isGeral ? 'flex' : 'none';
@@ -7532,39 +7541,66 @@ const lote_oficial = [
             render();
         }
 
-        function criarNovaUnidadeApp() {
-            const novoN = document.getElementById('new-unid-nome-input') ? document.getElementById('new-unid-nome-input').value : prompt("Digite o nome da NOVA Unidade:");
-            if(!novoN || novoN.trim() === "") return alert("Digite o nome da unidade!");
+        async function criarNovaUnidadeApp() {
+            const nomeInput = document.getElementById('new-unid-nome-input');
+            const fileInput = document.getElementById('new-unid-file');
             
-            if(db.unidades.find(u => u.nome.toLowerCase() === novoN.trim().toLowerCase())) {
-                return alert("Já existe uma unidade com este nome!");
+            if(!nomeInput.value.trim()) return alert("Digite o nome da unidade!");
+            if(db.unidades.find(u => u.nome.toLowerCase() === nomeInput.value.trim().toLowerCase())) return alert("Esta unidade já existe!");
+
+            let logoURL = "";
+            if(fileInput.files.length > 0) {
+                // Aqui entra a sua lógica do novo banco de dados de upload
+                // Por enquanto, usaremos Base64 para visualização imediata
+                logoURL = await processarUpload(fileInput.files[0]);
             }
+
+            db.unidades.push({ 
+                nome: nomeInput.value.trim(), 
+                logo: logoURL, 
+                cor: "#ffcc00" 
+            });
             
-            const novaLogo = document.getElementById('new-unid-logo-input') ? document.getElementById('new-unid-logo-input').value : "";
-            
-            try {
-                db.unidades.push({ nome: novoN.trim(), logo: novaLogo, cor: "#ffcc00" });
-                save();
-                alert("Unidade '" + novoN.trim() + "' criada com sucesso!");
-                
-                if(document.getElementById('new-unid-nome-input')) document.getElementById('new-unid-nome-input').value = "";
-                if(document.getElementById('new-unid-logo-input')) document.getElementById('new-unid-logo-input').value = "";
-                
-                const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
-                if(document.getElementById('new-unid-sel')) document.getElementById('new-unid-sel').innerHTML = htmlUnid;
-                if(document.getElementById('m-unid-dest')) document.getElementById('m-unid-dest').innerHTML = htmlUnid;
-                if(document.getElementById('edit-unid-sel')) document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
-                if(document.getElementById('del-unid-sel')) document.getElementById('del-unid-sel').innerHTML = htmlUnid;
-                render();
-            } catch(e) {
-                alert("Erro ao criar unidade: " + e.message);
-            }
+            finalizarAcaoUnidade("Unidade criada com sucesso!");
         }
-        function criarNovaUnidade() { criarNovaUnidadeApp(); }
-        function apagarUnidade() {
-            const u = document.getElementById('del-unid-sel').value;
-            if(u === 'Administração') return alert("Operação Negada: A Administração não pode ser apagada.");
-            if(confirm(`Tem certeza que deseja apagar a unidade ${u} e todos os seus membros?`)) { db.unidades = db.unidades.filter(x => x.nome !== u); db.usuarios = db.usuarios.filter(x => x.unid !== u); db.membros = db.membros.filter(x => x.unid !== u); save(); }
+
+        async function salvarEdicaoUnidade() {
+            const nomeOriginal = document.getElementById('edit-unid-select').value;
+            const novoNome = document.getElementById('edit-unid-nome-input').value.trim();
+            const fileInput = document.getElementById('edit-unid-file');
+            
+            const idx = db.unidades.findIndex(u => u.nome === nomeOriginal);
+            if(idx === -1) return alert("Unidade não encontrada!");
+
+            if(fileInput.files.length > 0) {
+                db.unidades[idx].logo = await processarUpload(fileInput.files[0]);
+            }
+            
+            if(novoNome && novoNome !== nomeOriginal) {
+                // Atualiza o nome da unidade em todos os membros vinculados
+                db.membros.forEach(m => { if(m.unid === nomeOriginal) m.unid = novoNome; });
+                db.usuarios.forEach(u => { if(u.unid === nomeOriginal) u.unid = novoNome; });
+                db.unidades[idx].nome = novoNome;
+            }
+
+            finalizarAcaoUnidade("Unidade atualizada com sucesso!");
+        }
+
+        // Função auxiliar para converter imagem em string (ou enviar para seu banco)
+        function processarUpload(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function finalizarAcaoUnidade(msg) {
+            save();
+            alert(msg);
+            // Limpa campos
+            document.querySelectorAll('#create-unid-section input, #edit-unid-section input').forEach(i => i.value = "");
+            render(); // Recarrega os selects e a UI
         }
         function alterarMinhaFoto(url) { 
             if (!url) return;
