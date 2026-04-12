@@ -1753,6 +1753,8 @@ header#main-header .user-info-header .user-status {
             <div class="close-modal" onclick="document.getElementById('modal-edit-user').style.display='none'"><i class="fa-solid fa-times"></i></div>
             <h3 style="color:var(--amarelo); margin-bottom: 20px; text-align:center;"><i class="fa-solid fa-user-pen"></i> Editar Líder</h3>
             <input type="hidden" id="edit-user-original-u">
+            <label class="input-label">Nome Completo:</label>
+            <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="edit-user-nome" placeholder="Nome Completo"></div>
             <label class="input-label">Login do Usuário:</label>
             <div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="edit-user-u" placeholder="Login"></div>
             <label class="input-label">Nova Senha (deixe em branco para manter):</label>
@@ -1943,10 +1945,13 @@ header#main-header .user-info-header .user-status {
                 
                 <div id="admin-only-users" class="form-box" style="display:none; margin-bottom: 30px;">
                     <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-user-gear"></i> Gerenciar Usuários/Líderes</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><i class="fa-solid fa-user-plus"></i><input type="text" id="new-u" placeholder="Novo Login"></div>
-                        <div class="input-group"><i class="fa-solid fa-key"></i><input type="text" id="new-p" placeholder="Senha"></div>
-                    </div>
+                <label class="input-label">Nome Completo do Líder:</label>
+                <div class="input-group"><i class="fa-solid fa-id-card"></i><input type="text" id="new-nome" placeholder="Nome Completo"></div>
+                <label class="input-label">Acesso do Sistema:</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="input-group"><i class="fa-solid fa-user-plus"></i><input type="text" id="new-u" placeholder="Novo Login"></div>
+                    <div class="input-group"><i class="fa-solid fa-key"></i><input type="password" id="new-p" placeholder="Senha"></div>
+                </div>
                     <label class="input-label">Vincular a qual Unidade?</label>
                     <div class="input-group"><i class="fa-solid fa-campground"></i><select id="new-unid-sel"></select></div>
                     <label class="input-label">Cargo (Opcional):</label>
@@ -1983,6 +1988,13 @@ header#main-header .user-info-header .user-status {
                     
                     <h4 style="margin-bottom: 10px; color:#aaa; font-size: 0.9rem;">Ganhadores Registrados (Mais recentes primeiro):</h4>
                     <div id="admin-ganhadores-list" class="admin-list"></div>
+                </div>
+
+                <div id="create-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid #1a6b3c;">
+                    <h3 style="color:#1a6b3c; margin-bottom: 15px;"><i class="fa-solid fa-campground"></i> Criar Nova Unidade</h3>
+                    <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="new-unid-nome-input" placeholder="Nome da Nova Unidade"></div>
+                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="new-unid-logo-input" placeholder="URL da Logo (Opcional)"></div>
+                    <button onclick="criarNovaUnidadeApp()" class="btn-save" style="background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; margin-bottom: 15px;"><i class="fa-solid fa-plus"></i> CADASTRAR UNIDADE</button>
                 </div>
 
                 <div id="delete-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border: 1px solid var(--vermelho);">
@@ -2685,6 +2697,7 @@ if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
             
             document.getElementById('nav-custom').style.display = user.perms.h ? 'flex' : 'none';
             document.getElementById('admin-only-users').style.display = isGeral ? 'block' : 'none';
+            if(document.getElementById('create-unid-section')) document.getElementById('create-unid-section').style.display = isGeral ? 'block' : 'none';
             document.getElementById('delete-unid-section').style.display = isGeral ? 'block' : 'none';
             // Mostra os botões críticos apenas para o Admin Geral
             if(document.getElementById('btn-gerir-esp-admin')) document.getElementById('btn-gerir-esp-admin').style.display = isGeral ? 'flex' : 'none';
@@ -2708,7 +2721,7 @@ if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
             
             if(canEditAll) { document.getElementById('container-m-unid-dest').style.display = 'block'; document.getElementById('container-edit-unid-sel').style.display = 'block'; }
 
-const meusM = db.membros.filter(m => canEditAll || m.unid === user.unid);
+const meusM = db.membros.filter(m => (canEditAll || m.unid === user.unid) && m.isLider !== true);
             document.getElementById('meus-membros-grid').innerHTML = meusM.map(m => `
     <div class="dbv-card" style="${h.glow ? 'box-shadow: 0 0 15px var(--amarelo)' : ''}">
         
@@ -2754,7 +2767,7 @@ ${!m.isLider ? `
                     let cargosTxt = l.cargo || l.unid; // Usa o cargo se existir, senão usa a unidade
                     if (l.tipo === 'geral') { cargosTxt = "Administração Geral"; }
 
-                    return `<div class="carousel-item" id="lid-item-${i}"><img src="${l.foto||'https://via.placeholder.com/150'}"><h3>${l.u}</h3><p style="font-size:0.85rem;">${cargosTxt}</p></div>`;
+                    return `<div class="carousel-item" id="lid-item-${i}"><img src="${l.foto||'https://via.placeholder.com/150'}"><h3>${l.nome || l.u}</h3><p style="font-size:0.85rem;">${cargosTxt}</p></div>`;
                 }).join('');
                 liderIdx = 0; 
                 setTimeout(() => atualizarCarrossel('lid-item-', lideres.length, liderIdx), 100);
@@ -2867,7 +2880,7 @@ function verTodosLideres() {
             pyramidHtml += `
             <div class="pyramid-item">
                 <img src="${l.foto||'https://via.placeholder.com/100'}">
-                <span class="name">${l.u}</span>
+                <span class="name">${l.nome || l.u}</span>
                 <span class="role">${cargosTxt}</span>
             </div>`;
         });
@@ -7328,7 +7341,8 @@ const lote_oficial = [
                 return `<div class="user-mgmt-card">
                     <img src="${u.foto || 'https://via.placeholder.com/50'}" onerror="this.src='https://via.placeholder.com/50'">
                     <div class="user-mgmt-info">
-                        <strong>${u.u} ${isAdmin ? '<span style="color:var(--amarelo); font-size:0.75rem;">[ADMIN]</span>' : ''} ${isMe ? '<span style="color:#888; font-size:0.75rem;">(você)</span>' : ''}</strong>
+                        <strong>${u.nome || u.u} ${isAdmin ? '<span style="color:var(--amarelo); font-size:0.75rem;">[ADMIN]</span>' : ''} ${isMe ? '<span style="color:#888; font-size:0.75rem;">(você)</span>' : ''}</strong>
+                        <span style="display:block; font-size:0.8rem; color:#888;">Login: ${u.u}</span>
                         <span><i class="fa-solid fa-campground"></i> ${u.unid || 'Sem unidade'}</span>
                         ${u.cargo ? `<span style="color:#ffcc00; font-size:0.8rem;"><i class="fa-solid fa-briefcase"></i> ${u.cargo}</span>` : ''}
                     </div>
@@ -7419,36 +7433,122 @@ const lote_oficial = [
 
         /* FUNÇÕES DE APOIO ORIGINAIS */
         function criarUsuario() {
-            const u = document.getElementById('new-u').value, p = document.getElementById('new-p').value, unid = document.getElementById('new-unid-sel').value, cargo = document.getElementById('new-cargo').value;
-            if(!u || !p) return alert("Preencha usuário e senha!");
-            // Substitua o .push da função criarUsuario por isto:
-const oculto = document.getElementById('new-user-oculto') ? document.getElementById('new-user-oculto').checked : false;
+            const nome = document.getElementById('new-nome').value;
+            const u = document.getElementById('new-u').value;
+            const p = document.getElementById('new-p').value;
+            const unid = document.getElementById('new-unid-sel').value;
+            const cargo = document.getElementById('new-cargo').value;
+            
+            if(!u || !p || !nome) return alert("Preencha Nome, Usuário e Senha!");
+            
+            const oculto = document.getElementById('new-user-oculto') ? document.getElementById('new-user-oculto').checked : false;
 
-db.usuarios.push({u, p, tipo:'lider', unid, cargo: cargo || '', foto:'', ocultoHome: oculto, perms:{h:document.getElementById('perm-h').checked, u:document.getElementById('perm-u').checked, m:document.getElementById('perm-m').checked, w:document.getElementById('perm-w').checked, t:document.getElementById('perm-t').checked}});
-            save(); alert("Usuário criado com sucesso!"); document.getElementById('new-u').value = ""; document.getElementById('new-p').value = ""; document.getElementById('new-cargo').value = ""; renderListaUsuarios();
+            db.usuarios.push({
+                nome: nome, u: u, p: p, tipo: 'lider', unid: unid, cargo: cargo || '', foto: '', ocultoHome: oculto, 
+                perms: { h: document.getElementById('perm-h').checked, u: document.getElementById('perm-u').checked, m: document.getElementById('perm-m').checked, w: document.getElementById('perm-w').checked, t: document.getElementById('perm-t').checked }
+            });
+            
+            save(); 
+            alert("Usuário criado com sucesso!"); 
+            document.getElementById('new-nome').value = ""; 
+            document.getElementById('new-u').value = ""; 
+            document.getElementById('new-p').value = ""; 
+            document.getElementById('new-cargo').value = ""; 
+            renderListaUsuarios();
         }
-        function cadastrarMembro() {
-            const n = document.getElementById('m-nome').value, f = document.getElementById('m-foto').value;
-            if(!n) return alert("O nome do membro é obrigatório!");
-            const canEditAll = user.tipo === 'geral' || user.perms.t; const uDest = canEditAll ? document.getElementById('m-unid-dest').value : user.unid;
-            db.membros.push({ id: Date.now(), nome: n, foto: f, unid: uDest, pontos: 0, historico: [] });
-            save(); document.getElementById('m-nome').value = ""; document.getElementById('m-foto').value = "";
+
+        function abrirEdicaoUsuario(uLogin) {
+            const u = db.usuarios.find(x => x.u === uLogin);
+            if (!u) return;
+            document.getElementById('edit-user-original-u').value = u.u;
+            if(document.getElementById('edit-user-nome')) document.getElementById('edit-user-nome').value = u.nome || "";
+            document.getElementById('edit-user-u').value = u.u;
+            document.getElementById('edit-user-p').value = '';
+            
+            const sel = document.getElementById('edit-user-unid');
+            sel.innerHTML = db.unidades.map(un => `<option value="${un.nome}" ${un.nome === u.unid ? 'selected' : ''}>${un.nome}</option>`).join('');
+            
+            document.getElementById('edit-user-cargo').value = u.cargo || '';
+            const perms = u.perms || {};
+            document.getElementById('edit-user-nivel').value = u.nivel || 3;
+            document.getElementById('edit-perm-h').checked = perms.h || false;;
+            document.getElementById('edit-perm-m').checked = perms.m || false;
+            document.getElementById('edit-perm-w').checked = perms.w || false;
+            document.getElementById('edit-perm-t').checked = perms.t || false;
+            if(document.getElementById('edit-user-oculto')) document.getElementById('edit-user-oculto').checked = u.ocultoHome || false;
+            
+            document.getElementById('modal-edit-user').style.display = 'flex';
         }
-        function excluirMembro(id) { if(confirm("Deseja realmente excluir este membro?")) { db.membros = db.membros.filter(x => x.id !== id); save(); } }
-        function carregarDadosUnidade() { const alvo = (user.tipo === 'geral' || user.perms.t) ? document.getElementById('edit-unid-sel').value : user.unid; const u = db.unidades.find(x => x.nome === alvo); if(u) { document.getElementById('edit-unid-nome').value = u.nome; document.getElementById('edit-unid-logo').value = u.logo; } }
-        function atualizarMinhaUnidade() {
-            const alvo = (user.tipo === 'geral' || user.perms.t) ? document.getElementById('edit-unid-sel').value : user.unid;
-            const uIdx = db.unidades.findIndex(x => x.nome === alvo);
-            if(uIdx !== -1) {
-                const novoN = document.getElementById('edit-unid-nome').value;
-                if(!novoN) return alert("A unidade precisa de um nome!");
-                db.unidades[uIdx].nome = novoN; db.unidades[uIdx].logo = document.getElementById('edit-unid-logo').value;
-                db.usuarios.forEach(us => { if(us.unid === alvo) us.unid = novoN; });
-                db.membros.forEach(mb => { if(mb.unid === alvo) mb.unid = novoN; });
-                if(user.unid === alvo) user.unid = novoN;
-                save(); alert("Unidade atualizada!");
+
+        function salvarEdicaoUsuario() {
+            const originalU = document.getElementById('edit-user-original-u').value;
+            const novoNome = document.getElementById('edit-user-nome') ? document.getElementById('edit-user-nome').value.trim() : "";
+            const novoU = document.getElementById('edit-user-u').value.trim();
+            const novaP = document.getElementById('edit-user-p').value;
+            const novaUnid = document.getElementById('edit-user-unid').value;
+            const novoCargo = document.getElementById('edit-user-cargo').value;
+            
+            if (!novoU) return alert("O login não pode ficar em branco!");
+            
+            const idx = db.usuarios.findIndex(x => x.u === originalU);
+            if (idx === -1) return;
+            
+            if (novoU !== originalU && db.usuarios.find(x => x.u === novoU)) {
+                return alert("Já existe um usuário com este login!");
+            }
+            
+            if (novoNome) db.usuarios[idx].nome = novoNome;
+            db.usuarios[idx].u = novoU;
+            if (novaP) db.usuarios[idx].p = novaP;
+            db.usuarios[idx].unid = novaUnid;
+            db.usuarios[idx].cargo = novoCargo || '';
+            db.usuarios[idx].nivel = parseInt(document.getElementById('edit-user-nivel').value) || 3;
+            if(document.getElementById('edit-user-oculto')) db.usuarios[idx].ocultoHome = document.getElementById('edit-user-oculto').checked;
+            db.usuarios[idx].perms = {
+                h: document.getElementById('edit-perm-h').checked,
+                u: document.getElementById('edit-perm-u').checked,
+                m: document.getElementById('edit-perm-m').checked,
+                w: document.getElementById('edit-perm-w').checked,
+                t: document.getElementById('edit-perm-t').checked
+            };
+            
+            if (originalU === user.u) { user = db.usuarios[idx]; }
+            
+            document.getElementById('modal-edit-user').style.display = 'none';
+            save();
+            alert("Usuário atualizado com sucesso!");
+            render();
+        }
+
+        function criarNovaUnidadeApp() {
+            const novoN = document.getElementById('new-unid-nome-input') ? document.getElementById('new-unid-nome-input').value : prompt("Digite o nome da NOVA Unidade:");
+            if(!novoN || novoN.trim() === "") return alert("Digite o nome da unidade!");
+            
+            if(db.unidades.find(u => u.nome.toLowerCase() === novoN.trim().toLowerCase())) {
+                return alert("Já existe uma unidade com este nome!");
+            }
+            
+            const novaLogo = document.getElementById('new-unid-logo-input') ? document.getElementById('new-unid-logo-input').value : "";
+            
+            try {
+                db.unidades.push({ nome: novoN.trim(), logo: novaLogo, cor: "#ffcc00" });
+                save();
+                alert("Unidade '" + novoN.trim() + "' criada com sucesso!");
+                
+                if(document.getElementById('new-unid-nome-input')) document.getElementById('new-unid-nome-input').value = "";
+                if(document.getElementById('new-unid-logo-input')) document.getElementById('new-unid-logo-input').value = "";
+                
+                const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
+                if(document.getElementById('new-unid-sel')) document.getElementById('new-unid-sel').innerHTML = htmlUnid;
+                if(document.getElementById('m-unid-dest')) document.getElementById('m-unid-dest').innerHTML = htmlUnid;
+                if(document.getElementById('edit-unid-sel')) document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
+                if(document.getElementById('del-unid-sel')) document.getElementById('del-unid-sel').innerHTML = htmlUnid;
+                render();
+            } catch(e) {
+                alert("Erro ao criar unidade: " + e.message);
             }
         }
+        function criarNovaUnidade() { criarNovaUnidadeApp(); }
         function apagarUnidade() {
             const u = document.getElementById('del-unid-sel').value;
             if(u === 'Administração') return alert("Operação Negada: A Administração não pode ser apagada.");
