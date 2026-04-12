@@ -7556,6 +7556,8 @@ const lote_oficial = [
             document.getElementById('edit-perm-w').checked = perms.w || false;
             document.getElementById('edit-perm-t').checked = perms.t || false;
             if(document.getElementById('edit-user-oculto')) document.getElementById('edit-user-oculto').checked = u.ocultoHome || false;
+            if(document.getElementById('edit-user-conselheiro')) document.getElementById('edit-user-conselheiro').checked = u.isConselheiro || false;
+
             
             document.getElementById('modal-edit-user').style.display = 'flex';
         }
@@ -7584,6 +7586,8 @@ const lote_oficial = [
             db.usuarios[idx].cargo = novoCargo || '';
             db.usuarios[idx].nivel = parseInt(document.getElementById('edit-user-nivel').value) || 3;
             if(document.getElementById('edit-user-oculto')) db.usuarios[idx].ocultoHome = document.getElementById('edit-user-oculto').checked;
+            if(document.getElementById('edit-user-conselheiro')) db.usuarios[idx].isConselheiro = document.getElementById('edit-user-conselheiro').checked;
+
             db.usuarios[idx].perms = {
                 h: document.getElementById('edit-perm-h').checked,
                 u: document.getElementById('edit-perm-u').checked,
