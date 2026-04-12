@@ -469,40 +469,44 @@ body.is-home header#main-header.initial-splash #menu-toggle {
         .pyramid-item .name { font-weight: bold; color: white; font-size: 0.9rem; display: block; }
         .pyramid-item .role { font-size: 0.75rem; color: var(--amarelo); font-weight: 600; margin-top: 5px; display: block; }
 
-                /* CORREÇÃO DA PIRÂMIDE PARA MOBILE */
+               /* CORREÇÃO DA PIRÂMIDE PARA MOBILE - FORÇANDO 3 ITENS */
         @media (max-width: 768px) {
             .pyramid-container {
-                overflow-x: hidden; /* Garante que não role para os lados */
-                padding: 15px 10px;
+                overflow-x: hidden;
+                padding: 15px 5px; /* Reduzi o preenchimento das bordas */
             }
             .pyramid-level {
-                gap: 15px; /* Espaço de respiro agradável */
+                gap: 6px; /* Espaço mínimo entre os cartões para sobrar área para o texto */
                 justify-content: center;
-                flex-wrap: wrap; /* Permite ir para a linha de baixo em vez de espremer */
-                align-items: stretch; /* O SEGREDO 1: Deixa todos os cartões da mesma linha com a mesma altura */
+                display: flex;
+                flex-wrap: wrap;
+                align-items: stretch;
             }
             .pyramid-item {
-                width: calc(50% - 15px); /* Aumentamos a largura para os nomes não quebrarem feio */
-                max-width: 180px; 
-                padding: 15px 10px;
+                /* O segredo: 33.33% menos o gap para garantir 3 por linha */
+                width: calc(33.33% - 8px); 
+                min-width: 100px; /* Garante que não fiquem excessivamente esmagados */
+                padding: 10px 4px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
             }
             .pyramid-item img {
-                width: 70px; /* Imagem em um tamanho de destaque */
-                height: 70px;
-                margin-bottom: 10px;
-            }
-            .pyramid-item .name {
-                font-size: 0.95rem; /* Fonte maior e bem legível */
-                text-align: center;
+                width: 55px; /* Tamanho equilibrado */
+                height: 55px;
                 margin-bottom: 8px;
             }
-            .pyramid-item .role {
-                font-size: 0.85rem;
+            .pyramid-item .name {
+                font-size: 0.75rem; /* Um pouco maior que antes, mas ainda cabe */
                 text-align: center;
-                margin-top: auto; /* O SEGREDO 2: Empurra os cargos para o fundo do cartão, alinhando todos perfeitamente */
+                margin-bottom: 5px;
+                line-height: 1.1;
+            }
+            .pyramid-item .role {
+                font-size: 0.65rem;
+                text-align: center;
+                margin-top: auto; /* Mantém "Dir. Associado" e "Associada" na mesma linha */
+                font-weight: bold;
             }
         }
         
