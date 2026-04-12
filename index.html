@@ -1599,7 +1599,14 @@ header#main-header .user-info-header .user-status {
                         <h4><i class="fa-solid fa-images"></i> Fundos Dinâmicos (Heroes)</h4>
                         <label class="input-label">Adicione vários blocos de fotos (carrossel) e escolha onde aparecerão.</label>
                         <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333; margin-bottom: 10px;">
-                            <textarea id="new-hero-imgs" rows="2" placeholder="URL(s) das Fotos separadas por vírgula"></textarea>
+                            
+                            <label class="upload-btn-label" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'" style="margin-bottom:10px;">
+                                <i class="fa-solid fa-cloud-arrow-up" style="color:var(--amarelo);"></i> Upload Foto do Fundo
+                                <input type="file" accept="image/*" style="display:none;" onchange="uploadHeroImg(this)">
+                            </label>
+
+                            <textarea id="new-hero-imgs" rows="2" placeholder="URL(s) das Fotos (Ou use o botão de upload acima)"></textarea>
+                            
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                 <select id="new-hero-loc"><option value="top">Topo (Início)</option><option value="mid">Meio da Página</option><option value="bottom">Fim da Página</option></select>
                                 <select id="new-hero-pos"><option value="center">Centralizado</option><option value="top">Alinhado no Topo</option><option value="bottom">Alinhado Embaixo</option></select>
@@ -2331,6 +2338,27 @@ function abrirMinhasEspecialidadesLider() {
         }
 
         /* LÓGICA DE CUSTOMIZAÇÃO - HEROES */
+        // Upload da foto para o Fundo Dinâmico (Hero)
+        async function uploadHeroImg(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const textarea = document.getElementById('new-hero-imgs');
+            const valorOriginal = textarea.value;
+            textarea.value = "Enviando...";
+            
+            try {
+                const imageUrl = await uploadToCloudinary(file);
+                if (valorOriginal.trim() === '') {
+                    textarea.value = imageUrl;
+                } else {
+                    textarea.value = valorOriginal + ', ' + imageUrl;
+                }
+            } catch (err) {
+                textarea.value = valorOriginal;
+                alert('Erro no upload: ' + err.message);
+            }
+        }
         function addHeroConfig() {
             const imgs = document.getElementById('new-hero-imgs').value;
             const loc = document.getElementById('new-hero-loc').value;
