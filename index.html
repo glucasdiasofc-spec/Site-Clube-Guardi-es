@@ -2001,6 +2001,18 @@ header#main-header .user-info-header .user-status {
                     <button onclick="criarNovaUnidadeApp()" class="btn-save" style="background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; margin-bottom: 15px;"><i class="fa-solid fa-plus"></i> CADASTRAR UNIDADE</button>
                 </div>
 
+                <div id="edit-unid-section-main" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid var(--amarelo);">
+                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-pen-to-square"></i> Editar Unidades</h3>
+                    <div class="input-group"><i class="fa-solid fa-campground"></i><select id="main-edit-unid-sel" onchange="carregarDadosUnidadeMain()"></select></div>
+                    <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="main-edit-unid-nome" placeholder="Nome da Unidade"></div>
+                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="main-edit-unid-logo" placeholder="URL da Logo"></div>
+                    <label class="upload-btn-label" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'" style="margin-bottom:15px;">
+                        <i class="fa-solid fa-upload" style="color:var(--amarelo);"></i> Upload Logo da Unidade
+                        <input type="file" accept="image/*" style="display:none;" onchange="uploadLogoUnidadeMain(this)">
+                    </label>
+                    <button onclick="atualizarUnidadeMain()" class="btn-save" style="background: var(--amarelo); color: black; margin-bottom: 15px;"><i class="fa-solid fa-check"></i> SALVAR ALTERAÇÕES</button>
+                </div>
+
                 <div id="delete-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border: 1px solid var(--vermelho);">
                     <h3 style="color:var(--vermelho); margin-bottom: 15px;"><i class="fa-solid fa-trash-can"></i> Apagar Unidades</h3>
                     <div class="input-group"><i class="fa-solid fa-campground"></i><select id="del-unid-sel"></select></div>
@@ -2702,6 +2714,7 @@ if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
             document.getElementById('nav-custom').style.display = user.perms.h ? 'flex' : 'none';
             document.getElementById('admin-only-users').style.display = isGeral ? 'block' : 'none';
             if(document.getElementById('create-unid-section')) document.getElementById('create-unid-section').style.display = isGeral ? 'block' : 'none';
+            if(document.getElementById('edit-unid-section-main')) document.getElementById('edit-unid-section-main').style.display = isGeral ? 'block' : 'none';
             document.getElementById('delete-unid-section').style.display = isGeral ? 'block' : 'none';
             // Mostra os botões críticos apenas para o Admin Geral
             if(document.getElementById('btn-gerir-esp-admin')) document.getElementById('btn-gerir-esp-admin').style.display = isGeral ? 'flex' : 'none';
@@ -2722,6 +2735,7 @@ if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
             const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
             document.getElementById('new-unid-sel').innerHTML = htmlUnid; document.getElementById('del-unid-sel').innerHTML = htmlUnid;
             document.getElementById('m-unid-dest').innerHTML = htmlUnid; document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
+            if(document.getElementById('main-edit-unid-sel')) document.getElementById('main-edit-unid-sel').innerHTML = htmlUnid;
             
             if(canEditAll) { document.getElementById('container-m-unid-dest').style.display = 'block'; document.getElementById('container-edit-unid-sel').style.display = 'block'; }
             
@@ -3016,7 +3030,20 @@ function verTodosLideres() {
         function buscarDesbravador(termo) {
             const container = document.getElementById('dbv-search-results');
             if (!termo || termo.length < 2) { container.innerHTML = ''; return; }
-            const resultados = db.membros.filter(m => m.nome.toLowerCase().includes(termo.toLowerCase()));
+            
+            // Busca específica: Prioriza início do nome, depois qualquer parte
+            const termoLower = termo.toLowerCase();
+            const resultados = db.membros.filter(m => 
+                m.nome.toLowerCase().startsWith(termoLower) || 
+                m.nome.toLowerCase().includes(termoLower)
+            ).sort((a, b) => {
+                const aStarts = a.nome.toLowerCase().startsWith(termoLower);
+                const bStarts = b.nome.toLowerCase().startsWith(termoLower);
+                if (aStarts && !bStarts) return -1;
+                if (!aStarts && bStarts) return 1;
+                return a.nome.localeCompare(b.nome);
+            });
+
             if (resultados.length === 0) {
                 container.innerHTML = '<p style="color:#888; text-align:center; padding:10px;">Nenhum desbravador encontrado.</p>';
                 return;
@@ -3034,6 +3061,21 @@ function verTodosLideres() {
                 </div>`;
             }).join('');
         }
+
+        // Atalho Ctrl+F para focar na busca
+        window.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                const searchInput = document.getElementById('dbv-search-input');
+                if (searchInput) {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Feedback visual no input
+                    searchInput.style.boxShadow = '0 0 15px var(--amarelo)';
+                    setTimeout(() => searchInput.style.boxShadow = '', 1000);
+                }
+            }
+        });
 
         // ID do Desbravador logado atualmente
         let dbvLogadoAtualId = null;
@@ -8833,6 +8875,57 @@ function gerarRelatorioFrequencia() {
                 alert('Logo salva na nuvem! Clique em "CADASTRAR UNIDADE" para criar.');
             } catch (err) {
                 alert('Erro no upload: ' + err.message);
+            }
+        }
+
+        async function uploadLogoUnidadeMain(input) {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+                const imageUrl = await uploadToCloudinary(file);
+                document.getElementById('main-edit-unid-logo').value = imageUrl;
+                alert('Logo salva na nuvem! Clique em "SALVAR ALTERAÇÕES" para aplicar.');
+            } catch (err) {
+                alert('Erro no upload: ' + err.message);
+            }
+        }
+
+        function carregarDadosUnidadeMain() {
+            const sel = document.getElementById('main-edit-unid-sel');
+            const nomeUnid = sel.value;
+            const unid = db.unidades.find(u => u.nome === nomeUnid);
+            if(unid) {
+                document.getElementById('main-edit-unid-nome').value = unid.nome;
+                document.getElementById('main-edit-unid-logo').value = unid.logo || '';
+            }
+        }
+
+        function atualizarUnidadeMain() {
+            const sel = document.getElementById('main-edit-unid-sel');
+            const nomeAntigo = sel.value;
+            const novoNome = document.getElementById('main-edit-unid-nome').value.trim();
+            const novaLogo = document.getElementById('main-edit-unid-logo').value.trim();
+
+            if(!novoNome) return alert("O nome da unidade não pode ficar vazio.");
+
+            if(novoNome.toLowerCase() !== nomeAntigo.toLowerCase() && db.unidades.find(u => u.nome.toLowerCase() === novoNome.toLowerCase())) {
+                return alert("Já existe uma unidade com esse nome!");
+            }
+
+            const unidIdx = db.unidades.findIndex(u => u.nome === nomeAntigo);
+            if(unidIdx > -1) {
+                db.unidades[unidIdx].nome = novoNome;
+                db.unidades[unidIdx].logo = novaLogo;
+
+                if(novoNome !== nomeAntigo) {
+                    db.membros.forEach(m => { if(m.unid === nomeAntigo) m.unid = novoNome; });
+                    db.usuarios.forEach(u => { if(u.unid === nomeAntigo) u.unid = novoNome; });
+                    if(user.unid === nomeAntigo) user.unid = novoNome;
+                }
+
+                save();
+                alert("Unidade atualizada com sucesso!");
+                render();
             }
         }
 
