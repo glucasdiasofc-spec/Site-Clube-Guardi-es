@@ -2833,7 +2833,8 @@ ${!m.isLider ? `
                         <div class="dbv-grid">
 	                            ${(() => {
                                     const conselheiros = db.usuarios.filter(usr => usr.unid === u.nome && usr.isConselheiro);
-                                    const todosNaUnidade = [...conselheiros, ...mb];
+                                    const todosNaUnidade = [...conselheiros, ...mb.filter(m => !m.isLider)];
+
                                     return todosNaUnidade.map(m => {
                                         let badges = '';
                                         if(m.cargos && m.cargos.length > 0) {
