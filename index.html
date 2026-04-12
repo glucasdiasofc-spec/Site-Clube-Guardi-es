@@ -1898,21 +1898,6 @@ header#main-header .user-info-header .user-status {
                     </label>
                 </div>
                 
-                <div id="box-gerenciamento-unid" class="form-box" style="display:none; background:#111; margin-top:20px;">
-                    <h4 id="titulo-edit-unid" style="color:var(--amarelo); font-size:14px; margin-bottom:15px;"><i class="fa-solid fa-pen-to-square"></i> Editar Unidade</h4>
-                    <div class="input-group" style="display:none;" id="container-edit-unid-sel"><i class="fa-solid fa-list"></i><select id="edit-unid-sel" onchange="carregarDadosUnidade()"></select></div>
-                    <label class="input-label">Nome da Unidade:</label>
-                    <div class="input-group"><i class="fa-solid fa-signature"></i><input type="text" id="edit-unid-nome" placeholder="Nome"></div>
-                    <label class="input-label">Logo da Unidade:</label>
-                    <div class="input-group"><i class="fa-solid fa-image"></i><input type="text" id="edit-unid-logo" placeholder="URL do Logo (ou use upload abaixo)"></div>
-                    <label style="background:#1a1a1a; border:1px dashed #444; border-radius:10px; padding:8px 15px; cursor:pointer; color:#888; font-size:0.8rem; display:flex; align-items:center; gap:8px; justify-content:center; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'">
-                        <i class="fa-solid fa-upload" style="color:var(--amarelo);"></i> Upload do Logo da Unidade
-                        <input type="file" accept="image/*" style="display:none;" onchange="uploadLogoUnidade(this)">
-                    </label>
-                    <button onclick="atualizarMinhaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px;"><i class="fa-solid fa-check"></i> SALVAR UNIDADE</button>
-                    <button onclick="criarNovaUnidade()" class="btn-save" style="font-size:12px; margin-top: 10px; background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white;"><i class="fa-solid fa-plus"></i> CRIAR NOVA UNIDADE</button>
-                </div>
-                
                 <button id="btn-reset-sistema" onclick="resetSistema()" style="display:none; width:100%; background:rgba(230,57,70,0.1); color:var(--vermelho); border:1px solid var(--vermelho); border-radius:8px; padding:12px; cursor:pointer; font-weight:bold; margin-top:30px; transition:0.3s;"><i class="fa-solid fa-triangle-exclamation"></i> RESET TOTAL DO SISTEMA</button>
             </aside>
 
@@ -1999,6 +1984,34 @@ header#main-header .user-info-header .user-status {
                         <input type="file" accept="image/*" style="display:none;" onchange="uploadLogoNovaUnidade(this)">
                     </label>
                     <button onclick="criarNovaUnidadeApp()" class="btn-save" style="background: linear-gradient(135deg, #1a6b3c, #0d4a28); color: white; margin-bottom: 15px;"><i class="fa-solid fa-plus"></i> CADASTRAR UNIDADE</button>
+                </div>
+                <div id="edit-unid-section-central" class="form-box" style="display:none; margin-bottom: 30px; border-left: 5px solid var(--amarelo);">
+                    <h3 style="color:var(--amarelo); margin-bottom: 15px;"><i class="fa-solid fa-pen-to-square"></i> Gerenciar Unidades Existentes</h3>
+                    
+                    <div id="container-edit-unid-sel" style="margin-bottom: 15px;">
+                        <label style="font-size: 12px; color: #aaa; display: block; margin-bottom: 5px;">Selecione a Unidade para Editar:</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-list"></i>
+                            <select id="edit-unid-sel" onchange="carregarDadosUnidade()" style="background: #222; color: white; border: none; width: 100%; height: 40px;"></select>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-signature"></i>
+                        <input type="text" id="edit-unid-nome" placeholder="Nome da Unidade">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-image"></i>
+                        <input type="text" id="edit-unid-logo" placeholder="URL da Logo">
+                    </div>
+
+                    <label class="upload-btn-label" onmouseover="this.style.borderColor='var(--amarelo)'" onmouseout="this.style.borderColor='#444'" style="margin-bottom:15px; cursor: pointer; display: block; border: 1px dashed #444; padding: 10px; text-align: center;">
+                        <i class="fa-solid fa-upload" style="color:var(--amarelo);"></i> Fazer Upload de Nova Logo
+                        <input type="file" accept="image/*" style="display:none;" onchange="uploadLogoUnidade(this)">
+                    </label>
+
+                    <button onclick="atualizarMinhaUnidade()" class="btn-save" style="background: linear-gradient(135deg, #d4a017, #b8860b); color: white;"><i class="fa-solid fa-floppy-disk"></i> SALVAR ALTERAÇÕES NA UNIDADE</button>
                 </div>
 
                 <div id="delete-unid-section" class="form-box" style="display:none; margin-bottom: 30px; border: 1px solid var(--vermelho);">
@@ -2725,9 +2738,18 @@ if(mainLogo) mainLogo.src = h.logoUrl ? h.logoUrl : 'PNGDBV.webp';
             
             if(canEditAll) { document.getElementById('container-m-unid-dest').style.display = 'block'; document.getElementById('container-edit-unid-sel').style.display = 'block'; }
             
-            // Inicializa os dados da caixa Editar Unidades na barra lateral
+            // Inicializa os dados da caixa Editar Unidades
             if (user.perms.u || user.tipo === 'geral') {
-                if (!canEditAll && user.unid) {
+                document.getElementById('create-unid-section').style.display = 'block';
+                document.getElementById('edit-unid-section-central').style.display = 'block';
+                
+                // Preenche o select de unidades
+                const htmlUnid = db.unidades.map(u => `<option value="${u.nome}">${u.nome}</option>`).join('');
+                document.getElementById('edit-unid-sel').innerHTML = htmlUnid;
+                
+                // Se não for Admin Geral, trava na unidade dele
+                if (user.tipo !== 'geral' && !user.perms.t) {
+                    document.getElementById('container-edit-unid-sel').style.display = 'none';
                     document.getElementById('edit-unid-sel').value = user.unid;
                 }
                 carregarDadosUnidade();
